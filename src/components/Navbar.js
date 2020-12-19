@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu } from 'antd';
 
 function Navbar() {
+    let location = useLocation();
+
     return (
     <>
         <div style={{display:'flex', justifyContent:'space-between'}}>
@@ -13,11 +15,11 @@ function Navbar() {
               style={{width:'9.2rem', height:'3.5rem'}}
             />
             </div>
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1">Home<Link to="/"></Link></Menu.Item>
-            <Menu.Item key="2">Login<Link to="/login"></Link></Menu.Item>
-            <Menu.Item key="3">Register<Link to="/register"></Link></Menu.Item>
-            <Menu.Item key="4">Logout<Link to="/"></Link></Menu.Item>
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['/']} selectedKeys={[ location.pathname ]}>
+            <Menu.Item key="/">Home<Link to="/"></Link></Menu.Item>
+            <Menu.Item key="/login">Login<Link to="/login"></Link></Menu.Item>
+            <Menu.Item key="/register">Register<Link to="/register"></Link></Menu.Item>
+            <Menu.Item key="/logout">Logout<Link to="/"></Link></Menu.Item>
         </Menu>
         </div>
     </>
