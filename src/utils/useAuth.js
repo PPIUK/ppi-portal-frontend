@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useContext, createContext } from 'react';
 import axios from 'axios';
+import qs from 'qs';
+import { setRef } from '@material-ui/core';
 
 const authContext = createContext();
 
@@ -17,7 +20,9 @@ export const useAuth = () => {
 };
 
 function useProvideAuth() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem('oauth-user'))
+    );
     const [accessToken, setAccessToken] = useState(
         localStorage.getItem('oauth-access-token')
     );
@@ -27,58 +32,85 @@ function useProvideAuth() {
 
     const signin = (email, password) => {
         return axios
-            .post('/api/auth/login', {
-                username: email,
-                password: password,
-                client_id: 'api',
-                client_secret: null,
-                grant_type: 'password',
-            })
+            .post(
+                '/api/auth/login',
+                qs.stringify({
+                    username: email,
+                    password: password,
+                    client_id: 'api',
+                    grant_type: 'password',
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            )
             .then((response) => {
-                setAccessToken(response.access_token);
-                setRefreshToken(response.refresh_token);
+                setAccessToken(response.data.access_token);
+                setRefreshToken(response.data.refresh_token);
                 localStorage.setItem(
                     'oauth-access-token',
-                    response.access_token
+                    response.data.access_token
                 );
                 localStorage.setItem(
                     'oauth-refresh-token',
-                    response.refresh_token
+                    response.data.refresh_token
                 );
-                return new Promise((resolve, reject) => {
-                    axios
-                        .get('/api/profile/me', {
-                            headers: {
-                                Authorization: `Bearer ${response.access_token}`,
-                            },
-                        })
-                        .then((user) => {
-                            setUser(user.data);
-                            resolve(
-                                response.access_token,
-                                response.refresh_token,
-                                user.data
-                            );
-                        })
-                        .catch((err) => reject(err));
-                });
+                return axios
+                    .get('/api/profiles/me', {
+                        headers: {
+                            Authorization: `Bearer ${response.data.access_token}`,
+                        },
+                    })
+                    .then((user) => {
+                        setUser(user.data.data);
+                        localStorage.setItem(
+                            'oauth-user',
+                            JSON.stringify(user.data.data)
+                        );
+                        return {
+                            accessToken: response.data.access_token,
+                            refreshToken: response.data.refresh_token,
+                            user: user.data.data,
+                        };
+                    });
             });
     };
 
-    const signup = (email, password) => {
-        throw {name: "NotImplementedError", message: "WIP"}
+    const signup = (_email, _password) => {
+        throw { name: 'NotImplementedError', message: 'WIP' };
     };
 
     const signout = () => {
-        throw {name: "NotImplementedError", message: "WIP"}
+        return axios
+            .post(
+                '/api/auth/logout',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            )
+            .then((resp) => {
+                setUser(null);
+                setRefreshToken(null);
+                setAccessToken(null);
+                localStorage.removeItem('oauth-access-token');
+                localStorage.removeItem('oauth-refresh-token');
+                localStorage.removeItem('oauth-user');
+
+                return resp;
+            });
     };
 
-    const sendPasswordResetEmail = (email) => {
-        throw {name: "NotImplementedError", message: "WIP"}
+    const sendPasswordResetEmail = (_email) => {
+        throw { name: 'NotImplementedError', message: 'WIP' };
     };
 
-    const confirmPasswordReset = (code, password) => {
-        throw {name: "NotImplementedError", message: "WIP"}
+    const confirmPasswordReset = (_code, _password) => {
+        throw { name: 'NotImplementedError', message: 'WIP' };
     };
 
     // Return the user object and auth methods

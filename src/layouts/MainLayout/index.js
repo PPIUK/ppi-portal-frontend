@@ -27,7 +27,7 @@ function MainLayout() {
             </Row>
             <Row justify="center">
                 {!screens.lg && (
-                    <Col span={18}>
+                    <Col flex="auto">
                         <Outlet />
                     </Col>
                 )}

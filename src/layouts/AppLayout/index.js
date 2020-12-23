@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 
-import { Outlet } from 'react-router';
-import { Layout, Menu } from 'antd';
-import {
-    UserOutlined,
-    AreaChartOutlined,
-    BookOutlined,
-    CopyrightOutlined,
-} from '@ant-design/icons';
+import { Navigate, Outlet } from 'react-router';
+import { Layout } from 'antd';
+import { CopyrightOutlined } from '@ant-design/icons';
 
 const { Header, Sider, Footer, Content } = Layout;
-const { SubMenu } = Menu;
+
+import { useAuth } from '../../utils/useAuth';
 
 import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 import './index.css';
 
 function AppLayout() {
+    const auth = useAuth();
     const [collapsed, setCollapsed] = useState(false);
     const onCollapse = (val) => setCollapsed(val);
+
+    if (!auth.user) return <Navigate to="/login" />;
     return (
         <Layout>
             <Sider
@@ -33,15 +33,8 @@ function AppLayout() {
                 }}
             >
                 <div className="logo" />
-                <Menu theme="dark" mode="inline" style={{ marginTop: '20px' }}>
-                    <Menu.Item icon={<UserOutlined />}>Profile</Menu.Item>
-                    <Menu.Item icon={<AreaChartOutlined />}>All Data</Menu.Item>
-                    <SubMenu icon={<BookOutlined />} title="Chapter">
-                        <Menu.Item>(eg. Leeds)</Menu.Item>
-                    </SubMenu>
-                </Menu>
+                <Sidebar />
             </Sider>
-
             <Layout>
                 <Layout>
                     <Header

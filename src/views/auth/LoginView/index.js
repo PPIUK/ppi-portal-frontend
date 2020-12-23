@@ -3,6 +3,10 @@ import React from 'react';
 import { Form, Input, Button, Checkbox, Card, Divider, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
+import { useAuth } from '../../../utils/useAuth';
+
+import { Navigate, useNavigate } from 'react-router-dom';
+
 import './index.css';
 
 const formStyle = {
@@ -13,13 +17,24 @@ const formStyle = {
 
 function LoginView() {
     const [form] = Form.useForm();
+    const auth = useAuth();
+    const navigate = useNavigate();
+
+    const onLoginSubmit = (vals) => {
+        auth.signin(vals.username, vals.password).then(() => {
+            navigate('/app/profile/me');
+        });
+    };
+
+    if (auth.user) return <Navigate to="/app/profile/me"></Navigate>;
+
     return (
         <Card {...formStyle}>
             <Typography.Title level={2} style={{ textAlign: 'center' }}>
                 Login
             </Typography.Title>
             <Divider />
-            <Form form={form}>
+            <Form form={form} onFinish={onLoginSubmit}>
                 <Form.Item
                     name="username"
                     rules={[
