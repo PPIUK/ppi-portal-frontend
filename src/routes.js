@@ -11,6 +11,8 @@ import OwnProfileView from './views/profile/OwnProfileView';
 import DatabaseSearchView from './views/member-database/DatabaseSearchView.js';
 import BranchListView from './views/member-database/BranchListView';
 
+import DemoView from './views/demo';
+
 const routes = [
     {
         path: 'app',
@@ -43,6 +45,7 @@ const routes = [
                     },
                 ],
             },
+            { path: 'demo', element: <DemoView /> },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
             { path: '*', element: <Navigate to="/404" /> },
         ],

@@ -35,37 +35,36 @@ function AppLayout() {
                 <div className="logo" />
                 <Sidebar />
             </Sider>
-            <Layout>
-                <Layout>
-                    <Header
-                        style={{
-                            backgroundColor: '#fff',
-                            position: 'fixed',
-                            left: 0,
-                            right: 0,
-                            top: 0,
-                            width: '100%',
-                            zIndex: 1,
-                        }}
-                    >
-                        <Navbar />
-                    </Header>
-                    <Content
-                        style={{
-                            margin: '24px 16px',
-                            padding: 24,
-                            minHeight: '100vh',
-                            overflow: 'auto',
-                        }}
-                    >
-                        <Outlet />
-                    </Content>
-                    <Footer
-                        style={{ textAlign: 'center', backgroundColor: '#fff' }}
-                    >
-                        <CopyrightOutlined /> PPI UK 2020
-                    </Footer>
-                </Layout>
+            <Layout style={{ marginLeft: 200 }}>
+                <Header
+                    style={{
+                        backgroundColor: '#fff',
+                        position: 'fixed',
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        width: '100%',
+                        zIndex: 1,
+                    }}
+                >
+                    <Navbar />
+                </Header>
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        marginTop: 64,
+                        padding: 24,
+                        minHeight: '100vh',
+                        overflow: 'initial',
+                    }}
+                >
+                    <Outlet />
+                </Content>
+                <Footer
+                    style={{ textAlign: 'center', backgroundColor: '#fff' }}
+                >
+                    <CopyrightOutlined /> PPI UK 2020
+                </Footer>
             </Layout>
         </Layout>
     );
