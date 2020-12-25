@@ -155,7 +155,7 @@ function useProvideAuth() {
     useEffect(() => {
         const renewInterval = setInterval(renewAccessToken, 1000 * 60 * 15);
         return () => clearTimeout(renewInterval);
-    }, []);
+    }, [refreshToken]);
 
     // Return the user object and auth methods
     return {

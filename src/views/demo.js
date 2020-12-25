@@ -1,151 +1,22 @@
 import React, { useState } from 'react';
-import { AutoComplete, Button, Card, Form, Input, Radio, Select } from 'antd';
+import {
+    AutoComplete,
+    Button,
+    Card,
+    Form,
+    Input,
+    Radio,
+    Checkbox,
+    Typography,
+} from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 import { useAuth } from '../utils/useAuth';
+
 // eslint-disable-next-line no-unused-vars
 const schema = {
     fields: [
-        {
-            component: 'radio',
-            name: 'nominee_nominator',
-            label: 'Nominee/Nominator?',
-            options: [
-                {
-                    value: 'Nominee',
-                    label: 'Nominee',
-                },
-                {
-                    value: 'Nominator',
-                    label: 'Nominator',
-                },
-            ],
-        },
-        {
-            component: 'radio',
-            name: 'education',
-            label: 'Pendidikan',
-            options: [
-                {
-                    value: 'S1',
-                    label: 'Undergraduate',
-                },
-                {
-                    value: 'S2',
-                    label: 'Masters',
-                },
-                {
-                    value: 'S3',
-                    label: 'Doctoral',
-                },
-            ],
-        },
-        {
-            component: 'checkbox',
-            name: 'award_chosen',
-            options: [
-                {
-                    value: 'A',
-                    label: 'Academic Excellence',
-                },
-                {
-                    value: 'B',
-                    label: 'Best Academic Contribution',
-                },
-                {
-                    value: 'C',
-                    label: 'Most Dedicated for Tackling Real World Problems',
-                },
-            ],
-            label: 'Kategori Award yang Dipilih:',
-            initialValue: 'd',
-        },
-        {
-            component: 'plain-text',
-            name: 'plain-text',
-            label: 'Data Diri',
-            strong: true,
-        },
-        {
-            component: 'text-field',
-            name: 'name',
-            label: 'Nama Calon Penerima Penghargaan',
-            placeholder: '',
-            helperText:
-                'Calon penerima penghargaan sudah mengisi sensus PPI UK di https://portal.ppiuk.org/census/',
-            type: 'text',
-        },
-        {
-            component: 'text-field',
-            name: 'text-field',
-            label: 'Facebook',
-        },
-        {
-            component: 'text-field',
-            name: 'text-field',
-            label: 'Twitter',
-        },
-        {
-            component: 'text-field',
-            name: 'text-field',
-            label: 'LinkedIn',
-        },
-        {
-            component: 'text-field',
-            name: 'text-field',
-            label: 'ResearchGate',
-        },
-        {
-            component: 'plain-text',
-            name: 'A',
-            label: 'Academic Excellence',
-            strong: true,
-            condition: {
-                when: 'award_chosen',
-                pattern: /A/,
-            },
-        },
-        {
-            component: 'checkbox',
-            name: 'AA',
-            options: [
-                {
-                    value: 'AA1',
-                    label:
-                        'Menjadi koordinator angkatan di program studi yang ditekuni',
-                },
-                {
-                    value: 'AA2',
-                    label:
-                        'Mengikuti seminar/kajian rutin yang diadakan oleh program studi',
-                },
-                {
-                    value: 'AA3',
-                    label:
-                        'Mengikuti seminar/kajian rutin yang di tingkat departemen',
-                },
-                {
-                    value: 'AA4',
-                    label:
-                        'Mengikuti seminar/kajian rutin yang di tingkat universitas',
-                },
-                {
-                    value: 'AA5',
-                    label: 'Menginisiasi suatu klub ilmiah (reading group)',
-                },
-                {
-                    value: 'AA6',
-                    label: 'Menjadi partisipan dalam klub ilmiah',
-                },
-            ],
-            label: 'Aktif dalam kegiatan akademik di Universitas',
-            placeholder: '',
-            condition: {
-                when: 'award_chosen',
-                pattern: /A/,
-            },
-        },
         {
             component: 'textarea',
             name: 'AA_explanation',
@@ -842,6 +713,137 @@ const schema = {
     ],
 };
 
+function AcademicExcellenceSubsection({ form }) {
+    return (
+        <div>
+            <Typography.Title level={5}>Academic Excellence</Typography.Title>
+            <Form.Item name="AA">
+                <Checkbox.Group
+                    options={['Aktif dalam kegiatan akademik di Universitas']}
+                />
+            </Form.Item>
+            <Form.Item shouldUpdate noStyle>
+                {({ getFieldValue }) => {
+                    let val = getFieldValue('AA');
+                    let selectedSubs = getFieldValue('AA_subs') || [];
+                    return val && val.length > 0 ? (
+                        <>
+                            <Typography.Text>Pilih subkategori</Typography.Text>
+                            <Form.Item name="AA_subs">
+                                <Checkbox.Group>
+                                    <Checkbox
+                                        value="Menjadi koordinator angkatan di program studi
+                                yang ditekuni"
+                                    >
+                                        Menjadi koordinator angkatan di program
+                                        studi yang ditekuni
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjadi koordinator angkatan di program studi yang ditekuni'
+                                                )
+                                            }
+                                            name="AA_subs_0"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Mengikuti seminar/kajian rutin yang diadakan oleh program studi">
+                                        Mengikuti seminar/kajian rutin yang
+                                        diadakan oleh program studi
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Mengikuti seminar/kajian rutin yang diadakan oleh program studi'
+                                                )
+                                            }
+                                            name="AA_subs_1"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Mengikuti seminar/kajian rutin yang di tingkat departemen">
+                                        Mengikuti seminar/kajian rutin yang di
+                                        tingkat departemen
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Mengikuti seminar/kajian rutin yang di tingkat departemen'
+                                                )
+                                            }
+                                            name="AA_subs_2"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Mengikuti seminar/kajian rutin yang di tingkat universitas">
+                                        Mengikuti seminar/kajian rutin yang di
+                                        tingkat universitas
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Mengikuti seminar/kajian rutin yang di tingkat universitas'
+                                                )
+                                            }
+                                            name="AA_subs_3"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menginisiasi suatu klub ilmiah (reading group)">
+                                        Menginisiasi suatu klub ilmiah (reading
+                                        group)
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menginisiasi suatu klub ilmiah (reading group)'
+                                                )
+                                            }
+                                            name="AA_subs_4"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjadi partisipan dalam klub ilmiah">
+                                        Menjadi partisipan dalam klub ilmiah
+                                        <Form.Item
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjadi partisipan dalam klub ilmiah'
+                                                )
+                                            }
+                                            name="AA_subs_5"
+                                            noStyle
+                                        >
+                                            <Input placeholder="Penjelasan" />
+                                        </Form.Item>
+                                    </Checkbox>
+                                </Checkbox.Group>
+                            </Form.Item>
+                        </>
+                    ) : null;
+                }}
+            </Form.Item>
+        </div>
+    );
+}
+
+const awardOptions = [
+    'Academic Excellence',
+    'Best Academic Contribution',
+    'Most Dedicated for Tackling Real World Problems',
+];
+
 export default function DemoView() {
     const auth = useAuth();
 
@@ -875,8 +877,10 @@ export default function DemoView() {
             });
     };
     const onNomineeSelect = (val, option) => setSelectedNominee(option.label);
-
     const onSubmitterChange = (e) => setSubmitterType(e.target.value);
+    const onAwardTypeChange = () =>
+        setAwardTypes(form.getFieldValue('awardTypes'));
+
     return (
         <Card
             title={
@@ -886,13 +890,15 @@ export default function DemoView() {
             }
             extra={<Button type="primary">Save</Button>}
         >
-            <Form form={form}>
+            <Form form={form} preserve={false}>
+                <Typography.Title level={5}>Data Diri</Typography.Title>
                 <Form.Item
                     name="submitterType"
                     label="I am a"
                     onChange={onSubmitterChange}
+                    initialValue="Nominee"
                 >
-                    <Radio.Group defaultValue="Nominee" buttonStyle="solid">
+                    <Radio.Group buttonStyle="solid">
                         <Radio.Button value="Nominee">Nominee</Radio.Button>
                         <Radio.Button value="Nominator">Nominator</Radio.Button>
                     </Radio.Group>
@@ -906,17 +912,51 @@ export default function DemoView() {
                         options={nominatedUsersSearch}
                         onSearch={onUsersSearch}
                         onSelect={onNomineeSelect}
+                        disabled={selectedNominee !== 'Please select a nominee'}
                     >
                         <Input
                             addonBefore={selectedNominee}
+                            addonAfter={
+                                <Button
+                                    type="link"
+                                    onClick={() => {
+                                        form.setFieldsValue({
+                                            nominatedUser: '',
+                                        });
+                                        setSelectedNominee(
+                                            'Please select a nominee'
+                                        );
+                                    }}
+                                >
+                                    Clear Selection
+                                </Button>
+                            }
                             placeholder="Start typing to search for members..."
                         />
                     </AutoComplete>
                 </Form.Item>
-                <Form.Item name="awardTypes" label="Kategori award">
-                    <Select></Select>
+                <Typography.Title level={5}>Kategori Award</Typography.Title>
+                <Form.Item name="awardTypes" onChange={onAwardTypeChange}>
+                    <Checkbox.Group options={awardOptions} />
                 </Form.Item>
+                {awardTypes.includes('Academic Excellence') && (
+                    <AcademicExcellenceSubsection />
+                )}
+                {awardTypes.includes('Best Academic Contribution') && <div />}
+                {awardTypes.includes(
+                    'Most Dedicated for Tackling Real World Problems'
+                ) && <div />}
             </Form>
+            <Button type="primary">Save</Button>
+            <Button
+                style={{
+                    backgroundColor: '#48c774',
+                    color: 'white',
+                    marginLeft: '5px',
+                }}
+            >
+                Submit
+            </Button>
         </Card>
     );
 }
