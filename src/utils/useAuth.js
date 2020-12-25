@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useContext, createContext, useEffect } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import { setRef } from '@material-ui/core';
@@ -112,6 +112,50 @@ function useProvideAuth() {
     const confirmPasswordReset = (_code, _password) => {
         throw { name: 'NotImplementedError', message: 'WIP' };
     };
+
+    const renewAccessToken = () =>
+        axios
+            .post(
+                '/api/auth/token',
+                qs.stringify({
+                    client_id: 'api',
+                    grant_type: 'refresh_token',
+                    refresh_token: refreshToken,
+                })
+            )
+            .then((resp) => {
+                setAccessToken(resp.data.access_token);
+                setRefreshToken(resp.data.refresh_token);
+                localStorage.setItem(
+                    'oauth-access-token',
+                    resp.data.access_token
+                );
+                localStorage.setItem(
+                    'oauth-refresh-token',
+                    resp.data.refresh_token
+                );
+
+                return true;
+            })
+            .catch(() => {
+                setUser(null);
+                setRefreshToken(null);
+                setAccessToken(null);
+                localStorage.removeItem('oauth-access-token');
+                localStorage.removeItem('oauth-refresh-token');
+                localStorage.removeItem('oauth-user');
+
+                return null;
+            });
+
+    // renew access token onmount and every 15 minutes
+    useEffect(() => {
+        renewAccessToken();
+    }, []);
+    useEffect(() => {
+        const renewInterval = setInterval(renewAccessToken, 1000 * 60 * 15);
+        return () => clearTimeout(renewInterval);
+    }, []);
 
     // Return the user object and auth methods
     return {

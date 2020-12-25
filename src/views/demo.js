@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AutoComplete, Button, Card, Form, Input, Radio, Select } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
-import FormRenderer from '@data-driven-forms/react-form-renderer';
-import {
-    componentMapper,
-    FormTemplate,
-} from '@data-driven-forms/ant-component-mapper';
-import { Card } from 'antd';
-
+import { useAuth } from '../utils/useAuth';
+// eslint-disable-next-line no-unused-vars
 const schema = {
     fields: [
         {
@@ -845,16 +843,80 @@ const schema = {
 };
 
 export default function DemoView() {
-    // eslint-disable-next-line no-unused-vars
-    const onSubmit = (_vals, _formApi) => {};
+    const auth = useAuth();
+
+    const [form] = Form.useForm();
+    const [submitterType, setSubmitterType] = useState('Nominee');
+    const [awardTypes, setAwardTypes] = useState([]);
+    const [nominatedUsersSearch, setNominatedUsersSearch] = useState([]);
+    const [selectedNominee, setSelectedNominee] = useState(
+        'Please select a nominee'
+    );
+
+    const onUsersSearch = (val) => {
+        axios
+            .get('/api/profiles/search/name', {
+                params: {
+                    name: val,
+                },
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            })
+            .then((resp) => {
+                setNominatedUsersSearch(
+                    resp.data.data.map((profile) => {
+                        return {
+                            label: profile.fullName,
+                            value: profile._id,
+                        };
+                    })
+                );
+            });
+    };
+    const onNomineeSelect = (val, option) => setSelectedNominee(option.label);
+
+    const onSubmitterChange = (e) => setSubmitterType(e.target.value);
     return (
-        <Card>
-            <FormRenderer
-                onSubmit={onSubmit}
-                schema={schema}
-                componentMapper={componentMapper}
-                FormTemplate={(props) => <FormTemplate {...props} />}
-            ></FormRenderer>
+        <Card
+            title={
+                <span>
+                    <FormOutlined /> MVP Awards
+                </span>
+            }
+            extra={<Button type="primary">Save</Button>}
+        >
+            <Form form={form}>
+                <Form.Item
+                    name="submitterType"
+                    label="I am a"
+                    onChange={onSubmitterChange}
+                >
+                    <Radio.Group defaultValue="Nominee" buttonStyle="solid">
+                        <Radio.Button value="Nominee">Nominee</Radio.Button>
+                        <Radio.Button value="Nominator">Nominator</Radio.Button>
+                    </Radio.Group>
+                </Form.Item>
+                <Form.Item
+                    name="nominatedUser"
+                    label="I am nominating"
+                    hidden={submitterType != 'Nominator'}
+                >
+                    <AutoComplete
+                        options={nominatedUsersSearch}
+                        onSearch={onUsersSearch}
+                        onSelect={onNomineeSelect}
+                    >
+                        <Input
+                            addonBefore={selectedNominee}
+                            placeholder="Start typing to search for members..."
+                        />
+                    </AutoComplete>
+                </Form.Item>
+                <Form.Item name="awardTypes" label="Kategori award">
+                    <Select></Select>
+                </Form.Item>
+            </Form>
         </Card>
     );
 }
