@@ -11,7 +11,7 @@ import OwnProfileView from './views/profile/OwnProfileView';
 import DatabaseSearchView from './views/member-database/DatabaseSearchView.js';
 import BranchListView from './views/member-database/BranchListView';
 
-import DemoView from './views/demo';
+import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
 
 const routes = [
     {
@@ -45,7 +45,17 @@ const routes = [
                     },
                 ],
             },
-            { path: 'demo', element: <DemoView /> },
+            {
+                path: 'mvp-award',
+                element: <Outlet />,
+                children: [
+                    {
+                        path: 'submissions',
+                        element: <Navigate to="/app/mvp-award/" />,
+                    },
+                    { path: '/', element: <MVPAwardFormView /> },
+                ],
+            },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
             { path: '*', element: <Navigate to="/404" /> },
         ],

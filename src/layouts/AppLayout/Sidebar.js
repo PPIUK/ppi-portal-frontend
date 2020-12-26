@@ -4,6 +4,7 @@ import {
     UserOutlined,
     AreaChartOutlined,
     BookOutlined,
+    FormOutlined,
 } from '@ant-design/icons';
 
 import { useAuth } from '../../utils/useAuth';
@@ -14,18 +15,28 @@ function Sidebar() {
 
     return (
         <Menu theme="dark" mode="inline" style={{ marginTop: '20px' }}>
-            <Menu.Item icon={<UserOutlined />}>My Profile</Menu.Item>
-            <Menu.Item icon={<AreaChartOutlined />}>Member Summary</Menu.Item>
+            <Menu.Item icon={<UserOutlined />}>
+                <Link to="/app/profile/me" />
+                My Profile
+            </Menu.Item>
+            <Menu.Item hidden icon={<AreaChartOutlined />}>
+                Member Summary
+            </Menu.Item>
             <Menu.SubMenu
                 icon={<BookOutlined />}
                 title={`Chapter: ${auth.user.branch}`}
+                hidden
             >
                 <Menu.Item>
-                    <Link to="myass" />
+                    <Link to="#" />
                     Member List
                 </Menu.Item>
                 <Menu.Item>Pending Verification</Menu.Item>
             </Menu.SubMenu>
+            <Menu.Item icon={<FormOutlined />}>
+                <Link to="/app/mvp-award/" />
+                MVP Awards
+            </Menu.Item>
         </Menu>
     );
 }
