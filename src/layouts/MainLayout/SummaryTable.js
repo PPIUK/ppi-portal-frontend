@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Tabs, Typography, Skeleton, Table } from 'antd';
+import { Card, Tabs, Typography, Skeleton, Table, Space, Image } from 'antd';
 import { School, CallSplit } from '@material-ui/icons';
 
 import axios from 'axios';
@@ -55,7 +55,14 @@ function SummaryTable() {
     }, []);
     return (
         <Card {...tableStyle}>
-            <Typography.Title level={2}>Member Statistics</Typography.Title>
+            <Space>
+                <Image
+                    width={100}
+                    src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
+                />
+                <Typography.Title level={2}>Member Statistics</Typography.Title>
+            </Space>
+
             <Tabs defaultActiveKey="Branch">
                 <Tabs.TabPane
                     tab={
