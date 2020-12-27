@@ -5,7 +5,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../../utils/useAuth';
 
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import './index.css';
 
@@ -73,9 +73,9 @@ function LoginView() {
                         <Checkbox>Remember me</Checkbox>
                     </Form.Item>
 
-                    <a className="login-form-forgot" href="">
+                    <Link className="login-form-forgot" to="/forgot">
                         Forgot password
-                    </a>
+                    </Link>
                 </Form.Item>
 
                 <Form.Item>
@@ -86,7 +86,7 @@ function LoginView() {
                     >
                         Log in
                     </Button>
-                    Or <a href="/register">register now!</a>
+                    Or <Link to="/register">register now!</Link>
                 </Form.Item>
             </Form>
         </Card>

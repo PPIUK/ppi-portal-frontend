@@ -5,7 +5,7 @@
 //       mischeivous enough to do so.
 //       Also I know there are a lot of reused patterns that can be abstracted away but the due date :)
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     AutoComplete,
     Button,
@@ -17,22 +17,65 @@ import {
     Typography,
     Divider,
     Upload,
+    Popover,
+    Popconfirm,
+    Modal,
 } from 'antd';
-import { FormOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+    FormOutlined,
+    UploadOutlined,
+    QuestionCircleOutlined,
+} from '@ant-design/icons';
 import axios from 'axios';
 
 import { useAuth } from '../../utils/useAuth';
 
-function AcademicExcellenceSubsection() {
+import { useNavigate } from 'react-router-dom';
+
+function AcademicExcellenceSubsection({ form }) {
+    const onChange = () => {
+        let awardIndicators = form.getFieldValue('awardIndicators') || [];
+        let academicExcellenceIndicators =
+            form.getFieldValue('Academic Excellence') || {};
+        let indicators = {
+            award: 'Academic Excellence',
+            indicators: [],
+        };
+
+        for (let indicator of Object.values(academicExcellenceIndicators)) {
+            const name = indicator.name[0];
+            let cIndicator = {
+                name: name,
+                subindicators: [],
+            };
+            if (indicator.subindicators)
+                for (let subindicator of indicator.subindicators) {
+                    cIndicator.subindicators.push({
+                        name: subindicator,
+                        elaboration: indicator['elaborations']
+                            ? indicator['elaborations'][`${subindicator}`]
+                            : '',
+                    });
+                }
+            indicators.indicators.push(cIndicator);
+        }
+
+        awardIndicators[0] = indicators;
+
+        form.setFieldsValue({ awardIndicators: awardIndicators });
+    };
     return (
         <div>
             <Typography.Title level={5}>Academic Excellence</Typography.Title>
-            <Form.Item name={['Academic Excellence', 'A', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Academic Excellence', 'A', 'name']}
+            >
                 <Checkbox.Group
                     options={['Aktif dalam kegiatan akademik di Universitas']}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Academic Excellence',
@@ -49,6 +92,7 @@ function AcademicExcellenceSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Academic Excellence',
                                     'A',
@@ -63,6 +107,7 @@ function AcademicExcellenceSubsection() {
                                         Menjadi koordinator angkatan di program
                                         studi yang ditekuni
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi koordinator angkatan di program studi yang ditekuni'
@@ -87,6 +132,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti seminar/kajian rutin yang
                                         diadakan oleh program studi
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengikuti seminar/kajian rutin yang diadakan oleh program studi'
@@ -111,6 +157,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti seminar/kajian rutin yang di
                                         tingkat departemen
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengikuti seminar/kajian rutin yang di tingkat departemen'
@@ -135,6 +182,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti seminar/kajian rutin yang di
                                         tingkat universitas
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengikuti seminar/kajian rutin yang di tingkat universitas'
@@ -159,6 +207,7 @@ function AcademicExcellenceSubsection() {
                                         Menginisiasi suatu klub ilmiah (reading
                                         group)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menginisiasi suatu klub ilmiah (reading group)'
@@ -182,6 +231,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Menjadi partisipan dalam klub ilmiah (reading group)">
                                         Menjadi partisipan dalam klub ilmiah
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi partisipan dalam klub ilmiah (reading group)'
@@ -210,14 +260,17 @@ function AcademicExcellenceSubsection() {
 
             <Divider />
 
-            <Form.Item name={['Academic Excellence', 'B', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Academic Excellence', 'B', 'name']}
+            >
                 <Checkbox.Group
                     options={[
                         'Aktif mengikuti workshop yang diadakan baik oleh universitas di UK',
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Academic Excellence',
@@ -234,6 +287,7 @@ function AcademicExcellenceSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Academic Excellence',
                                     'B',
@@ -244,6 +298,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Workshop terkait bidang studi">
                                         Workshop terkait bidang studi
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Workshop terkait bidang studi'
@@ -268,6 +323,7 @@ function AcademicExcellenceSubsection() {
                                         Workshop khusus terkait penelitian yang
                                         dilakukan
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Workshop khusus terkait penelitian yang dilakukan'
@@ -291,6 +347,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Workshop terkait metodologi penelitian">
                                         Workshop terkait metodologi penelitian
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Workshop terkait metodologi penelitian'
@@ -315,6 +372,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti public seminar yang diadakan
                                         oleh universitas
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengikuti public seminar yang diadakan oleh universitas'
@@ -339,6 +397,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti program edukasi tahunan (e.g.
                                         summer school)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengikuti program edukasi tahunan (e.g. summer school)'
@@ -367,14 +426,17 @@ function AcademicExcellenceSubsection() {
 
             <Divider />
 
-            <Form.Item name={['Academic Excellence', 'C', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Academic Excellence', 'C', 'name']}
+            >
                 <Checkbox.Group
                     options={[
                         'Ikut serta dalam kompetisi akademik yang diadakan oleh universitas di UK',
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Academic Excellence',
@@ -391,6 +453,7 @@ function AcademicExcellenceSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Academic Excellence',
                                     'C',
@@ -402,6 +465,7 @@ function AcademicExcellenceSubsection() {
                                         Kompetisi akademik tingkat departemen
                                         (e.g. esai, karya ilmiah, debat)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Kompetisi akademik tingkat departemen (e.g. esai, karya ilmiah, debat)'
@@ -426,6 +490,7 @@ function AcademicExcellenceSubsection() {
                                         Kompetisi akademik tingkat universitas
                                         (e.g. esai, karya ilmiah, debat)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Kompetisi akademik tingkat universitas (e.g. esai, karya ilmiah, debat)'
@@ -450,6 +515,7 @@ function AcademicExcellenceSubsection() {
                                         Kompetisi akademik tingkat nasional
                                         (se-UK) (e.g. esai, karya ilmiah, debat)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Kompetisi akademik tingkat nasional (se-UK) (e.g. esai, karya ilmiah, debat)'
@@ -474,6 +540,7 @@ function AcademicExcellenceSubsection() {
                                         Kompetisi akademik tingkat internasional
                                         (e.g. esai, karya ilmiah, debat)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Kompetisi akademik tingkat internasional (e.g. esai, karya ilmiah, debat)'
@@ -502,12 +569,15 @@ function AcademicExcellenceSubsection() {
 
             <Divider />
 
-            <Form.Item name={['Academic Excellence', 'D', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Academic Excellence', 'D', 'name']}
+            >
                 <Checkbox.Group
                     options={['Melakukan kolaborasi riset dengan dosen']}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Academic Excellence',
@@ -524,6 +594,7 @@ function AcademicExcellenceSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Academic Excellence',
                                     'D',
@@ -535,6 +606,7 @@ function AcademicExcellenceSubsection() {
                                         Penulisan paper/artikel ilmiah bersama
                                         dosen (sudah terbit)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Penulisan paper/artikel ilmiah bersama dosen (sudah terbit)'
@@ -560,6 +632,7 @@ function AcademicExcellenceSubsection() {
                                         dosen (dalam proses pengerjaan/menunggu
                                         keputusan)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Penulisan paper/artikel ilmiah bersama dosen (dalam proses pengerjaan/menunggu keputusan)'
@@ -584,6 +657,7 @@ function AcademicExcellenceSubsection() {
                                         Penulisan artikel populer bersama dosen
                                         (sudah terbit)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Penulisan artikel populer bersama dosen (sudah terbit)'
@@ -609,6 +683,7 @@ function AcademicExcellenceSubsection() {
                                         (dalam proses pengerjaan/menunggu
                                         keputusan)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Penulisan artikel populer bersama dosen (dalam proses pengerjaan/menunggu keputusan)'
@@ -633,6 +708,7 @@ function AcademicExcellenceSubsection() {
                                         Keterlibatan dalam proyek riset tingkat
                                         universitas
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Keterlibatan dalam proyek riset tingkat universitas'
@@ -657,6 +733,7 @@ function AcademicExcellenceSubsection() {
                                         Keterlibatan dalam proyek riset tingkat
                                         nasional (UK)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Keterlibatan dalam proyek riset tingkat nasional (UK)'
@@ -681,6 +758,7 @@ function AcademicExcellenceSubsection() {
                                         Keterlibatan dalam proyek riset tingkat
                                         internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Keterlibatan dalam proyek riset tingkat internasional'
@@ -709,12 +787,15 @@ function AcademicExcellenceSubsection() {
 
             <Divider />
 
-            <Form.Item name={['Academic Excellence', 'E', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Academic Excellence', 'E', 'name']}
+            >
                 <Checkbox.Group
                     options={['Mendapatkan bantuan pendanaan untuk kuliah']}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Academic Excellence',
@@ -731,6 +812,7 @@ function AcademicExcellenceSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Academic Excellence',
                                     'E',
@@ -741,6 +823,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Full Scholarship">
                                         Full Scholarship
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Full Scholarship'
@@ -764,6 +847,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Partial Scholarship">
                                         Partial Scholarship
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Partial Scholarship'
@@ -788,6 +872,7 @@ function AcademicExcellenceSubsection() {
                                         Mengikuti seminar/kajian rutin yang di
                                         tingkat departemen
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes('Grant')
                                             }
@@ -809,6 +894,7 @@ function AcademicExcellenceSubsection() {
                                     <Checkbox value="Bantuan Pendanaan Riset">
                                         Bantuan Pendanaan Riset
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Bantuan Pendanaan Riset'
@@ -838,17 +924,51 @@ function AcademicExcellenceSubsection() {
     );
 }
 
-function BestAcademicContribSubsection() {
+function BestAcademicContribSubsection({ form }) {
+    const onChange = () => {
+        let awardIndicators = form.getFieldValue('awardIndicators') || [];
+        let BACIndicators =
+            form.getFieldValue('Best Academic Contribution') || {};
+        let indicators = {
+            award: 'Best Academic Contribution',
+            indicators: [],
+        };
+
+        for (let indicator of Object.values(BACIndicators)) {
+            const name = indicator.name[0];
+            let cIndicator = {
+                name: name,
+                subindicators: [],
+            };
+            if (indicator.subindicators)
+                for (let subindicator of indicator.subindicators) {
+                    cIndicator.subindicators.push({
+                        name: subindicator,
+                        elaboration: indicator['elaborations']
+                            ? indicator['elaborations'][`${subindicator}`]
+                            : '',
+                    });
+                }
+            indicators.indicators.push(cIndicator);
+        }
+
+        awardIndicators[1] = indicators;
+
+        form.setFieldsValue({ awardIndicators: awardIndicators });
+    };
     return (
         <div>
             <Typography.Title level={5}>
                 Best Academic Contribution
             </Typography.Title>
 
-            <Form.Item name={['Best Academic Contribution', 'A', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Best Academic Contribution', 'A', 'name']}
+            >
                 <Checkbox.Group options={['Publikasi Paper/Artikel/Esai']} />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Best Academic Contribution',
@@ -865,6 +985,7 @@ function BestAcademicContribSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Best Academic Contribution',
                                     'A',
@@ -876,6 +997,7 @@ function BestAcademicContribSubsection() {
                                         Publikasi Paper/Artikel Ilmiah di Jurnal
                                         Q1/Q2/Q3/Q4 sebagai Author
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Author'
@@ -900,6 +1022,7 @@ function BestAcademicContribSubsection() {
                                         Publikasi Paper/Artikel Ilmiah di Jurnal
                                         Q1/Q2/Q3/Q4 sebagai Co-Author
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Co-Author'
@@ -924,6 +1047,7 @@ function BestAcademicContribSubsection() {
                                         Publikasi Paper dalam Conference
                                         Proceeding
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi Paper dalam Conference Proceeding'
@@ -947,6 +1071,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Publikasi Esai oleh media nasional">
                                         Publikasi Esai oleh media nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi Esai oleh media nasional'
@@ -970,6 +1095,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Publikasi Esai oleh media internasional">
                                         Publikasi Esai oleh media internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi Esai oleh media internasional'
@@ -994,6 +1120,7 @@ function BestAcademicContribSubsection() {
                                         Publikasi hasil penelitian dalam bentuk
                                         working paper
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi hasil penelitian dalam bentuk working paper'
@@ -1021,14 +1148,17 @@ function BestAcademicContribSubsection() {
             </Form.Item>
             <Divider />
 
-            <Form.Item name={['Best Academic Contribution', 'B', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Best Academic Contribution', 'B', 'name']}
+            >
                 <Checkbox.Group
                     options={[
                         'Berkontribusi terhadap pembaruan literatur (konseptual dan/atau empiris)',
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Best Academic Contribution',
@@ -1045,6 +1175,7 @@ function BestAcademicContribSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Best Academic Contribution',
                                     'B',
@@ -1055,6 +1186,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Memperbaharui pemahaman akan suatu teori">
                                         Memperbaharui pemahaman akan suatu teori
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Memperbaharui pemahaman akan suatu teori'
@@ -1078,6 +1210,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Membuat teori baru">
                                         Membuat teori baru
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Membuat teori baru'
@@ -1102,6 +1235,7 @@ function BestAcademicContribSubsection() {
                                         Memperbaharui pemahaman akan suatu
                                         konsep
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Memperbaharui pemahaman akan suatu konsep'
@@ -1125,6 +1259,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Membuat konsep baru">
                                         Membuat konsep baru
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Membuat konsep baru'
@@ -1148,6 +1283,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Mengisi empirical gap dalam suatu bidang">
                                         Mengisi empirical gap dalam suatu bidang
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Mengisi empirical gap dalam suatu bidang'
@@ -1172,6 +1308,7 @@ function BestAcademicContribSubsection() {
                                         Menghasilkan penelitian yang menggunakan
                                         pendekatan interdisipliner
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menghasilkan penelitian yang menggunakan pendekatan interdisipliner'
@@ -1199,12 +1336,15 @@ function BestAcademicContribSubsection() {
             </Form.Item>
             <Divider />
 
-            <Form.Item name={['Best Academic Contribution', 'C', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Best Academic Contribution', 'C', 'name']}
+            >
                 <Checkbox.Group
                     options={['Menjadi Pembicara di Seminar Internasional']}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Best Academic Contribution',
@@ -1221,6 +1361,7 @@ function BestAcademicContribSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Best Academic Contribution',
                                     'C',
@@ -1231,6 +1372,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Hadir sebagai keynote speaker">
                                         Hadir sebagai keynote speaker
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Hadir sebagai keynote speaker'
@@ -1254,6 +1396,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="Hadir sebagai guest speaker">
                                         Hadir sebagai guest speaker
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Hadir sebagai guest speaker'
@@ -1281,14 +1424,17 @@ function BestAcademicContribSubsection() {
             </Form.Item>
             <Divider />
 
-            <Form.Item name={['Best Academic Contribution', 'D', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Best Academic Contribution', 'D', 'name']}
+            >
                 <Checkbox.Group
                     options={[
                         'Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional (author atau co-author)',
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Best Academic Contribution',
@@ -1305,6 +1451,7 @@ function BestAcademicContribSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Best Academic Contribution',
                                     'D',
@@ -1312,21 +1459,22 @@ function BestAcademicContribSubsection() {
                                 ]}
                             >
                                 <Checkbox.Group>
-                                    <Checkbox value="Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author">
-                                        Karya ilmiahnya (sebagai author)
-                                        dipresentasikan di Konferensi Akademik
-                                        Internasional ilmiah sebagai author
+                                    <Checkbox value="Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author">
+                                        Karya ilmiahnya dipresentasikan di
+                                        Konferensi Akademik Internasional ilmiah
+                                        sebagai author
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author'
+                                                    'Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author'
                                                 )
                                             }
                                             name={[
                                                 'Best Academic Contribution',
                                                 'D',
                                                 'elaborations',
-                                                'Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author',
+                                                'Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author',
                                             ]}
                                             noStyle
                                         >
@@ -1337,21 +1485,22 @@ function BestAcademicContribSubsection() {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author">
-                                        Karya ilmiahnya (sebagai author)
-                                        dipresentasikan di Konferensi Akademik
-                                        Internasional ilmiah sebagai author
+                                    <Checkbox value="Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai co-author">
+                                        Karya ilmiahnya dipresentasikan di
+                                        Konferensi Akademik Internasional ilmiah
+                                        sebagai co-author
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author'
+                                                    'Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai co-author'
                                                 )
                                             }
                                             name={[
                                                 'Best Academic Contribution',
                                                 'D',
                                                 'elaborations',
-                                                'Karya ilmiahnya (sebagai author) dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author',
+                                                'Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai co-author',
                                             ]}
                                             noStyle
                                         >
@@ -1369,10 +1518,13 @@ function BestAcademicContribSubsection() {
             </Form.Item>
             <Divider />
 
-            <Form.Item name={['Best Academic Contribution', 'E', 'name']}>
+            <Form.Item
+                onChange={onChange}
+                name={['Best Academic Contribution', 'E', 'name']}
+            >
                 <Checkbox.Group options={['HAKI/Patent yang dimiliki']} />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Best Academic Contribution',
@@ -1389,6 +1541,7 @@ function BestAcademicContribSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Best Academic Contribution',
                                     'E',
@@ -1399,6 +1552,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="HAKI/Paten Nasional">
                                         HAKI/Paten Nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'HAKI/Paten Nasional'
@@ -1422,6 +1576,7 @@ function BestAcademicContribSubsection() {
                                     <Checkbox value="HAKI/Paten Internasional">
                                         HAKI/Paten Internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'HAKI/Paten Internasional'
@@ -1451,7 +1606,41 @@ function BestAcademicContribSubsection() {
     );
 }
 
-function RealWorldSubsection() {
+function RealWorldSubsection({ form }) {
+    const onChange = () => {
+        let awardIndicators = form.getFieldValue('awardIndicators') || [];
+        let realWorldIndicators =
+            form.getFieldValue(
+                'Most Dedicated for Tackling Real World Problems'
+            ) || {};
+        let indicators = {
+            award: 'Most Dedicated for Tackling Real World Problems',
+            indicators: [],
+        };
+
+        for (let indicator of Object.values(realWorldIndicators)) {
+            const name = indicator.name[0];
+            let cIndicator = {
+                name: name,
+                subindicators: [],
+            };
+            if (indicator.subindicators)
+                for (let subindicator of indicator.subindicators) {
+                    cIndicator.subindicators.push({
+                        name: subindicator,
+                        elaboration: indicator['elaborations']
+                            ? indicator['elaborations'][`${subindicator}`]
+                            : '',
+                    });
+                }
+            indicators.indicators.push(cIndicator);
+        }
+
+        awardIndicators[2] = indicators;
+
+        form.setFieldsValue({ awardIndicators: awardIndicators });
+    };
+
     return (
         <div>
             <Typography.Title level={5}>
@@ -1459,6 +1648,7 @@ function RealWorldSubsection() {
             </Typography.Title>
 
             <Form.Item
+                onChange={onChange}
                 name={[
                     'Most Dedicated for Tackling Real World Problems',
                     'A',
@@ -1471,7 +1661,7 @@ function RealWorldSubsection() {
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Most Dedicated for Tackling Real World Problems',
@@ -1488,6 +1678,7 @@ function RealWorldSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Most Dedicated for Tackling Real World Problems',
                                     'A',
@@ -1499,6 +1690,7 @@ function RealWorldSubsection() {
                                         Publikasi tulisan populer di
                                         outlet/media publikasi nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi tulisan populer di outlet/media publikasi nasional'
@@ -1523,6 +1715,7 @@ function RealWorldSubsection() {
                                         Publikasi tulisan populer di
                                         outlet/media publikasi internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Publikasi tulisan populer di outlet/media publikasi internasional'
@@ -1547,6 +1740,7 @@ function RealWorldSubsection() {
                                         Content-creator di Youtube/Instagram
                                         terkait isu yang ditekuni
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Content-creator di Youtube/Instagram terkait isu yang ditekuni'
@@ -1571,6 +1765,7 @@ function RealWorldSubsection() {
                                         Membuat situs khusus terkait isu yang
                                         ditekuni (website/blog){' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Membuat situs khusus terkait isu yang ditekuni (website/blog)'
@@ -1596,6 +1791,7 @@ function RealWorldSubsection() {
                                         ditekuni (whatsapp group, facebook
                                         group, et cetera ){' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Membuat forum virtual terkait isu yang ditekuni (whatsapp group, facebook group, et cetera )'
@@ -1624,6 +1820,7 @@ function RealWorldSubsection() {
             <Divider />
 
             <Form.Item
+                onChange={onChange}
                 name={[
                     'Most Dedicated for Tackling Real World Problems',
                     'B',
@@ -1636,7 +1833,7 @@ function RealWorldSubsection() {
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Most Dedicated for Tackling Real World Problems',
@@ -1653,6 +1850,7 @@ function RealWorldSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Most Dedicated for Tackling Real World Problems',
                                     'B',
@@ -1665,6 +1863,7 @@ function RealWorldSubsection() {
                                         untuk kepentingan masyarakat di tingkat
                                         akar rumput (grassroot)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Upaya mentransformasi hasil penelitian untuk kepentingan masyarakat di tingkat akar rumput (grassroot)'
@@ -1689,6 +1888,7 @@ function RealWorldSubsection() {
                                         Upaya mentransformasi hasil penelitian
                                         untuk perekonomian/aktivitas industri
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Upaya mentransformasi hasil penelitian untuk perekonomian/aktivitas industri'
@@ -1713,6 +1913,7 @@ function RealWorldSubsection() {
                                         Upaya mentransformasi hasil penelitian
                                         untuk kebijakan publik
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Upaya mentransformasi hasil penelitian untuk kebijakan publik'
@@ -1737,6 +1938,7 @@ function RealWorldSubsection() {
                                         Upaya mentransformasi hasil penelitian
                                         menjadi suatu bentuk gerakan nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Upaya mentransformasi hasil penelitian menjadi suatu bentuk gerakan nasional'
@@ -1762,6 +1964,7 @@ function RealWorldSubsection() {
                                         menjadi suatu bentuk gerakan
                                         internasional{' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Upaya mentransformasi hasil penelitian menjadi suatu bentuk gerakan internasional'
@@ -1790,6 +1993,7 @@ function RealWorldSubsection() {
             <Divider />
 
             <Form.Item
+                onChange={onChange}
                 name={[
                     'Most Dedicated for Tackling Real World Problems',
                     'C',
@@ -1802,7 +2006,7 @@ function RealWorldSubsection() {
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Most Dedicated for Tackling Real World Problems',
@@ -1819,6 +2023,7 @@ function RealWorldSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Most Dedicated for Tackling Real World Problems',
                                     'C',
@@ -1831,6 +2036,7 @@ function RealWorldSubsection() {
                                         organisasi/komunitas riset tingkat
                                         universitas
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat universitas'
@@ -1855,6 +2061,7 @@ function RealWorldSubsection() {
                                         Menjadi INISIATOR organisasi/komunitas
                                         riset tingkat nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi INISIATOR organisasi/komunitas riset tingkat nasional'
@@ -1880,6 +2087,7 @@ function RealWorldSubsection() {
                                         organisasi/komunitas riset tingkat
                                         internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat internasional'
@@ -1900,22 +2108,23 @@ function RealWorldSubsection() {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas">
-                                        Terlibat sebagai INISIATOR /ANGGOTA
-                                        dalam program/aktivitas terkait isu yang
+                                    <Checkbox value="Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas">
+                                        Terlibat sebagai INISIATOR/ANGGOTA dalam
+                                        program/aktivitas terkait isu yang
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat Universitas{' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas'
+                                                    'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas',
+                                                'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas',
                                             ]}
                                             noStyle
                                         >
@@ -1926,22 +2135,23 @@ function RealWorldSubsection() {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional">
-                                        Terlibat sebagai INISIATOR /ANGGOTA
-                                        dalam program/aktivitas terkait isu yang
+                                    <Checkbox value="Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional">
+                                        Terlibat sebagai INISIATOR/ANGGOTA dalam
+                                        program/aktivitas terkait isu yang
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat Nasional{' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional'
+                                                    'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Terlibat sebagai INISIATOR /ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional',
+                                                'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional',
                                             ]}
                                             noStyle
                                         >
@@ -1958,6 +2168,7 @@ function RealWorldSubsection() {
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional'
@@ -1986,6 +2197,7 @@ function RealWorldSubsection() {
             <Divider />
 
             <Form.Item
+                onChange={onChange}
                 name={[
                     'Most Dedicated for Tackling Real World Problems',
                     'D',
@@ -1998,7 +2210,7 @@ function RealWorldSubsection() {
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Most Dedicated for Tackling Real World Problems',
@@ -2015,6 +2227,7 @@ function RealWorldSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Most Dedicated for Tackling Real World Problems',
                                     'D',
@@ -2026,6 +2239,7 @@ function RealWorldSubsection() {
                                         Menjadi panelist/discussant di
                                         seminar/forum nasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi panelist/discussant di seminar/forum nasional'
@@ -2050,6 +2264,7 @@ function RealWorldSubsection() {
                                         Menjadi panelist/discussant di
                                         seminar/forum internasional
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjadi panelist/discussant di seminar/forum internasional'
@@ -2078,6 +2293,7 @@ function RealWorldSubsection() {
             <Divider />
 
             <Form.Item
+                onChange={onChange}
                 name={[
                     'Most Dedicated for Tackling Real World Problems',
                     'E',
@@ -2090,7 +2306,7 @@ function RealWorldSubsection() {
                     ]}
                 />
             </Form.Item>
-            <Form.Item shouldUpdate noStyle>
+            <Form.Item onChange={onChange} shouldUpdate noStyle>
                 {({ getFieldValue }) => {
                     let val = getFieldValue([
                         'Most Dedicated for Tackling Real World Problems',
@@ -2107,6 +2323,7 @@ function RealWorldSubsection() {
                         <>
                             <Typography.Text>Pilih subkategori</Typography.Text>
                             <Form.Item
+                                onChange={onChange}
                                 name={[
                                     'Most Dedicated for Tackling Real World Problems',
                                     'E',
@@ -2118,6 +2335,7 @@ function RealWorldSubsection() {
                                         Menjalankan proyek independen untuk isu
                                         yang ditekuni (sendiri)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjalankan proyek independen untuk isu yang ditekuni (sendiri)'
@@ -2143,6 +2361,7 @@ function RealWorldSubsection() {
                                         yang ditekuni (dalam tim, sebagai
                                         inisiator)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjalankan proyek independen untuk isu yang ditekuni (dalam tim, sebagai inisiator)'
@@ -2168,6 +2387,7 @@ function RealWorldSubsection() {
                                         yang ditekuni (dalam tim, sebagai
                                         anggota)
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjalankan proyek independen untuk isu yang ditekuni (dalam tim, sebagai anggota)'
@@ -2195,9 +2415,10 @@ function RealWorldSubsection() {
                                         Informal untuk isu yang ditekuni
                                         (sebagai inisiator){' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'PMenjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGOs/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai inisiator)'
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGOs/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai inisiator)'
                                                 )
                                             }
                                             name={[
@@ -2222,6 +2443,7 @@ function RealWorldSubsection() {
                                         Informal untuk isu yang ditekuni
                                         (sebagai mitra){' '}
                                         <Form.Item
+                                            onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
                                                     'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGO s/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai mitra)'
@@ -2257,8 +2479,28 @@ const awardOptions = [
     'Most Dedicated for Tackling Real World Problems',
 ];
 
+function alreadySubmitted(message, navigate) {
+    let secondsToGo = 5;
+    const modal = Modal.info({
+        title: 'Form Submitted',
+        content: `${message} You will be redirected in ${secondsToGo} seconds`,
+    });
+    const timer = setInterval(() => {
+        secondsToGo -= 1;
+        modal.update({
+            content: `${message} You will be redirected in ${secondsToGo} seconds`,
+        });
+    }, 1000);
+    setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+        navigate('/app/profile/me');
+    }, secondsToGo * 1005);
+}
+
 export default function MVPAwardFormView() {
     const auth = useAuth();
+    const navigate = useNavigate();
 
     const [form] = Form.useForm();
     const [submitterType, setSubmitterType] = useState('Nominee');
@@ -2267,7 +2509,9 @@ export default function MVPAwardFormView() {
     const [selectedNominee, setSelectedNominee] = useState(
         'Please select a nominee'
     );
+    const [uploadFileList, setUploadFileList] = useState([]);
 
+    const onFileChoose = (e) => setUploadFileList([...e.fileList].slice(-1));
     const onUsersSearch = (val) => {
         axios
             .get('/api/profiles/search/name', {
@@ -2294,6 +2538,56 @@ export default function MVPAwardFormView() {
     const onAwardTypeChange = () =>
         setAwardTypes(form.getFieldValue('awardTypes'));
 
+    const submitForm = (vals) => {
+        axios
+            .post(
+                '/api/forms/mvpawards/edit',
+                {
+                    ...vals,
+                    awardIndicators: form.getFieldValue('awardIndicators'),
+                    submitted: true,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                }
+            )
+            .then(() => {
+                alreadySubmitted(
+                    'Form has been submitted successfully!',
+                    navigate
+                );
+            })
+            .catch(() => {
+                Modal.error({
+                    title: 'Error',
+                    content:
+                        'A server error has occured, please try again in a moment',
+                });
+            });
+    };
+
+    useEffect(() => {
+        form.setFieldsValue({ awardIndicators: [] });
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get('/api/forms/mvpawards/edit', {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            })
+            .then((resp) => {
+                if (resp.data.data.submitted)
+                    alreadySubmitted(
+                        'Form has already been submitted!',
+                        navigate
+                    );
+            });
+    }, []);
+
     return (
         <Card
             title={
@@ -2301,13 +2595,8 @@ export default function MVPAwardFormView() {
                     <FormOutlined /> MVP Awards
                 </span>
             }
-            extra={
-                <Button type="default" disabled={awardTypes.length == 0}>
-                    Save
-                </Button>
-            }
         >
-            <Form form={form} preserve={false}>
+            <Form form={form} preserve={false} onFinish={submitForm}>
                 <Typography.Title level={5}>Data Diri</Typography.Title>
                 <Form.Item
                     name="submitterType"
@@ -2352,6 +2641,14 @@ export default function MVPAwardFormView() {
                             placeholder="Start typing to search for members..."
                         />
                     </AutoComplete>
+                    <Typography.Text type="secondary">
+                        If you cannot find the user you want to nominate, please
+                        ask them to go to{' '}
+                        <Typography.Link href="https://portal.ppiuk.org/register">
+                            https://portal.ppiuk.org/register
+                        </Typography.Link>{' '}
+                        to create a user on the member portal
+                    </Typography.Text>
                 </Form.Item>
 
                 <Form.Item
@@ -2374,40 +2671,147 @@ export default function MVPAwardFormView() {
                     <Checkbox.Group options={awardOptions} />
                 </Form.Item>
                 {awardTypes.includes('Academic Excellence') && (
-                    <AcademicExcellenceSubsection />
+                    <AcademicExcellenceSubsection form={form} />
                 )}
                 {awardTypes.includes('Best Academic Contribution') && (
-                    <BestAcademicContribSubsection />
+                    <BestAcademicContribSubsection form={form} />
                 )}
                 {awardTypes.includes(
                     'Most Dedicated for Tackling Real World Problems'
-                ) && <RealWorldSubsection />}
+                ) && <RealWorldSubsection form={form} />}
                 {awardTypes.length > 0 && (
                     <>
                         <Typography.Title level={5}>
                             {submitterType == 'Nominee'
-                                ? 'Upload CV & Personal Statement (one combined PDF)'
-                                : 'Upload Statement of Support (PDF)'}
+                                ? 'Upload CV & Personal Statement (single PDF) '
+                                : 'Upload CV of nominated candidate (optional) and Statement of Support (single PDF) '}
+                            <Popover
+                                content={
+                                    submitterType == 'Nominee' ? (
+                                        <div>
+                                            <strong>
+                                                A. Curriculum Vitae (mandatory)
+                                            </strong>
+                                            <p>
+                                                1. Mandatory: All achievements
+                                                related to the selected award
+                                                category, written in a sequence
+                                                and detail
+                                            </p>
+                                            <p>
+                                                2. Core optional: work/research
+                                                experiences, awards
+                                                accomplishment, other
+                                                achievements
+                                            </p>
+                                            <br />
+                                            <strong>
+                                                B. Personal Statement
+                                                (mandatory)
+                                            </strong>
+                                            <p>
+                                                Written in English with maximum
+                                                1000 words
+                                            </p>
+                                            <p>
+                                                1. Why you deserve to get The
+                                                MVP Awards in the chosen
+                                                category
+                                            </p>
+                                            <p>
+                                                2. Elaborate interestingly any
+                                                achievement related, including
+                                                the hardship you face
+                                            </p>
+                                            <p>
+                                                3. How you reflect yourself to
+                                                your achievements
+                                            </p>
+                                            <p>
+                                                4. What are your expectations if
+                                                you win the MVP Awards?
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <strong>
+                                                A. Curriculum Vitae of your
+                                                nominated candidate (optional)
+                                            </strong>
+                                            <p>
+                                                1. Mandatory: All achievements
+                                                related to the selected award
+                                                category, written in a sequence
+                                                and detail
+                                            </p>
+                                            <p>
+                                                2. Core optional: work/research
+                                                experiences, awards
+                                                accomplishment, other
+                                                achievements
+                                            </p>
+                                            <br />
+                                            <strong>
+                                                B. Statement of Support
+                                                (mandatory)
+                                            </strong>
+                                            <p>
+                                                Written in English with maximum
+                                                1000 words
+                                            </p>
+                                            <p>
+                                                1. Why the nominated candidate
+                                                deserves to get The MVP Awards
+                                                in the award category you choose
+                                            </p>
+                                            <p>
+                                                2. Elaborate interestingly any
+                                                achievement related of nominated
+                                                candidate
+                                            </p>
+                                            <p>
+                                                3. How do you view your
+                                                nominated candidate’s
+                                                achievements?
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                                title="Advice on what to include in your supporting documents"
+                            >
+                                <QuestionCircleOutlined />
+                            </Popover>
                         </Typography.Title>
-                        <Upload accept=".pdf">
+                        <Upload
+                            accept=".pdf"
+                            onChange={onFileChoose}
+                            fileList={uploadFileList}
+                            action={`${axios.defaults.baseURL}/api/forms/mvpawards/edit`}
+                            headers={{
+                                Authorization: `Bearer ${auth.accessToken}`,
+                            }}
+                        >
                             <Button icon={<UploadOutlined />}>
                                 Click to Upload
                             </Button>
                         </Upload>
+                        <Typography.Text type="secondary">
+                            Hover over the question mark for more information
+                        </Typography.Text>
                     </>
                 )}
+
+                <Divider />
+                <Popconfirm
+                    title="Are you sure? You cannot edit or resubmit after submitting"
+                    onConfirm={() => form.submit()}
+                    placement="topLeft"
+                >
+                    <Button type="primary" disabled={awardTypes.length == 0}>
+                        Submit
+                    </Button>
+                </Popconfirm>
             </Form>
-            <Divider />
-            <Button
-                type="default"
-                style={{ marginRight: '5px' }}
-                disabled={awardTypes.length == 0}
-            >
-                Save
-            </Button>
-            <Button type="primary" disabled={awardTypes.length == 0}>
-                Submit
-            </Button>
         </Card>
     );
 }
