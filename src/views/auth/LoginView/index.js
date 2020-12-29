@@ -33,6 +33,18 @@ function LoginView() {
             <Typography.Title level={2} style={{ textAlign: 'center' }}>
                 Login
             </Typography.Title>
+            <Typography.Text type="secondary" style={{ textAlign: 'center' }}>
+                If you have filled out the{' '}
+                <Typography.Text strong>PPI UK Census</Typography.Text>, please{' '}
+                <Link to="/forgot" component={Typography.Link}>
+                    reset your password
+                </Link>
+                . Otherwise you may{' '}
+                <Link to="/register" component={Typography.Link}>
+                    register
+                </Link>{' '}
+                as normal
+            </Typography.Text>
             <Divider />
             <Form form={form} onFinish={onLoginSubmit}>
                 <Form.Item

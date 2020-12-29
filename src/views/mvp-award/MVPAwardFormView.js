@@ -2480,17 +2480,24 @@ const awardOptions = [
 ];
 
 function alreadySubmitted(message, navigate) {
+    // TODO: remove after form revision
+    return;
+
+    // eslint-disable-next-line no-unreachable
     let secondsToGo = 5;
+    // eslint-disable-next-line no-unreachable
     const modal = Modal.info({
         title: 'Form Submitted',
         content: `${message} You will be redirected in ${secondsToGo} seconds`,
     });
+    // eslint-disable-next-line no-unreachable
     const timer = setInterval(() => {
         secondsToGo -= 1;
         modal.update({
             content: `${message} You will be redirected in ${secondsToGo} seconds`,
         });
     }, 1000);
+    // eslint-disable-next-line no-unreachable
     setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
@@ -2567,6 +2574,30 @@ export default function MVPAwardFormView() {
                 });
             });
     };
+
+    // TODO: remove after form revisions
+    useEffect(() => {
+        // eslint-disable-next-line no-unreachable
+        let secondsToGo = 10;
+        // eslint-disable-next-line no-unreachable
+        const modal = Modal.info({
+            title: 'Undergoing Changes',
+            content: `This form is undergoing some revisions, do not worry if you have submitted. You will be redirected in ${secondsToGo} seconds`,
+        });
+        // eslint-disable-next-line no-unreachable
+        const timer = setInterval(() => {
+            secondsToGo -= 1;
+            modal.update({
+                content: `This form is undergoing some revisions, do not worry if you have submitted. You will be redirected in ${secondsToGo} seconds`,
+            });
+        }, 1000);
+        // eslint-disable-next-line no-unreachable
+        setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+            navigate('/app/profile/me');
+        }, secondsToGo * 1005);
+    }, []);
 
     useEffect(() => {
         form.setFieldsValue({ awardIndicators: [] });
