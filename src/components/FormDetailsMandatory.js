@@ -606,7 +606,7 @@ export default function FormDetailsMandatory() {
                 >
                     Register
                 </Button>
-                Already a member or participated in PPIUK Census? <Link to="/login">Login now!</Link>
+                Already a member? <Link to="/login">Login now!</Link>
             </Form.Item>
         </Form>
     );
