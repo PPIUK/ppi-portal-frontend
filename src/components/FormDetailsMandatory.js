@@ -448,8 +448,6 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
-            Already registered / filled out the PPI UK Census, please <Link to="/login">Login now!</Link>
-
             <Form.Item
                 name="email"
                 label="Campus Email"
