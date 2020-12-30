@@ -448,6 +448,8 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            <Divider />
+
             <Form.Item
                 name="email"
                 label="Campus Email"
@@ -604,7 +606,7 @@ export default function FormDetailsMandatory() {
                 >
                     Register
                 </Button>
-                Already registered or participated in PPI UK Census? <Link to="/login">Login now!</Link>
+                Already a member or participated in PPIUK Census? <Link to="/login">Login now!</Link>
             </Form.Item>
         </Form>
     );
