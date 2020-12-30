@@ -451,6 +451,7 @@ export default function FormDetailsMandatory() {
             <Form.Item>
                 Already registered / filled out PPIUK Census? <Link to="/login"> Login here!</Link>
             </Form.Item>
+            <Divider />
             <Form.Item
                 name="email"
                 label="Campus Email"
