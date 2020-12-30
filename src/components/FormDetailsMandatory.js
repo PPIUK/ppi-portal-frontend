@@ -457,7 +457,7 @@ export default function FormDetailsMandatory() {
                 >
                     Register
                 </Button>
-                Already registered or filled out PPIUK Census before? <Link to="/login">Login now!</Link>
+                Already participated in PPI UK Census? <Link to="/login">Login now!</Link>
             </Form.Item>
             <Divider />
 
