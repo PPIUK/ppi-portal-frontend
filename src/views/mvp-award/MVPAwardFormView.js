@@ -2611,7 +2611,7 @@ export default function MVPAwardFormView() {
                 },
             })
             .then((resp) => {
-                if (resp.data.data.submitted)
+                if (resp.data.data && resp.data.data.submitted)
                     alreadySubmitted(
                         'Form has already been submitted!',
                         navigate
