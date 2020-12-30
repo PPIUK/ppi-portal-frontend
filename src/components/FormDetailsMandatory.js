@@ -448,6 +448,8 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            <Divider />
+
             <Form.Item
                 name="email"
                 label="Campus Email"
