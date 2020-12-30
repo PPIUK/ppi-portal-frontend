@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Form, Input, Button, Checkbox, Card, Divider, Typography } from 'antd';
+import {
+    Form,
+    Input,
+    Button,
+    Checkbox,
+    Card,
+    Divider,
+    Typography,
+    Alert,
+} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../../utils/useAuth';
@@ -15,15 +24,51 @@ const formStyle = {
     },
 };
 
+const loginErrorAlert = (message) => {
+    return (
+        <Alert
+            message={message}
+            type="error"
+            showIcon
+            style={{
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottom: 0,
+                animation: 'login-feedback-enter 0.5s ease-out',
+            }}
+        />
+    );
+};
+
 function LoginView() {
     const [form] = Form.useForm();
     const auth = useAuth();
     const navigate = useNavigate();
 
+    const [loginFeedback, setLoginFeedback] = useState(null);
+
     const onLoginSubmit = (vals) => {
-        auth.signin(vals.username, vals.password).then(() => {
-            navigate('/app/profile/me');
-        });
+        auth.signin(vals.username, vals.password)
+            .then(() => {
+                navigate('/app/profile/me');
+            })
+            .catch((err) => {
+                if (err.response.status === 400 || err.response.status === 404)
+                    return setLoginFeedback(
+                        loginErrorAlert('Invalid credentials!')
+                    );
+
+                if (err.response.status === 401)
+                    return setLoginFeedback(
+                        loginErrorAlert('Account pending verification.')
+                    );
+
+                return setLoginFeedback(
+                    loginErrorAlert(
+                        'Internal server error. Please try again in a moment'
+                    )
+                );
+            });
     };
 
     if (auth.user) return <Navigate to="/app/profile/me"></Navigate>;
@@ -90,11 +135,22 @@ function LoginView() {
                     </Link>
                 </Form.Item>
 
+                {loginFeedback}
+
                 <Form.Item>
                     <Button
                         type="primary"
                         htmlType="submit"
                         className="login-form-button"
+                        style={
+                            loginFeedback
+                                ? {
+                                      borderTopRightRadius: 0,
+                                      borderTopLeftRadius: 0,
+                                      borderTop: 0,
+                                  }
+                                : null
+                        }
                     >
                         Log in
                     </Button>

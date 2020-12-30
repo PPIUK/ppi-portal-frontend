@@ -993,21 +993,21 @@ function BestAcademicContribSubsection({ form }) {
                                 ]}
                             >
                                 <Checkbox.Group>
-                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Author">
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Author">
                                         Publikasi Paper/Artikel Ilmiah di Jurnal
-                                        Q1/Q2/Q3/Q4 sebagai Author
+                                        Q1 sebagai <strong>Author</strong>
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Author'
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Author'
                                                 )
                                             }
                                             name={[
                                                 'Best Academic Contribution',
                                                 'A',
                                                 'elaborations',
-                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Author',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Author',
                                             ]}
                                             noStyle
                                         >
@@ -1018,21 +1018,21 @@ function BestAcademicContribSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Co-Author">
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Author">
                                         Publikasi Paper/Artikel Ilmiah di Jurnal
-                                        Q1/Q2/Q3/Q4 sebagai Co-Author
+                                        Q2 sebagai <strong>Author</strong>
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Co-Author'
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Author'
                                                 )
                                             }
                                             name={[
                                                 'Best Academic Contribution',
                                                 'A',
                                                 'elaborations',
-                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q1/Q2/Q3/Q4 sebagai Co-Author',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Author',
                                             ]}
                                             noStyle
                                         >
@@ -1042,6 +1042,158 @@ function BestAcademicContribSubsection({ form }) {
                                             />
                                         </Form.Item>
                                     </Checkbox>
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q3 sebagai <strong>Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q4 sebagai <strong>Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Co-Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q1 sebagai <strong>Co-Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Co-Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q1 sebagai Co-Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Co-Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q2 sebagai <strong>Co-Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Co-Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q2 sebagai Co-Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Co-Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q3 sebagai <strong>Co-Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Co-Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q3 sebagai Co-Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Co-Author">
+                                        Publikasi Paper/Artikel Ilmiah di Jurnal
+                                        Q4 sebagai <strong>Co-Author</strong>
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Co-Author'
+                                                )
+                                            }
+                                            name={[
+                                                'Best Academic Contribution',
+                                                'A',
+                                                'elaborations',
+                                                'Publikasi Paper/Artikel Ilmiah di Jurnal Q4 sebagai Co-Author',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
                                     <br />
                                     <Checkbox value="Publikasi Paper dalam Conference Proceeding">
                                         Publikasi Paper dalam Conference
@@ -1462,7 +1614,7 @@ function BestAcademicContribSubsection({ form }) {
                                     <Checkbox value="Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai author">
                                         Karya ilmiahnya dipresentasikan di
                                         Konferensi Akademik Internasional ilmiah
-                                        sebagai author
+                                        sebagai <strong>author</strong>
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
@@ -1488,7 +1640,7 @@ function BestAcademicContribSubsection({ form }) {
                                     <Checkbox value="Karya ilmiahnya dipresentasikan di Konferensi Akademik Internasional ilmiah sebagai co-author">
                                         Karya ilmiahnya dipresentasikan di
                                         Konferensi Akademik Internasional ilmiah
-                                        sebagai co-author
+                                        sebagai <strong>co-author</strong>
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
@@ -2031,22 +2183,21 @@ function RealWorldSubsection({ form }) {
                                 ]}
                             >
                                 <Checkbox.Group>
-                                    <Checkbox value="Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat universitas">
-                                        Menjadi INISIATOR/ANGGOTA
-                                        organisasi/komunitas riset tingkat
-                                        universitas
+                                    <Checkbox value="Menjadi INISIATOR organisasi/komunitas riset tingkat universitas">
+                                        Menjadi INISIATOR organisasi/komunitas
+                                        riset tingkat universitas
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat universitas'
+                                                    'Menjadi INISIATOR organisasi/komunitas riset tingkat universitas'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat universitas',
+                                                'Menjadi INISIATOR organisasi/komunitas riset tingkat universitas',
                                             ]}
                                             noStyle
                                         >
@@ -2056,6 +2207,32 @@ function RealWorldSubsection({ form }) {
                                             />
                                         </Form.Item>
                                     </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjadi ANGGOTA organisasi/komunitas riset tingkat universitas">
+                                        Menjadi ANGGOTA organisasi/komunitas
+                                        riset tingkat universitas
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjadi ANGGOTA organisasi/komunitas riset tingkat universitas'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Menjadi ANGGOTA organisasi/komunitas riset tingkat universitas',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
                                     <br />
                                     <Checkbox value="Menjadi INISIATOR organisasi/komunitas riset tingkat nasional">
                                         Menjadi INISIATOR organisasi/komunitas
@@ -2082,22 +2259,21 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat internasional">
-                                        Menjadi INISIATOR/ANGGOTA
-                                        organisasi/komunitas riset tingkat
-                                        internasional
+                                    <Checkbox value="Menjadi ANGGOTA organisasi/komunitas riset tingkat nasional">
+                                        Menjadi ANGGOTA organisasi/komunitas
+                                        riset tingkat nasional
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat internasional'
+                                                    'Menjadi ANGGOTA organisasi/komunitas riset tingkat nasional'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Menjadi INISIATOR/ANGGOTA organisasi/komunitas riset tingkat internasional',
+                                                'Menjadi ANGGOTA organisasi/komunitas riset tingkat nasional',
                                             ]}
                                             noStyle
                                         >
@@ -2108,8 +2284,60 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas">
-                                        Terlibat sebagai INISIATOR/ANGGOTA dalam
+                                    <br />
+                                    <Checkbox value="Menjadi INISIATOR organisasi/komunitas riset tingkat internasional">
+                                        Menjadi INISIATOR organisasi/komunitas
+                                        riset tingkat internasional
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjadi INISIATOR organisasi/komunitas riset tingkat internasional'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Menjadi INISIATOR organisasi/komunitas riset tingkat internasional',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjadi ANGGOTA organisasi/komunitas riset tingkat internasional">
+                                        Menjadi ANGGOTA organisasi/komunitas
+                                        riset tingkat internasional
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjadi ANGGOTA organisasi/komunitas riset tingkat internasional'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Menjadi ANGGOTA organisasi/komunitas riset tingkat internasional',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas">
+                                        Terlibat sebagai INISIATOR dalam
                                         program/aktivitas terkait isu yang
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat Universitas{' '}
@@ -2117,14 +2345,14 @@ function RealWorldSubsection({ form }) {
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas'
+                                                    'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas',
+                                                'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas',
                                             ]}
                                             noStyle
                                         >
@@ -2135,8 +2363,36 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional">
-                                        Terlibat sebagai INISIATOR/ANGGOTA dalam
+                                    <Checkbox value="Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas">
+                                        Terlibat sebagai ANGGOTA dalam
+                                        program/aktivitas terkait isu yang
+                                        ditekuni (e.g. charity/free meal
+                                        programmes) di tingkat Universitas{' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Universitas',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional">
+                                        Terlibat sebagai INISIATOR dalam
                                         program/aktivitas terkait isu yang
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat Nasional{' '}
@@ -2144,14 +2400,14 @@ function RealWorldSubsection({ form }) {
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional'
+                                                    'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional',
+                                                'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional',
                                             ]}
                                             noStyle
                                         >
@@ -2162,8 +2418,36 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional">
-                                        Terlibat sebagai INISIATOR/ANGGOTA dalam
+                                    <Checkbox value="Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional">
+                                        Terlibat sebagai ANGGOTA dalam
+                                        program/aktivitas terkait isu yang
+                                        ditekuni (e.g. charity/free meal
+                                        programmes) di tingkat Nasional{' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat Nasional',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional">
+                                        Terlibat sebagai INISIATOR dalam
                                         program/aktivitas terkait isu yang
                                         ditekuni (e.g. charity/free meal
                                         programmes) di tingkat internasional
@@ -2171,14 +2455,41 @@ function RealWorldSubsection({ form }) {
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional'
+                                                    'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'C',
                                                 'elaborations',
-                                                'Terlibat sebagai INISIATOR/ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional',
+                                                'Terlibat sebagai INISIATOR dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional">
+                                        Terlibat sebagai ANGGOTA dalam
+                                        program/aktivitas terkait isu yang
+                                        ditekuni (e.g. charity/free meal
+                                        programmes) di tingkat internasional
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'C',
+                                                'elaborations',
+                                                'Terlibat sebagai ANGGOTA dalam program/aktivitas terkait isu yang ditekuni (e.g. charity/free meal programmes) di tingkat internasional',
                                             ]}
                                             noStyle
                                         >
@@ -2408,24 +2719,23 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGOs/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai inisiator)">
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai inisiator)">
                                         Menjalankan proyek yang merupakan bentuk
-                                        kerja sama dengan
-                                        Pemerintah/Industri/NGOs/IOs/ Lembaa
-                                        Informal untuk isu yang ditekuni
-                                        (sebagai inisiator){' '}
+                                        kerja sama dengan Pemerintah untuk isu
+                                        yang ditekuni (sebagai inisiator){' '}
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGOs/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai inisiator)'
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai inisiator)'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'E',
                                                 'elaborations',
-                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGOs/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai inisiator)',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai inisiator)',
                                             ]}
                                             noStyle
                                         >
@@ -2436,24 +2746,183 @@ function RealWorldSubsection({ form }) {
                                         </Form.Item>
                                     </Checkbox>
                                     <br />
-                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGO s/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai mitra)">
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai mitra)">
                                         Menjalankan proyek yang merupakan bentuk
-                                        kerja sama dengan
-                                        Pemerintah/Industri/NGO s/IOs/ Lembaa
-                                        Informal untuk isu yang ditekuni
-                                        (sebagai mitra){' '}
+                                        kerja sama dengan Pemerintah untuk isu
+                                        yang ditekuni (sebagai mitra){' '}
                                         <Form.Item
                                             onChange={onChange}
                                             hidden={
                                                 !selectedSubs.includes(
-                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGO s/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai mitra)'
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai mitra)'
                                                 )
                                             }
                                             name={[
                                                 'Most Dedicated for Tackling Real World Problems',
                                                 'E',
                                                 'elaborations',
-                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah/Industri/NGO s/IOs/ Lembaa Informal untuk isu yang ditekuni (sebagai mitra)',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Pemerintah untuk isu yang ditekuni (sebagai mitra)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai inisiator)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan Industri untuk isu
+                                        yang ditekuni (sebagai inisiator){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai inisiator)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai inisiator)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai mitra)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan Industri untuk isu
+                                        yang ditekuni (sebagai mitra){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai mitra)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Industri untuk isu yang ditekuni (sebagai mitra)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai inisiator)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan NGOs/IOs untuk isu
+                                        yang ditekuni (sebagai inisiator){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai inisiator)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai inisiator)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai mitra)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan NGOs/IOs untuk isu
+                                        yang ditekuni (sebagai mitra){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai mitra)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan NGOs/IOs untuk isu yang ditekuni (sebagai mitra)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+
+                                    <br />
+                                    <br />
+
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai inisiator)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan Lembaga Informal untuk
+                                        isu yang ditekuni (sebagai inisiator){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai inisiator)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai inisiator)',
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input.TextArea
+                                                rows={4}
+                                                placeholder="Penjelasan"
+                                            />
+                                        </Form.Item>
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox value="Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai mitra)">
+                                        Menjalankan proyek yang merupakan bentuk
+                                        kerja sama dengan Lembaga Informal untuk
+                                        isu yang ditekuni (sebagai mitra){' '}
+                                        <Form.Item
+                                            onChange={onChange}
+                                            hidden={
+                                                !selectedSubs.includes(
+                                                    'Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai mitra)'
+                                                )
+                                            }
+                                            name={[
+                                                'Most Dedicated for Tackling Real World Problems',
+                                                'E',
+                                                'elaborations',
+                                                'Menjalankan proyek yang merupakan bentuk kerja sama dengan Lembaga Informal untuk isu yang ditekuni (sebagai mitra)',
                                             ]}
                                             noStyle
                                         >
@@ -2480,24 +2949,17 @@ const awardOptions = [
 ];
 
 function alreadySubmitted(message, navigate) {
-    // TODO: remove after form revision
-    return;
-
-    // eslint-disable-next-line no-unreachable
     let secondsToGo = 5;
-    // eslint-disable-next-line no-unreachable
     const modal = Modal.info({
         title: 'Form Submitted',
         content: `${message} You will be redirected in ${secondsToGo} seconds`,
     });
-    // eslint-disable-next-line no-unreachable
     const timer = setInterval(() => {
         secondsToGo -= 1;
         modal.update({
             content: `${message} You will be redirected in ${secondsToGo} seconds`,
         });
     }, 1000);
-    // eslint-disable-next-line no-unreachable
     setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
@@ -2574,30 +3036,6 @@ export default function MVPAwardFormView() {
                 });
             });
     };
-
-    // TODO: remove after form revisions
-    useEffect(() => {
-        // eslint-disable-next-line no-unreachable
-        let secondsToGo = 10;
-        // eslint-disable-next-line no-unreachable
-        const modal = Modal.info({
-            title: 'Undergoing Changes',
-            content: `This form is undergoing some revisions, do not worry if you have submitted. You will be redirected in ${secondsToGo} seconds`,
-        });
-        // eslint-disable-next-line no-unreachable
-        const timer = setInterval(() => {
-            secondsToGo -= 1;
-            modal.update({
-                content: `This form is undergoing some revisions, do not worry if you have submitted. You will be redirected in ${secondsToGo} seconds`,
-            });
-        }, 1000);
-        // eslint-disable-next-line no-unreachable
-        setTimeout(() => {
-            clearInterval(timer);
-            modal.destroy();
-            navigate('/app/profile/me');
-        }, secondsToGo * 1005);
-    }, []);
 
     useEffect(() => {
         form.setFieldsValue({ awardIndicators: [] });
