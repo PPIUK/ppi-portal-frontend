@@ -448,6 +448,17 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            <Form.Item>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: '100%' }}
+                    loading={submitState === 'submitting;'}
+                >
+                    Register
+                </Button>
+                Already a member? <Link to="/login">Login now!</Link>
+            </Form.Item>
             <Divider />
 
             <Form.Item
