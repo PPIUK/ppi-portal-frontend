@@ -6,7 +6,8 @@
     ],
     "globals": {
         "localStorage": true,
-        "console": true
+        "console": true,
+        "process": true
     },
     "env": {
         "browser": true,
