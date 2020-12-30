@@ -449,6 +449,14 @@ export default function FormDetailsMandatory() {
             scrollToFirstError
         >
             <Form.Item>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: '100%' }}
+                    loading={submitState === 'submitting;'}
+                >
+                    Register
+                </Button>
                 Already registered or filled out PPIUK Census before? <Link to="/login">Login now!</Link>
             </Form.Item>
             <Divider />
