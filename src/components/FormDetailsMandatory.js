@@ -448,6 +448,10 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            <Form.Item>
+                Already a member? <Link to="/login">Login now!</Link>
+            </Form.Item>
+
             <Divider />
 
             <Form.Item
