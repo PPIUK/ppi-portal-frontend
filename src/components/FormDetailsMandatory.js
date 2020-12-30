@@ -448,19 +448,6 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
-            <Form.Item>
-                <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{ width: '100%' }}
-                    loading={submitState === 'submitting;'}
-                >
-                    Register
-                </Button>
-                Already participated in PPI UK Census? <Link to="/login">Login now!</Link>
-            </Form.Item>
-            <Divider />
-
             <Form.Item
                 name="email"
                 label="Campus Email"
@@ -617,7 +604,7 @@ export default function FormDetailsMandatory() {
                 >
                     Register
                 </Button>
-                Already a member? <Link to="/login">Login now!</Link>
+                Already registered or participated in PPI UK Census? <Link to="/login">Login now!</Link>
             </Form.Item>
         </Form>
     );
