@@ -441,12 +441,6 @@ export default function FormDetailsMandatory() {
         );
 
     return (
-        <Typography.Text type="secondary" style={{ textAlign: 'center' }}>
-            If you have registered / filled out the{' '}
-            <Typography.Text strong>PPI UK Census</Typography.Text>, please{' '}
-            <Link to="/login">Login now!</Link>
-        </Typography.Text>
-        <Divider />
         <Form
             {...formItemLayout}
             form={form}
@@ -454,6 +448,8 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            Already registered / filled out the PPI UK Census, please <Link to="/login">Login now!</Link>
+
             <Form.Item
                 name="email"
                 label="Campus Email"
