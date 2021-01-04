@@ -120,6 +120,7 @@ function DatabaseSearchView() {
                     columns={profileTableCols}
                     dataSource={profilesData}
                     pagination={paginationData}
+                    scroll={{ x: true }}
                     onChange={onTableChange}
                 />
             )}
