@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu } from 'antd';
-import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
+import {
+    LogoutOutlined,
+    MenuOutlined,
+    UserOutlined,
+    SettingOutlined,
+} from '@ant-design/icons';
 import { useAuth } from '../../utils/useAuth';
 
 function Navbar() {
@@ -21,8 +26,11 @@ function Navbar() {
                 icon={<MenuOutlined />}
                 title={auth.user.fullName}
             >
-                <Menu.Item key="/logout" icon={<UserOutlined />}>
+                <Menu.Item key="/app/profile/me" icon={<UserOutlined />}>
                     My Profile<Link to="/app/profile/me"></Link>
+                </Menu.Item>
+                <Menu.Item key="/app/settings" icon={<SettingOutlined />}>
+                    Settings<Link to="/app/settings"></Link>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item

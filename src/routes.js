@@ -6,12 +6,14 @@ import LoginView from './views/auth/LoginView';
 import NotFoundView from './views/error/NotFoundView';
 import ServerErrorView from './views/error/ServerErrorView';
 import RegisterView from './views/auth/RegisterView';
+import PasswordResetView from './views/auth/PasswordResetView';
+import ForgotPasswordView from './views/auth/ForgotPasswordView';
 import ProfileView from './views/profile/ProfileView';
 import OwnProfileView from './views/profile/OwnProfileView';
 import DatabaseSearchView from './views/member-database/DatabaseSearchView.js';
 import BranchListView from './views/member-database/BranchListView';
 
-import DemoView from './views/demo';
+import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
 
 const routes = [
     {
@@ -45,7 +47,17 @@ const routes = [
                     },
                 ],
             },
-            { path: 'demo', element: <DemoView /> },
+            {
+                path: 'mvp-award',
+                element: <Outlet />,
+                children: [
+                    {
+                        path: 'submissions',
+                        element: <Navigate to="/app/mvp-award/" />,
+                    },
+                    { path: '/', element: <MVPAwardFormView /> },
+                ],
+            },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
             { path: '*', element: <Navigate to="/404" /> },
         ],
@@ -56,6 +68,15 @@ const routes = [
         children: [
             { path: 'login', element: <LoginView /> },
             { path: 'register', element: <RegisterView /> },
+            { path: 'forgot', element: <ForgotPasswordView /> },
+            {
+                path: 'reset-password',
+                element: <Outlet />,
+                children: [
+                    { path: ':token', element: <PasswordResetView /> },
+                    { path: '/', element: <Navigate to="/forgot" /> },
+                ],
+            },
             { path: '404', element: <NotFoundView /> },
             { path: '505', element: <ServerErrorView /> },
             { path: '/', element: <Navigate to="/app/profile/me" /> },

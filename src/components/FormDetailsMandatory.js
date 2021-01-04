@@ -12,6 +12,7 @@ import {
 import { useForm } from 'antd/lib/form/Form';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const universityOptions = [
     { value: 'University of Aberdeen' },
@@ -447,6 +448,12 @@ export default function FormDetailsMandatory() {
             onFinish={onRegisterSubmit}
             scrollToFirstError
         >
+            <Form.Item>
+                Already a member? <Link to="/login">Login now!</Link>
+            </Form.Item>
+
+            <Divider />
+
             <Form.Item
                 name="email"
                 label="Campus Email"
@@ -603,7 +610,7 @@ export default function FormDetailsMandatory() {
                 >
                     Register
                 </Button>
-                Already a member? <a href="/login">Login now!</a>
+                Already a member? <Link to="/login">Login now!</Link>
             </Form.Item>
         </Form>
     );
