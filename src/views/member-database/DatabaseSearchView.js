@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, Skeleton, Table, Typography } from 'antd';
+import { useAuth } from '../../utils/useAuth';
 
 const tableStyle = {
     style: {
@@ -12,86 +13,93 @@ const profileTableCols = [
     {
         title: 'Name',
         dataIndex: 'fullName',
-        key: 'name',
-        sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+        key: 'fullName',
+        sorter: true,
     },
     {
         title: 'University',
         dataIndex: 'university',
         key: 'university',
-        sorter: (a, b) => a.university.localeCompare(b.university),
+        sorter: true,
     },
     {
         title: 'Degree Level',
         dataIndex: 'degreeLevel',
         key: 'degreeLevel',
-        sorter: (a, b) => a.degreeLevel.localeCompare(b.degreeLevel),
+        sorter: true,
     },
     {
         title: 'Faculty',
         dataIndex: 'faculty',
         key: 'faculty',
-        sorter: (a, b) => a.faculty.localeCompare(b.faculty),
+        sorter: true,
     },
     {
         title: 'Course',
         dataIndex: 'course',
         key: 'course',
-        sorter: (a, b) => a.course.localeCompare(b.course),
+        sorter: true,
     },
     {
         title: 'Branch',
         dataIndex: 'branch',
         key: 'branch',
-        sorter: (a, b) => a.branch.localeCompare(b.branch),
+        sorter: true,
     },
 ];
 
 function DatabaseSearchView() {
-    const [profilesData, setProfilesData] = useState(null);
-    const [paginationData, setPaginationData] = useState({
-        paginate: true,
-        limit: 10,
-        page: 1,
-    });
-    const accessToken = localStorage.getItem('oauth-access-token');
+    const auth = useAuth();
 
-    const handleTableChange = (pagination) => {
+    const [profilesData, setProfilesData] = useState(null);
+    const [paginationData, setPaginationData] = useState(null);
+
+    const getData = (page, params = false) => {
+        let sort;
+        if (params.sortField === 'fullName' || !params.sortField) {
+            sort = 'full_name:';
+        } else if (params.sortField === 'degreeLevel') {
+            sort = 'degree_level:';
+        } else if (params.sortField) {
+            sort = params.sortField;
+            sort += ':';
+        }
+        if (params.sortOrder === 'ascend' || !params.sortOrder) {
+            sort += 'asc';
+        } else if (params.sortOrder === 'descend') {
+            sort += 'desc';
+        }
+
         axios
             .get('/api/profiles/public', {
-                params: pagination,
+                params: {
+                    paginate: true,
+                    limit: 10,
+                    page,
+                    sort,
+                },
                 headers: {
-                    Authorization: 'Bearer '.concat(accessToken),
+                    Authorization: `Bearer ${auth.accessToken}`,
                 },
             })
             .then((resp) => {
                 setProfilesData(resp.data.data.profiles);
                 setPaginationData({
-                    paginate: true,
-                    current: resp.data.data.page,
-                    pageSize: resp.data.data.limit,
                     total: resp.data.data.totalProfiles,
                 });
             });
     };
 
+    const onTableChange = (pagination, filters, sorter) => {
+        console.log(sorter);
+        getData(pagination.current, {
+            sortField: sorter.field,
+            sortOrder: sorter.order,
+        });
+    };
+
     useEffect(() => {
-        axios
-            .get('/api/profiles/public', {
-                params: paginationData,
-                headers: {
-                    Authorization: 'Bearer '.concat(accessToken),
-                },
-            })
-            .then((resp) => {
-                setProfilesData(resp.data.data.profiles);
-                setPaginationData({
-                    paginate: true,
-                    current: resp.data.data.page,
-                    pageSize: resp.data.data.limit,
-                    total: resp.data.data.totalProfiles,
-                });
-            });
+        getData();
     }, []);
     return (
         <Card {...tableStyle}>
@@ -101,7 +109,7 @@ function DatabaseSearchView() {
                     columns={profileTableCols}
                     dataSource={profilesData}
                     pagination={paginationData}
-                    onchange={handleTableChange}
+                    onChange={onTableChange}
                 />
             )}
             {!profilesData && <Skeleton />}
