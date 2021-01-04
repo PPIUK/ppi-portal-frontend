@@ -3,6 +3,11 @@ import axios from 'axios';
 import { Card, Skeleton, Table, Typography } from 'antd';
 import { useAuth } from '../../utils/useAuth';
 
+const baseURL =
+    process.env.NODE_ENV == 'production'
+        ? 'https://portal.ppiuk.org'
+        : 'http://localhost:3001';
+
 const tableStyle = {
     style: {
         margin: '3rem 3rem',
@@ -15,6 +20,12 @@ const profileTableCols = [
         dataIndex: 'fullName',
         key: 'fullName',
         sorter: true,
+        // eslint-disable-next-line react/display-name
+        render: (text, row) => (
+            <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+                {text}
+            </Typography.Link>
+        ),
     },
     {
         title: 'University',
