@@ -10,3 +10,8 @@
 .login-form-button {
     width: 100%;
 }
+
+@keyframes login-feedback-enter {
+    from {transform: translateY(20px);}
+    to {transform: translateY(0px);}
+}
