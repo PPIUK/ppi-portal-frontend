@@ -80,7 +80,7 @@ const routes = [
             { path: '404', element: <NotFoundView /> },
             { path: '505', element: <ServerErrorView /> },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
-            { path: '*', element: <Navigate to="/404" /> },
+            { path: '*', element: <Navigate to="/app/profile/me" /> },
         ],
     },
 ];
