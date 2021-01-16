@@ -5,17 +5,6 @@ import { useAuth } from '../../utils/useAuth';
 
 function OwnProfileView() {
     const auth = useAuth();
-    const [counter, setCounter] = useState(0);
-
-    useEffect(() => {
-        setInterval(() => {
-            setCounter(counter + 1);
-        }, 100);
-    }, []);
-
-    useEffect(() => {
-        console.log(counter);
-    }, []);
 
     return (
         <Card
@@ -35,7 +24,7 @@ function OwnProfileView() {
             <br />
             <Typography.Text>{`Origin City      :   ${auth.user.originCity}`}</Typography.Text>
             <br />
-            <Typography.Text>{`addressUK        :   ${auth.user.addressUK}`}</Typography.Text>
+            <Typography.Text>{`Address UK       :   ${auth.user.addressUK}`}</Typography.Text>
             <br />
             <Typography.Text>{`Postcode UK      :   ${auth.user.postcodeUK}`}</Typography.Text>
             <br />
@@ -61,7 +50,7 @@ function OwnProfileView() {
             <br />
             <Typography.Text>{`Email Personal   :   ${auth.user.emailPersonal}`}</Typography.Text>
             <br />
-            <Typography.Text>{`PhoneWA          :   ${auth.user.phoneWA}`}</Typography.Text>
+            <Typography.Text>{`WA Number        :   ${auth.user.phoneWA}`}</Typography.Text>
             <br />
             <Typography.Text>{`Linkedin         :   ${auth.user.linkedin}`}</Typography.Text>
             <br />
