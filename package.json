@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^12.5.0",
     "antd": "^4.9.2",
     "axios": "^0.21.0",
+    "downloadjs": "^1.4.7",
     "history": "^5.0.0",
     "qs": "^6.9.4",
     "react": "^17.0.1",
