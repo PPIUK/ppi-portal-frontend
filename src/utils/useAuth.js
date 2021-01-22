@@ -135,7 +135,20 @@ function useProvideAuth() {
                     resp.data.refresh_token
                 );
 
-                return true;
+                return axios
+                    .get('/api/profiles/me', {
+                        headers: {
+                            Authorization: `Bearer ${resp.data.access_token}`,
+                        },
+                    })
+                    .then((user) => {
+                        setUser(user.data.data);
+                        localStorage.setItem(
+                            'oauth-user',
+                            JSON.stringify(user.data.data)
+                        );
+                        return true;
+                    });
             })
             .catch(() => {
                 setUser(null);
