@@ -15,6 +15,7 @@ import BranchListView from './views/member-database/BranchListView';
 
 import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
 import MVPAwardIndexView from './views/mvp-award/MVPAwardIndexView';
+import MVPAwardSubmissionView from './views/mvp-award/MVPAwardSubmissionView';
 
 const routes = [
     {
@@ -58,7 +59,7 @@ const routes = [
                     },
                     {
                         path: 'submission/:userID',
-                        element: <MVPAwardIndexView />,
+                        element: <MVPAwardSubmissionView />,
                     },
                     { path: '/', element: <MVPAwardFormView /> },
                 ],
