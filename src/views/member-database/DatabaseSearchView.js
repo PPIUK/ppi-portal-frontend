@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, Skeleton, Table, Typography } from 'antd';
 import { getColumnSearchProps } from './ColumnSearchProps';
 import { useAuth } from '../../utils/useAuth';
+import { Navigate } from 'react-router-dom';
 
 const baseURL =
     process.env.NODE_ENV == 'production'
@@ -11,12 +12,15 @@ const baseURL =
 
 const tableStyle = {
     style: {
-        margin: '3rem 3rem',
+        margin: '1rem 1rem',
     },
 };
 
 function DatabaseSearchView() {
     const auth = useAuth();
+
+    if (!auth.user.roles.includes('verified'))
+        return <Navigate to="/app/profile/me" />;
 
     const [profilesData, setProfilesData] = useState(null);
     const [searchText, setSearchText] = useState('');

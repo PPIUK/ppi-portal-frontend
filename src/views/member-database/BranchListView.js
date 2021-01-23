@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Card, Skeleton, Table, Typography } from 'antd';
 import { getColumnSearchProps } from './ColumnSearchProps';
 import { useAuth } from '../../utils/useAuth';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 const baseURL =
     process.env.NODE_ENV == 'production'
@@ -20,6 +20,12 @@ const tableStyle = {
 function BranchListView() {
     const auth = useAuth();
     const params = useParams();
+
+    if (
+        !auth.user.roles.includes('dataAccess') ||
+        !(auth.user.branch.toUpperCase() === params.branchName.toUpperCase())
+    )
+        return <Navigate to="/app/profile/me" />;
 
     const [profilesData, setProfilesData] = useState(null);
     const [searchText, setSearchText] = useState('');
