@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Card, Skeleton, Table, Typography } from 'antd';
+import { Button, Card, Input, Skeleton, Space, Table, Typography } from 'antd';
 import { useAuth } from '../../utils/useAuth';
+import { SearchOutlined } from '@ant-design/icons';
 
 const baseURL =
     process.env.NODE_ENV == 'production'
@@ -14,80 +15,23 @@ const tableStyle = {
     },
 };
 
-const profileTableCols = [
-    {
-        title: 'Name',
-        dataIndex: 'fullName',
-        key: 'fullName',
-        sorter: true,
-        // eslint-disable-next-line react/display-name
-        render: (text, row) => (
-            <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
-                {text}
-            </Typography.Link>
-        ),
-    },
-    {
-        title: 'University',
-        dataIndex: 'university',
-        key: 'university',
-        sorter: true,
-    },
-    {
-        title: 'Degree Level',
-        dataIndex: 'degreeLevel',
-        key: 'degreeLevel',
-        sorter: true,
-    },
-    {
-        title: 'Faculty',
-        dataIndex: 'faculty',
-        key: 'faculty',
-        sorter: true,
-    },
-    {
-        title: 'Course',
-        dataIndex: 'course',
-        key: 'course',
-        sorter: true,
-    },
-    {
-        title: 'Branch',
-        dataIndex: 'branch',
-        key: 'branch',
-        sorter: true,
-    },
-];
-
 function DatabaseSearchView() {
     const auth = useAuth();
 
     const [profilesData, setProfilesData] = useState(null);
-    const [paginationData, setPaginationData] = useState(null);
+    // eslint-disable-next-line no-unused-vars
+    const [searchText, setSearchText] = useState('');
+    // eslint-disable-next-line no-unused-vars
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
 
-    const getData = (page, params = false) => {
-        let sort;
-        if (params.sortField === 'fullName' || !params.sortField) {
-            sort = 'full_name:';
-        } else if (params.sortField === 'degreeLevel') {
-            sort = 'degree_level:';
-        } else if (params.sortField) {
-            sort = params.sortField;
-            sort += ':';
-        }
-        if (params.sortOrder === 'ascend' || !params.sortOrder) {
-            sort += 'asc';
-        } else if (params.sortOrder === 'descend') {
-            sort += 'desc';
-        }
-
+    const getData = () => {
+        let sort = 'full_name:asc';
         axios
             .get('/api/profiles/public', {
                 params: {
-                    paginate: true,
-                    limit: 10,
-                    page,
-                    sort,
+                    paginate: false,
+                    sort: sort,
                 },
                 headers: {
                     Authorization: `Bearer ${auth.accessToken}`,
@@ -95,23 +39,162 @@ function DatabaseSearchView() {
             })
             .then((resp) => {
                 setProfilesData(resp.data.data.profiles);
-                setPaginationData({
-                    total: resp.data.data.totalProfiles,
-                });
             });
     };
 
-    const onTableChange = (pagination, filters, sorter) => {
-        console.log(sorter);
-        getData(pagination.current, {
-            sortField: sorter.field,
-            sortOrder: sorter.order,
-        });
-    };
+    function getColumnSearchProps(dataIndex) {
+        return {
+            // eslint-disable-next-line react/display-name
+            filterDropdown: ({
+                setSelectedKeys,
+                selectedKeys,
+                confirm,
+                clearFilters,
+            }) => (
+                <div style={{ padding: 8 }}>
+                    <Input
+                        ref={searchInput}
+                        placeholder={`Search ${dataIndex}`}
+                        value={selectedKeys[0]}
+                        onChange={(e) =>
+                            setSelectedKeys(
+                                e.target.value ? [e.target.value] : []
+                            )
+                        }
+                        onPressEnter={() =>
+                            handleSearch(selectedKeys, confirm, dataIndex)
+                        }
+                        style={{
+                            width: 188,
+                            marginBottom: 8,
+                            display: 'block',
+                        }}
+                    />
+                    <Space>
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                handleSearch(selectedKeys, confirm, dataIndex)
+                            }
+                            icon={<SearchOutlined />}
+                            size="small"
+                            style={{ width: 90 }}
+                        >
+                            Search
+                        </Button>
+                        <Button
+                            onClick={() => handleReset(clearFilters)}
+                            size="small"
+                            style={{ width: 90 }}
+                        >
+                            Reset
+                        </Button>
+                    </Space>
+                </div>
+            ),
+            // eslint-disable-next-line react/display-name
+            filterIcon: (filtered) => (
+                <SearchOutlined
+                    style={{ color: filtered ? '#1890ff' : undefined }}
+                />
+            ),
+            onFilter: (value, record) =>
+                record[dataIndex]
+                    .toString()
+                    .toLowerCase()
+                    .includes(value.toLowerCase()),
+            onFilterDropdownVisibleChange: (visible) => {
+                if (visible) {
+                    setTimeout(() => searchInput.current.select());
+                }
+            },
+        };
+    }
+
+    function handleSearch(selectedKeys, confirm, dataIndex) {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    }
+
+    function handleReset(clearFilters) {
+        clearFilters();
+        setSearchText('');
+    }
+
+    const profileTableCols = [
+        {
+            title: 'Name',
+            dataIndex: 'fullName',
+            key: 'fullName',
+            sorter: {
+                compare: (a, b) => a.fullName.localeCompare(b.fullName),
+                // multiple: 6,
+            },
+            ...getColumnSearchProps('fullName'),
+            // eslint-disable-next-line react/display-name
+            render: (text, row) => (
+                <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+                    {text}
+                </Typography.Link>
+            ),
+        },
+        {
+            title: 'University',
+            dataIndex: 'university',
+            key: 'university',
+            sorter: {
+                compare: (a, b) => a.university.localeCompare(b.university),
+                // multiple: 5,
+            },
+            ...getColumnSearchProps('university'),
+        },
+        {
+            title: 'Degree Level',
+            dataIndex: 'degreeLevel',
+            key: 'degreeLevel',
+            sorter: {
+                compare: (a, b) => a.degreeLevel.localeCompare(b.degreeLevel),
+                // multiple: 4,
+            },
+            ...getColumnSearchProps('degreeLevel'),
+        },
+        {
+            title: 'Faculty',
+            dataIndex: 'faculty',
+            key: 'faculty',
+            sorter: {
+                compare: (a, b) => a.faculty.localeCompare(b.faculty),
+                // multiple: 3,
+            },
+            ...getColumnSearchProps('faculty'),
+        },
+        {
+            title: 'Course',
+            dataIndex: 'course',
+            key: 'course',
+            sorter: {
+                compare: (a, b) => a.course.localeCompare(b.course),
+                // multiple: 2,
+            },
+            ...getColumnSearchProps('course'),
+        },
+        {
+            title: 'Branch',
+            dataIndex: 'branch',
+            key: 'branch',
+            sorter: {
+                compare: (a, b) => a.branch.localeCompare(b.branch),
+                // multiple: 1,
+            },
+            ...getColumnSearchProps('branch'),
+        },
+    ];
 
     useEffect(() => {
         getData();
     }, []);
+
     return (
         <Card {...tableStyle}>
             <Typography.Title level={2}>Public Profile Info</Typography.Title>
@@ -119,9 +202,7 @@ function DatabaseSearchView() {
                 <Table
                     columns={profileTableCols}
                     dataSource={profilesData}
-                    pagination={paginationData}
                     scroll={{ x: true }}
-                    onChange={onTableChange}
                 />
             )}
             {!profilesData && <Skeleton />}
