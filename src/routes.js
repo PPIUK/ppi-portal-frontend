@@ -14,6 +14,8 @@ import DatabaseSearchView from './views/member-database/DatabaseSearchView.js';
 import BranchListView from './views/member-database/BranchListView';
 
 import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
+import MVPAwardIndexView from './views/mvp-award/MVPAwardIndexView';
+import MVPAwardSubmissionView from './views/mvp-award/MVPAwardSubmissionView';
 
 const routes = [
     {
@@ -53,7 +55,11 @@ const routes = [
                 children: [
                     {
                         path: 'submissions',
-                        element: <Navigate to="/app/mvp-award/" />,
+                        element: <MVPAwardIndexView />,
+                    },
+                    {
+                        path: 'submission/:userID',
+                        element: <MVPAwardSubmissionView />,
                     },
                     { path: '/', element: <MVPAwardFormView /> },
                 ],
@@ -80,7 +86,7 @@ const routes = [
             { path: '404', element: <NotFoundView /> },
             { path: '505', element: <ServerErrorView /> },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
-            { path: '*', element: <Navigate to="/404" /> },
+            { path: '*', element: <Navigate to="/app/profile/me" /> },
         ],
     },
 ];

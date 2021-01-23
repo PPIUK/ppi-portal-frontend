@@ -5,6 +5,7 @@ import {
     AreaChartOutlined,
     BookOutlined,
     FormOutlined,
+    UnorderedListOutlined,
 } from '@ant-design/icons';
 
 import { useAuth } from '../../utils/useAuth';
@@ -43,6 +44,15 @@ function Sidebar() {
                 <Link to="/app/mvp-award/" />
                 MVP Awards
             </Menu.Item>
+            {auth.user.roles.includes('mvpAwardsAccess') && (
+                <Menu.Item
+                    icon={<UnorderedListOutlined />}
+                    key="/app/mvp-award/submissions"
+                >
+                    <Link to="/app/mvp-award/submissions" />
+                    MVP Submissions
+                </Menu.Item>
+            )}
         </Menu>
     );
 }

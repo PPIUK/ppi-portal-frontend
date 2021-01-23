@@ -3152,8 +3152,8 @@ export default function MVPAwardFormView() {
                     <>
                         <Typography.Title level={5}>
                             {submitterType == 'Nominee'
-                                ? 'Upload CV & Personal Statement (single PDF) '
-                                : 'Upload CV of nominated candidate (optional) and Statement of Support (single PDF) '}
+                                ? 'Upload CV (mandatory) '
+                                : 'Upload CV of nominated candidate (optional) '}
                             <Popover
                                 content={
                                     submitterType == 'Nominee' ? (
@@ -3173,15 +3173,61 @@ export default function MVPAwardFormView() {
                                                 accomplishment, other
                                                 achievements
                                             </p>
-                                            <br />
+                                        </div>
+                                    ) : (
+                                        <div>
                                             <strong>
-                                                B. Personal Statement
-                                                (mandatory)
+                                                A. Curriculum Vitae of your
+                                                nominated candidate (optional)
                                             </strong>
                                             <p>
-                                                Written in English with maximum
-                                                1000 words
+                                                1. Mandatory: All achievements
+                                                related to the selected award
+                                                category, written in a sequence
+                                                and detail
                                             </p>
+                                            <p>
+                                                2. Core optional: work/research
+                                                experiences, awards
+                                                accomplishment, other
+                                                achievements
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                                title="Advice on what to include in your supporting documents"
+                            >
+                                <QuestionCircleOutlined />
+                            </Popover>
+                        </Typography.Title>
+                        <Upload
+                            accept=".pdf"
+                            onChange={onFileChoose}
+                            fileList={uploadFileList}
+                            action={`${axios.defaults.baseURL}/api/forms/mvpawards/edit`}
+                            headers={{
+                                Authorization: `Bearer ${auth.accessToken}`,
+                            }}
+                        >
+                            <Button icon={<UploadOutlined />}>
+                                Click to Upload
+                            </Button>
+                        </Upload>
+                        <Typography.Text type="secondary">
+                            Hover over the question mark for more information
+                        </Typography.Text>
+
+                        <Typography.Title level={5}>
+                            {submitterType == 'Nominee'
+                                ? 'Personal Statement '
+                                : 'Statement of Support '}
+                            <Popover
+                                content={
+                                    submitterType == 'Nominee' ? (
+                                        <div>
+                                            <strong>
+                                                B. Personal Statement (Optional)
+                                            </strong>
                                             <p>
                                                 1. Why you deserve to get The
                                                 MVP Awards in the chosen
@@ -3204,30 +3250,9 @@ export default function MVPAwardFormView() {
                                     ) : (
                                         <div>
                                             <strong>
-                                                A. Curriculum Vitae of your
-                                                nominated candidate (optional)
-                                            </strong>
-                                            <p>
-                                                1. Mandatory: All achievements
-                                                related to the selected award
-                                                category, written in a sequence
-                                                and detail
-                                            </p>
-                                            <p>
-                                                2. Core optional: work/research
-                                                experiences, awards
-                                                accomplishment, other
-                                                achievements
-                                            </p>
-                                            <br />
-                                            <strong>
                                                 B. Statement of Support
-                                                (mandatory)
+                                                (optional)
                                             </strong>
-                                            <p>
-                                                Written in English with maximum
-                                                1000 words
-                                            </p>
                                             <p>
                                                 1. Why the nominated candidate
                                                 deserves to get The MVP Awards
@@ -3251,19 +3276,12 @@ export default function MVPAwardFormView() {
                                 <QuestionCircleOutlined />
                             </Popover>
                         </Typography.Title>
-                        <Upload
-                            accept=".pdf"
-                            onChange={onFileChoose}
-                            fileList={uploadFileList}
-                            action={`${axios.defaults.baseURL}/api/forms/mvpawards/edit`}
-                            headers={{
-                                Authorization: `Bearer ${auth.accessToken}`,
-                            }}
-                        >
-                            <Button icon={<UploadOutlined />}>
-                                Click to Upload
-                            </Button>
-                        </Upload>
+                        <Form.Item name="statement">
+                            <Input.TextArea
+                                rows={4}
+                                placeholder="Write here..."
+                            />
+                        </Form.Item>
                         <Typography.Text type="secondary">
                             Hover over the question mark for more information
                         </Typography.Text>
