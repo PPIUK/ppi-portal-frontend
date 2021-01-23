@@ -82,7 +82,6 @@ function BranchListView() {
                 compare: (a, b) => (a.dob > b.dob ? 1 : a.dob < b.dob ? -1 : 0),
             },
             ...getColumnSearchProps('dob', ...columnSearchParams),
-            // eslint-disable-next-line no-undef
             render: (text) => moment(text).format('DD-MM-YYYY'),
         },
         {
@@ -161,7 +160,6 @@ function BranchListView() {
                         : 0,
             },
             ...getColumnSearchProps('startDate', ...columnSearchParams),
-            // eslint-disable-next-line no-undef
             render: (text) => moment(text).format('DD-MM-YYYY'),
         },
         {
@@ -173,7 +171,6 @@ function BranchListView() {
                     a.endDate > b.endDate ? 1 : a.endDate < b.endDate ? -1 : 0,
             },
             ...getColumnSearchProps('endDate', ...columnSearchParams),
-            // eslint-disable-next-line no-undef
             render: (text) => moment(text).format('DD-MM-YYYY'),
         },
         {
