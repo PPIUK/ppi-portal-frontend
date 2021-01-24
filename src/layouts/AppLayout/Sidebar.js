@@ -26,20 +26,31 @@ function Sidebar() {
                 <Link to="/app/profile/me" />
                 My Profile
             </Menu.Item>
-            <Menu.Item hidden icon={<AreaChartOutlined />}>
-                Member Summary
-            </Menu.Item>
-            <Menu.SubMenu
-                icon={<BookOutlined />}
-                title={`Chapter: ${auth.user.branch}`}
-                hidden
-            >
-                <Menu.Item>
-                    <Link to="#" />
-                    Member List
+            {auth.user.roles.includes('verified') && (
+                <Menu.Item
+                    icon={<AreaChartOutlined />}
+                    key="/app/member-database/search"
+                >
+                    <Link to="/app/member-database/search" />
+                    Member Summary
                 </Menu.Item>
-                <Menu.Item>Pending Verification</Menu.Item>
-            </Menu.SubMenu>
+            )}
+            {auth.user.roles.includes('dataAccess') && (
+                <Menu.SubMenu
+                    icon={<BookOutlined />}
+                    title={`Chapter: ${auth.user.branch}`}
+                >
+                    <Menu.Item
+                        key={`/app/member-database/branch/${auth.user.branch}`}
+                    >
+                        <Link
+                            to={`/app/member-database/branch/${auth.user.branch}`}
+                        />
+                        Member List
+                    </Menu.Item>
+                    <Menu.Item hidden>Pending Verification</Menu.Item>
+                </Menu.SubMenu>
+            )}
             <Menu.Item icon={<FormOutlined />} key="/app/mvp-award/">
                 <Link to="/app/mvp-award/" />
                 MVP Awards
