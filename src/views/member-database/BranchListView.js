@@ -28,6 +28,7 @@ function BranchListView() {
         return <Navigate to="/app/profile/me" />;
 
     const [profilesData, setProfilesData] = useState(null);
+    const [page, setPage] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -59,6 +60,11 @@ function BranchListView() {
     ];
 
     const profileTableCols = [
+        {
+            title: 'No',
+            key: 'index',
+            render: (value, item, index) => (page - 1) * 10 + index + 1,
+        },
         {
             title: 'Name',
             dataIndex: 'fullName',
@@ -246,6 +252,11 @@ function BranchListView() {
                 <Table
                     columns={profileTableCols}
                     dataSource={profilesData}
+                    pagination={{
+                        onChange(current) {
+                            setPage(current);
+                        },
+                    }}
                     scroll={{ x: true }}
                 />
             )}

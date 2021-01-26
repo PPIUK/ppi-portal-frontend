@@ -23,6 +23,7 @@ function DatabaseSearchView() {
         return <Navigate to="/app/profile/me" />;
 
     const [profilesData, setProfilesData] = useState(null);
+    const [page, setPage] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -53,6 +54,11 @@ function DatabaseSearchView() {
     ];
 
     const profileTableCols = [
+        {
+            title: 'No',
+            key: 'index',
+            render: (value, item, index) => (page - 1) * 10 + index + 1,
+        },
         {
             title: 'Name',
             dataIndex: 'fullName',
@@ -126,6 +132,11 @@ function DatabaseSearchView() {
                 <Table
                     columns={profileTableCols}
                     dataSource={profilesData}
+                    pagination={{
+                        onChange(current) {
+                            setPage(current);
+                        },
+                    }}
                     scroll={{ x: true }}
                 />
             )}
