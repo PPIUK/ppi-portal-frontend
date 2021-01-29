@@ -40,7 +40,10 @@ function BranchListView() {
                 params: {
                     paginate: false,
                     sort: sort,
-                    branch: params.branchName,
+                    branch:
+                        auth.user.branch !== 'All'
+                            ? params.branchName
+                            : undefined,
                 },
                 headers: {
                     Authorization: `Bearer ${auth.accessToken}`,
