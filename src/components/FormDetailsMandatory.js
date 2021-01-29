@@ -211,7 +211,6 @@ const universityOptions = [
 ];
 
 const branchOptions = [
-    { value: 'General' },
     { value: 'Aberdeen' },
     { value: 'Belfast' },
     { value: 'Birmingham' },
@@ -520,7 +519,7 @@ export default function FormDetailsMandatory() {
             <Form.Item name="branch" label="PPI Branch" rules={branchRules}>
                 <AutoComplete
                     options={branchOptions}
-                    placeholder="Branch (select General if you don't know)"
+                    placeholder="Branch"
                     filterOption={(inputValue, option) =>
                         option.value
                             .toUpperCase()
