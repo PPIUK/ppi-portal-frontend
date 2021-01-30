@@ -24,6 +24,7 @@ function DatabaseSearchView() {
 
     const [profilesData, setProfilesData] = useState(null);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -45,6 +46,12 @@ function DatabaseSearchView() {
             });
     };
 
+    const nameLinkFormat = (text, row) => (
+        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+            {text}
+        </Typography.Link>
+    );
+
     let columnSearchParams = [
         searchInput,
         searchText,
@@ -57,29 +64,26 @@ function DatabaseSearchView() {
         {
             title: 'No',
             key: 'index',
-            render: (value, item, index) => (page - 1) * 10 + index + 1,
+            render: (value, item, index) => (page - 1) * pageSize + index + 1,
         },
         {
             title: 'Name',
             dataIndex: 'fullName',
             key: 'fullName',
             sorter: {
-                compare: (a, b) => a.fullName.localeCompare(b.fullName),
+                compare: (a, b) =>
+                    (a.fullName || '').localeCompare(b.fullName || ''),
             },
             ...getColumnSearchProps('fullName', ...columnSearchParams),
-            // eslint-disable-next-line react/display-name
-            render: (text, row) => (
-                <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
-                    {text}
-                </Typography.Link>
-            ),
+            render: nameLinkFormat,
         },
         {
             title: 'University',
             dataIndex: 'university',
             key: 'university',
             sorter: {
-                compare: (a, b) => a.university.localeCompare(b.university),
+                compare: (a, b) =>
+                    (a.university || '').localeCompare(b.university || ''),
             },
             ...getColumnSearchProps('university', ...columnSearchParams),
         },
@@ -88,7 +92,8 @@ function DatabaseSearchView() {
             dataIndex: 'degreeLevel',
             key: 'degreeLevel',
             sorter: {
-                compare: (a, b) => a.degreeLevel.localeCompare(b.degreeLevel),
+                compare: (a, b) =>
+                    (a.degreeLevel || '').localeCompare(b.degreeLevel || ''),
             },
             ...getColumnSearchProps('degreeLevel', ...columnSearchParams),
         },
@@ -97,7 +102,8 @@ function DatabaseSearchView() {
             dataIndex: 'faculty',
             key: 'faculty',
             sorter: {
-                compare: (a, b) => a.faculty.localeCompare(b.faculty),
+                compare: (a, b) =>
+                    (a.faculty || '').localeCompare(b.faculty || ''),
             },
             ...getColumnSearchProps('faculty', ...columnSearchParams),
         },
@@ -106,7 +112,8 @@ function DatabaseSearchView() {
             dataIndex: 'course',
             key: 'course',
             sorter: {
-                compare: (a, b) => a.course.localeCompare(b.course),
+                compare: (a, b) =>
+                    (a.course || '').localeCompare(b.course || ''),
             },
             ...getColumnSearchProps('course', ...columnSearchParams),
         },
@@ -115,7 +122,8 @@ function DatabaseSearchView() {
             dataIndex: 'branch',
             key: 'branch',
             sorter: {
-                compare: (a, b) => a.branch.localeCompare(b.branch),
+                compare: (a, b) =>
+                    (a.branch || '').localeCompare(b.branch || ''),
             },
             ...getColumnSearchProps('branch', ...columnSearchParams),
         },
@@ -136,6 +144,11 @@ function DatabaseSearchView() {
                         onChange(current) {
                             setPage(current);
                         },
+                        onShowSizeChange(current, size) {
+                            setPageSize(size);
+                        },
+                        showSizeChanger: true,
+                        pageSizeOptions: [5, 10, 20, 50, 100],
                     }}
                     scroll={{ x: true }}
                 />
