@@ -1,11 +1,5 @@
-// eslint-disable-next-line no-unused-vars
-import { useAuth } from '../../utils/useAuth';
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useRef, useState } from 'react';
-// eslint-disable-next-line no-unused-vars
-import axios from 'axios';
-// eslint-disable-next-line no-unused-vars
-import { Button, Card, Input, Skeleton, Space, Table, Typography } from 'antd';
+import React from 'react';
+import { Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 const getColumnSearchProps = (

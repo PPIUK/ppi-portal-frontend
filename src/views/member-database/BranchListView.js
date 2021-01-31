@@ -29,6 +29,7 @@ function BranchListView() {
 
     const [profilesData, setProfilesData] = useState(null);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -54,6 +55,18 @@ function BranchListView() {
             });
     };
 
+    const dateFormat = (text) => (
+        <Typography>
+            {text !== undefined ? moment(text).format('DD-MM-YYYY') : null}
+        </Typography>
+    );
+
+    const nameLinkFormat = (text, row) => (
+        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+            {text}
+        </Typography.Link>
+    );
+
     let columnSearchParams = [
         searchInput,
         searchText,
@@ -66,22 +79,18 @@ function BranchListView() {
         {
             title: 'No',
             key: 'index',
-            render: (value, item, index) => (page - 1) * 10 + index + 1,
+            render: (value, item, index) => (page - 1) * pageSize + index + 1,
         },
         {
             title: 'Name',
             dataIndex: 'fullName',
             key: 'fullName',
             sorter: {
-                compare: (a, b) => a.fullName.localeCompare(b.fullName),
+                compare: (a, b) =>
+                    (a.fullName || '').localeCompare(b.fullName || ''),
             },
             ...getColumnSearchProps('fullName', ...columnSearchParams),
-            // eslint-disable-next-line react/display-name
-            render: (text, row) => (
-                <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
-                    {text}
-                </Typography.Link>
-            ),
+            render: nameLinkFormat,
         },
         {
             title: 'Date of Birth',
@@ -91,14 +100,15 @@ function BranchListView() {
                 compare: (a, b) => (a.dob > b.dob ? 1 : a.dob < b.dob ? -1 : 0),
             },
             ...getColumnSearchProps('dob', ...columnSearchParams),
-            render: (text) => moment(text).format('DD-MM-YYYY'),
+            render: dateFormat,
         },
         {
             title: 'Origin City',
             dataIndex: 'originCity',
             key: 'originCity',
             sorter: {
-                compare: (a, b) => a.originCity.localeCompare(b.originCity),
+                compare: (a, b) =>
+                    (a.originCity || '').localeCompare(b.originCity || ''),
             },
             ...getColumnSearchProps('originCity', ...columnSearchParams),
         },
@@ -107,7 +117,8 @@ function BranchListView() {
             dataIndex: 'addressUK',
             key: 'addressUK',
             sorter: {
-                compare: (a, b) => a.addressUK.localeCompare(b.addressUK),
+                compare: (a, b) =>
+                    (a.addressUK || '').localeCompare(b.addressUK || ''),
             },
             ...getColumnSearchProps('addressUK', ...columnSearchParams),
         },
@@ -116,7 +127,8 @@ function BranchListView() {
             dataIndex: 'postcodeUK',
             key: 'postcodeUK',
             sorter: {
-                compare: (a, b) => a.postcodeUK.localeCompare(b.postcodeUK),
+                compare: (a, b) =>
+                    (a.postcodeUK || '').localeCompare(b.postcodeUK || ''),
             },
             ...getColumnSearchProps('postcodeUK', ...columnSearchParams),
         },
@@ -125,7 +137,8 @@ function BranchListView() {
             dataIndex: 'university',
             key: 'university',
             sorter: {
-                compare: (a, b) => a.university.localeCompare(b.university),
+                compare: (a, b) =>
+                    (a.university || '').localeCompare(b.university || ''),
             },
             ...getColumnSearchProps('university', ...columnSearchParams),
         },
@@ -134,7 +147,8 @@ function BranchListView() {
             dataIndex: 'degreeLevel',
             key: 'degreeLevel',
             sorter: {
-                compare: (a, b) => a.degreeLevel.localeCompare(b.degreeLevel),
+                compare: (a, b) =>
+                    (a.degreeLevel || '').localeCompare(b.degreeLevel || ''),
             },
             ...getColumnSearchProps('degreeLevel', ...columnSearchParams),
         },
@@ -143,7 +157,8 @@ function BranchListView() {
             dataIndex: 'faculty',
             key: 'faculty',
             sorter: {
-                compare: (a, b) => a.faculty.localeCompare(b.faculty),
+                compare: (a, b) =>
+                    (a.faculty || '').localeCompare(b.faculty || ''),
             },
             ...getColumnSearchProps('faculty', ...columnSearchParams),
         },
@@ -152,7 +167,8 @@ function BranchListView() {
             dataIndex: 'course',
             key: 'course',
             sorter: {
-                compare: (a, b) => a.course.localeCompare(b.course),
+                compare: (a, b) =>
+                    (a.course || '').localeCompare(b.course || ''),
             },
             ...getColumnSearchProps('course', ...columnSearchParams),
         },
@@ -169,7 +185,7 @@ function BranchListView() {
                         : 0,
             },
             ...getColumnSearchProps('startDate', ...columnSearchParams),
-            render: (text) => moment(text).format('DD-MM-YYYY'),
+            render: dateFormat,
         },
         {
             title: 'End Date',
@@ -180,7 +196,7 @@ function BranchListView() {
                     a.endDate > b.endDate ? 1 : a.endDate < b.endDate ? -1 : 0,
             },
             ...getColumnSearchProps('endDate', ...columnSearchParams),
-            render: (text) => moment(text).format('DD-MM-YYYY'),
+            render: dateFormat,
         },
         {
             title: 'Funding Source',
@@ -188,7 +204,9 @@ function BranchListView() {
             key: 'fundingSource',
             sorter: {
                 compare: (a, b) =>
-                    a.fundingSource.localeCompare(b.fundingSource),
+                    (a.fundingSource || '').localeCompare(
+                        b.fundingSource || ''
+                    ),
             },
             ...getColumnSearchProps('fundingSource', ...columnSearchParams),
         },
@@ -197,7 +215,7 @@ function BranchListView() {
             dataIndex: 'email',
             key: 'email',
             sorter: {
-                compare: (a, b) => a.email.localeCompare(b.email),
+                compare: (a, b) => (a.email || '').localeCompare(b.email || ''),
             },
             ...getColumnSearchProps('email', ...columnSearchParams),
         },
@@ -207,7 +225,9 @@ function BranchListView() {
             key: 'emailPersonal',
             sorter: {
                 compare: (a, b) =>
-                    a.emailPersonal.localeCompare(b.emailPersonal),
+                    (a.emailPersonal || '').localeCompare(
+                        b.emailPersonal || ''
+                    ),
             },
             ...getColumnSearchProps('emailPersonal', ...columnSearchParams),
         },
@@ -216,7 +236,7 @@ function BranchListView() {
             dataIndex: 'phoneWA',
             key: 'phoneWA',
             sorter: {
-                compare: (a, b) => a.phoneWA.localeCompare(b.phoneWA),
+                compare: (a, b) => (a.phoneWA || '').compare(b.phoneWA || ''),
             },
             ...getColumnSearchProps('phoneWA', ...columnSearchParams),
         },
@@ -225,7 +245,8 @@ function BranchListView() {
             dataIndex: 'linkedin',
             key: 'linkedin',
             sorter: {
-                compare: (a, b) => a.linkedin.localeCompare(b.linkedin),
+                compare: (a, b) =>
+                    (a.linkedin || '').localeCompare(b.linkedin || ''),
             },
             ...getColumnSearchProps('linkedin', ...columnSearchParams),
         },
@@ -234,7 +255,8 @@ function BranchListView() {
             dataIndex: 'branch',
             key: 'branch',
             sorter: {
-                compare: (a, b) => a.branch.localeCompare(b.branch),
+                compare: (a, b) =>
+                    (a.branch || '').localeCompare(b.branch || ''),
             },
             ...getColumnSearchProps('branch', ...columnSearchParams),
         },
@@ -259,6 +281,11 @@ function BranchListView() {
                         onChange(current) {
                             setPage(current);
                         },
+                        onShowSizeChange(current, size) {
+                            setPageSize(size);
+                        },
+                        showSizeChanger: true,
+                        pageSizeOptions: [5, 10, 20, 50, 100],
                     }}
                     scroll={{ x: true }}
                 />
