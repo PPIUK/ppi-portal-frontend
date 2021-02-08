@@ -8,6 +8,7 @@ import ServerErrorView from './views/error/ServerErrorView';
 import RegisterView from './views/auth/RegisterView';
 import PasswordResetView from './views/auth/PasswordResetView';
 import ForgotPasswordView from './views/auth/ForgotPasswordView';
+import AuthorizeView from './views/auth/AuthorizeView';
 import ProfileView from './views/profile/ProfileView';
 import OwnProfileView from './views/profile/OwnProfileView';
 import DatabaseSearchView from './views/member-database/DatabaseSearchView.js';
@@ -89,6 +90,7 @@ const routes = [
             { path: '*', element: <Navigate to="/app/profile/me" /> },
         ],
     },
+    { path: 'authorize', element: <AuthorizeView /> },
 ];
 
 export default routes;
