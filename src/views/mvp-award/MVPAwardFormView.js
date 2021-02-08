@@ -3002,7 +3002,12 @@ export default function MVPAwardFormView() {
                 );
             });
     };
-    const onNomineeSelect = (val, option) => setSelectedNominee(option.label);
+    const onNomineeSelect = (val, option) => {
+        form.setFieldsValue({
+            nominatedUser: option.value,
+        });
+        setSelectedNominee(option.label);
+    };
     const onSubmitterChange = (e) => setSubmitterType(e.target.value);
     const onAwardTypeChange = () =>
         setAwardTypes(form.getFieldValue('awardTypes'));
