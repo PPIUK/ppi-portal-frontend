@@ -82,6 +82,18 @@ export default function MVPAwardIndexView() {
                 </span>
             }
         >
+            <Descriptions title="Contact Details" bordered size="middle">
+                <Descriptions.Item label="Email (Uni)" span={3}>
+                    {submitter.email}
+                </Descriptions.Item>
+                <Descriptions.Item label="Email (Personal)" span={3}>
+                    {submitter.emailPersonal}
+                </Descriptions.Item>
+                <Descriptions.Item label="Phone Number" span={3}>
+                    {submitter.phoneWA}
+                </Descriptions.Item>
+            </Descriptions>
+            <br />
             <Descriptions title="Summary" bordered size="middle">
                 <Descriptions.Item label="Nominated Member" span={3}>
                     {nominee.fullName}
