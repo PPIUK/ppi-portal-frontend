@@ -84,13 +84,13 @@ export default function MVPAwardIndexView() {
         >
             <Descriptions title="Contact Details" bordered size="middle">
                 <Descriptions.Item label="Email (Uni)" span={3}>
-                    {submitter.email}
+                    {nominee.email}
                 </Descriptions.Item>
                 <Descriptions.Item label="Email (Personal)" span={3}>
-                    {submitter.emailPersonal}
+                    {nominee.emailPersonal}
                 </Descriptions.Item>
                 <Descriptions.Item label="Phone Number" span={3}>
-                    {submitter.phoneWA}
+                    {nominee.phoneWA}
                 </Descriptions.Item>
             </Descriptions>
             <br />
