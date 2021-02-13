@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import qs from 'qs';
 
 import {
     Form,
@@ -40,7 +42,7 @@ const loginErrorAlert = (message) => {
     );
 };
 
-function LoginView() {
+function LoginView({ appOAuthLogin }) {
     const [form] = Form.useForm();
     const auth = useAuth();
     const navigate = useNavigate();
@@ -50,7 +52,14 @@ function LoginView() {
     const onLoginSubmit = (vals) => {
         auth.signin(vals.username, vals.password)
             .then(() => {
-                navigate('/app/profile/me');
+                if (appOAuthLogin === null) {
+                    navigate('/app/profile/me');
+                } else {
+                    axios.post(
+                        'http://localhost:3000/api/auth/authorize',
+                        qs.stringify(appOAuthLogin)
+                    );
+                }
             })
             .catch((err) => {
                 if (err.response.status === 400 || err.response.status === 404)
