@@ -17,13 +17,10 @@ function AuthorizeView() {
     const auth = useAuth();
     const location = useLocation();
     const params = qs.parse(location.search, { ignoreQueryPrefix: true });
-    params.user = auth.user;
 
     if (auth.user && auth.accessToken) {
-        axios.post(
-            'http://localhost:3000/api/auth/authorize',
-            qs.stringify(params)
-        );
+        params.user = auth.user;
+        axios.post('/api/auth/authorize', qs.stringify(params));
 
         return (
             <Card {...cardStyle}>
@@ -33,7 +30,7 @@ function AuthorizeView() {
     }
     return (
         <Card {...cardStyle}>
-            <LoginView />
+            <LoginView appOAuthLogin={params} />
         </Card>
     );
 }

@@ -52,11 +52,15 @@ function LoginView({ appOAuthLogin }) {
     const onLoginSubmit = (vals) => {
         auth.signin(vals.username, vals.password)
             .then(() => {
-                if (appOAuthLogin === null) {
+                if (
+                    appOAuthLogin === undefined ||
+                    Object.keys(appOAuthLogin).length === 0
+                ) {
                     navigate('/app/profile/me');
                 } else {
+                    appOAuthLogin.user = localStorage.getItem('oauth-user');
                     axios.post(
-                        'http://localhost:3000/api/auth/authorize',
+                        '/api/auth/authorize',
                         qs.stringify(appOAuthLogin)
                     );
                 }
