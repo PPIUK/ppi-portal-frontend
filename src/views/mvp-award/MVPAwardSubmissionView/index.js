@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Card, Button, Skeleton, Descriptions, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
-import { useAuth } from '../../utils/useAuth';
+import { useAuth } from '../../../utils/useAuth';
 
 import { Navigate, useParams } from 'react-router-dom';
 
 import axios from 'axios';
-
 import download from 'downloadjs';
+
+import scoring from './scoring.json';
 
 export default function MVPAwardIndexView() {
     const params = useParams();
     const auth = useAuth();
     const [formData, setFormData] = useState(null);
+    const [score, setScore] = useState(0);
     const [submitter, setSubmitter] = useState(null);
     const [nominee, setNominee] = useState(null);
     const [fileError, setFileError] = useState('');
@@ -48,6 +50,23 @@ export default function MVPAwardIndexView() {
             })
             .then((resp) => {
                 setFormData(resp.data.data);
+                let score = 0;
+                resp.data.data.awardIndicators.map(
+                    (award) =>
+                        award &&
+                        award.indicators.map(
+                            (indicator) =>
+                                indicator &&
+                                indicator.subindicators.map(
+                                    (subindicator) =>
+                                        subindicator &&
+                                        (score +=
+                                            scoring[subindicator.name] || 0)
+                                )
+                        )
+                );
+                setScore(score);
+
                 axios
                     .get(`/api/profiles/${resp.data.data.user}`, {
                         headers: {
@@ -112,6 +131,10 @@ export default function MVPAwardIndexView() {
                             </>
                         );
                     })}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Score" span={3}>
+                    {score}
                 </Descriptions.Item>
             </Descriptions>
             <br />
