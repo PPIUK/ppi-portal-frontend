@@ -2967,6 +2967,15 @@ function alreadySubmitted(message, navigate) {
     }, secondsToGo * 1005);
 }
 
+function disableSubmissions(navigate) {
+    Modal.info({
+        title: 'Submissions closed',
+        content:
+            'Submissions are now closed, thank you for your interest in The MVP Awards',
+        afterClose: () => navigate('/app/profile/me'),
+    });
+}
+
 export default function MVPAwardFormView() {
     const auth = useAuth();
     const navigate = useNavigate();
@@ -3047,19 +3056,20 @@ export default function MVPAwardFormView() {
     }, []);
 
     useEffect(() => {
-        axios
-            .get('/api/forms/mvpawards/edit', {
-                headers: {
-                    Authorization: `Bearer ${auth.accessToken}`,
-                },
-            })
-            .then((resp) => {
-                if (resp.data.data && resp.data.data.submitted)
-                    alreadySubmitted(
-                        'Form has already been submitted!',
-                        navigate
-                    );
-            });
+        disableSubmissions(navigate);
+        // axios
+        //     .get('/api/forms/mvpawards/edit', {
+        //         headers: {
+        //             Authorization: `Bearer ${auth.accessToken}`,
+        //         },
+        //     })
+        //     .then((resp) => {
+        //         if (resp.data.data && resp.data.data.submitted)
+        //             alreadySubmitted(
+        //                 'Form has already been submitted!',
+        //                 navigate
+        //             );
+        //     });
     }, []);
 
     return (
