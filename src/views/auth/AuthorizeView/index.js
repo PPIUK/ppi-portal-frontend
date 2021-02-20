@@ -25,7 +25,7 @@ function AuthorizeView() {
                 withCredentials: true,
             })
             .then((res) => {
-                window.location = res.request.res.responseUrl;
+                window.location = res.request.responseURL;
             });
 
         return (
