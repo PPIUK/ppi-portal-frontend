@@ -20,7 +20,9 @@ function AuthorizeView() {
 
     if (auth.user && auth.accessToken) {
         params.user = auth.user;
-        axios.post('/api/auth/authorize', qs.stringify(params));
+        axios.post('/api/auth/authorize', qs.stringify(params), {
+            withCredentials: true,
+        });
 
         return (
             <Card {...cardStyle}>

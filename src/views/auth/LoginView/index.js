@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import qs from 'qs';
 
 import {
     Form,
@@ -57,12 +55,6 @@ function LoginView({ appOAuthLogin }) {
                     Object.keys(appOAuthLogin).length === 0
                 ) {
                     navigate('/app/profile/me');
-                } else {
-                    appOAuthLogin.user = localStorage.getItem('oauth-user');
-                    axios.post(
-                        '/api/auth/authorize',
-                        qs.stringify(appOAuthLogin)
-                    );
                 }
             })
             .catch((err) => {
