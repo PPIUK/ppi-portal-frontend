@@ -114,6 +114,9 @@ export default function MVPAwardIndexView() {
                 <Descriptions.Item label="UK Address" span={3}>
                     {nominee.addressUK}
                 </Descriptions.Item>
+                <Descriptions.Item label="UK Postcode" span={3}>
+                    {nominee.postcodeUK}
+                </Descriptions.Item>
             </Descriptions>
             <br />
             <Descriptions title="Summary" bordered size="middle">
