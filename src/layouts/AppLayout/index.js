@@ -35,7 +35,7 @@ function AppLayout() {
                 <div className="logo" />
                 <Sidebar />
             </Sider>
-            <Layout style={{ marginLeft: 200 }}>
+            <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
                 <Header
                     style={{
                         backgroundColor: '#fff',
