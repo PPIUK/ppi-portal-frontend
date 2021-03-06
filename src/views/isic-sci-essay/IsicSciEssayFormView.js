@@ -233,7 +233,9 @@ function IsicSciEssayFormView() {
             >
                 <Card>
                     <Typography.Title level={2} style={{ textAlign: 'center' }}>
-                        ISIC X SCI 2021 Essay Competition
+                        <a href="http://isic2021.ppiuk.org/essay-competition/">
+                            ISIC X SCI 2021 Essay Competition
+                        </a>
                     </Typography.Title>
                     <Typography.Title level={3} style={{ textAlign: 'center' }}>
                         Registration & Abstract Submission
@@ -355,8 +357,8 @@ function IsicSciEssayFormView() {
                         <Form.Item
                             label={
                                 isCollaboration
-                                    ? "Author 1's Valid Student ID Number"
-                                    : "Author's Valid Student ID Number"
+                                    ? "Author 1's Valid Student ID #"
+                                    : "Author's Valid Student ID #"
                             }
                             name="studentIdNumber1"
                             rules={[
@@ -412,8 +414,8 @@ function IsicSciEssayFormView() {
                         <Form.Item
                             label={
                                 isCollaboration
-                                    ? "Author 1's KTP/Passport Number"
-                                    : "Author's KTP/Passport Number"
+                                    ? "Author 1's KTP/Passport #"
+                                    : "Author's KTP/Passport #"
                             }
                             name="ktpPassportNumber1"
                             rules={[
@@ -509,7 +511,7 @@ function IsicSciEssayFormView() {
                                 </Form.Item>
 
                                 <Form.Item
-                                    label="Author 2's Valid Student ID Number"
+                                    label="Author 2's Valid Student ID #"
                                     name="studentIdNumber2"
                                     rules={[
                                         {
@@ -563,7 +565,7 @@ function IsicSciEssayFormView() {
                                 </Form.Item>
 
                                 <Form.Item
-                                    label="Author 2's KTP/Passport Number"
+                                    label="Author 2's KTP/Passport #"
                                     name="ktpPassportNumber2"
                                     rules={[
                                         {
@@ -673,7 +675,7 @@ function IsicSciEssayFormView() {
                         >
                             <Upload
                                 maxCount={1}
-                                accept=".pdf"
+                                accept=".doc,.docx"
                                 beforeUpload={(file) =>
                                     beforeUpload('abstract', file)
                                 }
@@ -684,7 +686,7 @@ function IsicSciEssayFormView() {
                                     Select File
                                 </Button>
                                 <Typography>
-                                    (.pdf file only, max: 5 MB)
+                                    (.doc/.docx file only, max: 5 MB)
                                 </Typography>
                             </Upload>
                         </Form.Item>

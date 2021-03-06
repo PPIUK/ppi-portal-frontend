@@ -31,8 +31,10 @@ function IsicSciEssayFormSubmittedView() {
                 <Card style={{ textAlign: 'center' }}>
                     <Typography.Title>Abstract Submitted</Typography.Title>
                     <Typography>
-                        Thank you for participating in ISIC x SCI 2021 Essay
-                        Competition.
+                        Thank you for participating in{' '}
+                        <a href="http://isic2021.ppiuk.org/essay-competition/">
+                            ISIC X SCI 2021 Essay Competition
+                        </a>
                     </Typography>
                     <Typography>
                         We have received the abstract that you submitted.
