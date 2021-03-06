@@ -3,6 +3,7 @@ import {
     Card,
     Form,
     Input,
+    Layout,
     Modal,
     Popconfirm,
     Radio,
@@ -11,9 +12,11 @@ import {
     Upload,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
+const { Content } = Layout;
 const { Option } = Select;
 
 const layout = {
@@ -27,6 +30,58 @@ const tailLayout = {
 function IsicSciEssayFormView() {
     const [submissionType, setSubmissionType] = useState('Individual');
     const [isCollaboration, setIsCollaboration] = useState(false);
+
+    const [abstractFileList, setAbstractFileList] = useState([]);
+    const [studentId1FileList, setStudentId1FileList] = useState([]);
+    const [studentId2FileList, setStudentId2FileList] = useState([]);
+    const [ktp1FileList, setKtp1FileList] = useState([]);
+    const [ktp2FileList, setKtp2FileList] = useState([]);
+
+    const [isUploading, setIsUploading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const beforeUpload = (type, file) => {
+        switch (type) {
+            case 'abstract':
+                setAbstractFileList([file]);
+                break;
+            case 'studentId1':
+                setStudentId1FileList([file]);
+                break;
+            case 'studentId2':
+                setStudentId2FileList([file]);
+                break;
+            case 'ktp1':
+                setKtp1FileList([file]);
+                break;
+            case 'ktp2':
+                setKtp2FileList([file]);
+                break;
+        }
+        return false;
+    };
+
+    const onRemove = (type) => {
+        switch (type) {
+            case 'abstract':
+                setAbstractFileList([]);
+                return abstractFileList;
+            case 'studentId1':
+                setStudentId1FileList([]);
+                return studentId1FileList;
+            case 'studentId2':
+                setStudentId2FileList([]);
+                return studentId2FileList;
+            case 'ktp1':
+                setKtp1FileList([]);
+                return ktp1FileList;
+            case 'ktp2':
+                setKtp2FileList([]);
+                return ktp2FileList;
+        }
+    };
+
     const [form] = Form.useForm();
 
     const submissionTypes = [
@@ -36,7 +91,7 @@ function IsicSciEssayFormView() {
 
     const onSubmissionTypeChange = (e) => {
         setSubmissionType(e.target.value);
-        if (submissionType === 'Collaboration') {
+        if (e.target.value === 'Collaboration') {
             setIsCollaboration(true);
         } else {
             setIsCollaboration(false);
@@ -44,159 +99,218 @@ function IsicSciEssayFormView() {
     };
 
     const submit = (vals) => {
+        setIsUploading(true);
+
+        const abstractFormData = new FormData();
+        abstractFileList.forEach((file) => {
+            abstractFormData.append('files[]', file);
+        });
+
+        const studentId1FormData = new FormData();
+        studentId1FileList.forEach((file) => {
+            studentId1FormData.append('files[]', file);
+        });
+
+        const ktp1FormData = new FormData();
+        ktp1FileList.forEach((file) => {
+            ktp1FormData.append('files[]', file);
+        });
+
+        const studentId2FormData = new FormData();
+        studentId2FileList.forEach((file) => {
+            studentId2FormData.append('files[]', file);
+        });
+
+        const ktp2FormData = new FormData();
+        ktp2FileList.forEach((file) => {
+            ktp2FormData.append('files[]', file);
+        });
+
+        let submissionId = '';
+
         axios
             .post('/api/forms/isicsciessay/submit', vals)
+            .then((res) => {
+                console.log(res.data.submissionId);
+                submissionId = res.data.submissionId;
+                return axios.post(
+                    `/api/forms/isicsciessay/${submissionId}/abstract`,
+                    abstractFormData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+            })
             .then(() => {
-                Modal.info({
-                    title: 'Form Submitted',
-                    content: 'Form has been submitted successfully!',
+                return axios.post(
+                    `/api/forms/isicsciessay/${submissionId}/studentID/1`,
+                    studentId1FormData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+            })
+            .then(() => {
+                return axios.post(
+                    `/api/forms/isicsciessay/${submissionId}/ktp/1`,
+                    ktp1FormData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+            })
+            .then(() => {
+                if (isCollaboration) {
+                    return axios.post(
+                        `/api/forms/isicsciessay/${submissionId}/studentID/2`,
+                        studentId2FormData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        }
+                    );
+                }
+            })
+            .then(() => {
+                if (isCollaboration) {
+                    return axios.post(
+                        `/api/forms/isicsciessay/${submissionId}/ktp/2`,
+                        ktp2FormData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        }
+                    );
+                }
+            })
+            .then(() => {
+                return axios.post('/api/forms/isicsciessay/submit', {
+                    ...vals,
+                    abstractSubmitted: true,
                 });
+            })
+            .then(() => {
+                setIsUploading(false);
+                navigate(`/isic-sci-essay/${submissionId}/submitted`);
             })
             .catch((error) => {
                 Modal.error({
                     title: 'Error',
                     content: error.response.data.message,
                 });
+                setIsUploading(false);
             });
     };
 
+    useEffect(() => {
+        document.title = 'ISIC x SCI 2021 Essay Competition';
+    });
+
     return (
-        <Card>
-            <Typography.Title level={2} style={{ textAlign: 'center' }}>
-                ISIC X SCI 2021 Essay Competition
-            </Typography.Title>
-
-            <Form
-                {...layout}
-                form={form}
-                onFinish={submit}
-                requiredMark={false}
-                initialValues={{ submissionType: 'Individual' }}
+        <Layout
+            style={{
+                background:
+                    'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(0,212,240,1) 20%, rgba(4,0,255,1) 100%',
+                minHeight: '100vh',
+            }}
+        >
+            <Content
+                style={{
+                    margin: '24px 16px',
+                    marginTop: 24,
+                    padding: 24,
+                    minHeight: '100vh',
+                    overflow: 'initial',
+                }}
             >
-                <Form.Item
-                    label="Topic"
-                    name="topic"
-                    rules={[
-                        { required: true, message: 'Please choose the topic!' },
-                    ]}
-                >
-                    <Select>
-                        <Option value="01">01. STEM</Option>
-                        <Option value="02">
-                            02. Built Environment & Infrastructure
-                        </Option>
-                        <Option value="03">03. Business and Economics</Option>
-                        <Option value="04">04. Health</Option>
-                        <Option value="05">05. Education</Option>
-                        <Option value="06">
-                            06. Political Science and Law
-                        </Option>
-                        <Option value="07">07. Energy</Option>
-                        <Option value="08">
-                            08. Social Development, Arts and Humanities
-                        </Option>
-                    </Select>
-                </Form.Item>
+                <Card>
+                    <Typography.Title level={2} style={{ textAlign: 'center' }}>
+                        ISIC X SCI 2021 Essay Competition
+                    </Typography.Title>
+                    <Typography.Title level={3} style={{ textAlign: 'center' }}>
+                        Registration & Abstract Submission
+                    </Typography.Title>
 
-                <Form.Item
-                    label="Title"
-                    name="title"
-                    rules={[
-                        { required: true, message: 'Please choose the topic!' },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item label="Submission Type" name="submissionType">
-                    <Radio.Group
-                        options={submissionTypes}
-                        onChange={onSubmissionTypeChange}
-                        optionType="button"
-                        buttonStyle="solid"
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label="Name User 1"
-                    name="userName1"
-                    rules={[
-                        { required: true, message: 'Please input the name!' },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="University User 1"
-                    name="university1"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input the university!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Major User 1"
-                    name="major1"
-                    rules={[
-                        { required: true, message: 'Please input the major!' },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Valid Student ID Number User 1"
-                    name="studentIdNumber1"
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                'Please input the valid student ID number!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item label="Valid Student ID 1" name="studentId1">
-                    <Upload maxCount={1}>
-                        <Button icon={<UploadOutlined />}>Select File</Button>
-                    </Upload>
-                </Form.Item>
-
-                <Form.Item
-                    label="KTP/Passport Number User 1"
-                    name="ktpPassportNumber1"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input the KTP/Passport number!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item label="KTP/Passport 1" name="ktpPassport1">
-                    <Upload maxCount={1}>
-                        <Button icon={<UploadOutlined />}>Select File</Button>
-                    </Upload>
-                </Form.Item>
-
-                {submissionType === 'Collaboration' && (
-                    <>
+                    <Form
+                        {...layout}
+                        form={form}
+                        onFinish={submit}
+                        requiredMark={false}
+                        initialValues={{ submissionType: 'Individual' }}
+                    >
                         <Form.Item
-                            label="Name User 2"
-                            name="userName2"
+                            label="Topic"
+                            name="topic"
                             rules={[
                                 {
-                                    required: { isCollaboration },
+                                    required: true,
+                                    message: 'Please choose the topic!',
+                                },
+                            ]}
+                        >
+                            <Select>
+                                <Option value="01">01. STEM</Option>
+                                <Option value="02">
+                                    02. Built Environment & Infrastructure
+                                </Option>
+                                <Option value="03">
+                                    03. Business and Economics
+                                </Option>
+                                <Option value="04">04. Health</Option>
+                                <Option value="05">05. Education</Option>
+                                <Option value="06">
+                                    06. Political Science and Law
+                                </Option>
+                                <Option value="07">07. Energy</Option>
+                                <Option value="08">
+                                    08. Social Development, Arts and Humanities
+                                </Option>
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Title"
+                            name="title"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input the title!',
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Submission Type"
+                            name="submissionType"
+                        >
+                            <Radio.Group
+                                options={submissionTypes}
+                                onChange={onSubmissionTypeChange}
+                                optionType="button"
+                                buttonStyle="solid"
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            label={
+                                isCollaboration
+                                    ? 'Author 1 Name'
+                                    : 'Author Name'
+                            }
+                            name="name1"
+                            rules={[
+                                {
+                                    required: true,
                                     message: 'Please input the name!',
                                 },
                             ]}
@@ -205,11 +319,15 @@ function IsicSciEssayFormView() {
                         </Form.Item>
 
                         <Form.Item
-                            label="University User 2"
-                            name="university2"
+                            label={
+                                isCollaboration
+                                    ? "Author 1's University"
+                                    : "Author's University"
+                            }
+                            name="university1"
                             rules={[
                                 {
-                                    required: { isCollaboration },
+                                    required: true,
                                     message: 'Please input the university!',
                                 },
                             ]}
@@ -218,11 +336,15 @@ function IsicSciEssayFormView() {
                         </Form.Item>
 
                         <Form.Item
-                            label="Major User 2"
-                            name="major2"
+                            label={
+                                isCollaboration
+                                    ? "Author 1's Major"
+                                    : "Author's Major"
+                            }
+                            name="major1"
                             rules={[
                                 {
-                                    required: { isCollaboration },
+                                    required: true,
                                     message: 'Please input the major!',
                                 },
                             ]}
@@ -231,11 +353,15 @@ function IsicSciEssayFormView() {
                         </Form.Item>
 
                         <Form.Item
-                            label="Valid Student ID Number User 2"
-                            name="studentIdNumber2"
+                            label={
+                                isCollaboration
+                                    ? "Author 1's Valid Student ID Number"
+                                    : "Author's Valid Student ID Number"
+                            }
+                            name="studentIdNumber1"
                             rules={[
                                 {
-                                    required: { isCollaboration },
+                                    required: true,
                                     message:
                                         'Please input the valid student ID number!',
                                 },
@@ -244,20 +370,55 @@ function IsicSciEssayFormView() {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="Valid Student ID 2" name="studentId2">
-                            <Upload maxCount={1}>
+                        <Form.Item
+                            label={
+                                isCollaboration
+                                    ? "Author 1's Valid Student ID"
+                                    : "Author's Valid Student ID"
+                            }
+                            name="studentId1"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        'Please choose the valid student ID file!',
+                                    validator: () => {
+                                        if (studentId1FileList.length === 1) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject();
+                                    },
+                                },
+                            ]}
+                        >
+                            <Upload
+                                maxCount={1}
+                                accept=".gif,.jpg,.jpeg,.png"
+                                beforeUpload={(file) =>
+                                    beforeUpload('studentId1', file)
+                                }
+                                onRemove={() => onRemove('studentId1')}
+                                fileList={studentId1FileList}
+                            >
                                 <Button icon={<UploadOutlined />}>
                                     Select File
                                 </Button>
+                                <Typography>
+                                    (.gif/.jpg/.jpeg/.png file only, max: 5 MB)
+                                </Typography>
                             </Upload>
                         </Form.Item>
 
                         <Form.Item
-                            label="KTP/Passport Number User 2"
-                            name="ktpPassportNumber2"
+                            label={
+                                isCollaboration
+                                    ? "Author 1's KTP/Passport Number"
+                                    : "Author's KTP/Passport Number"
+                            }
+                            name="ktpPassportNumber1"
                             rules={[
                                 {
-                                    required: { isCollaboration },
+                                    required: true,
                                     message:
                                         'Please input the KTP/Passport number!',
                                 },
@@ -266,63 +427,307 @@ function IsicSciEssayFormView() {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="KTP/Passport 2" name="ktpPassport2">
-                            <Upload maxCount={1}>
+                        <Form.Item
+                            label={
+                                isCollaboration
+                                    ? "Author 1's KTP/Passport"
+                                    : "Author's KTP/Passport"
+                            }
+                            name="ktpPassport1"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        'Please choose the valid KTP/Passport file!',
+                                    validator: () => {
+                                        if (ktp1FileList.length === 1) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject();
+                                    },
+                                },
+                            ]}
+                        >
+                            <Upload
+                                maxCount={1}
+                                accept=".gif,.jpg,.jpeg,.png"
+                                beforeUpload={(file) =>
+                                    beforeUpload('ktp1', file)
+                                }
+                                onRemove={() => onRemove('ktp1')}
+                                fileList={ktp1FileList}
+                            >
                                 <Button icon={<UploadOutlined />}>
                                     Select File
                                 </Button>
+                                <Typography>
+                                    (.gif/.jpg/.jpeg/.png file only, max: 5 MB)
+                                </Typography>
                             </Upload>
                         </Form.Item>
-                    </>
-                )}
 
-                <Form.Item
-                    label="Email Address (main author)"
-                    name="emailAddressMain"
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                'Please choose the email address of the main author!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
+                        {submissionType === 'Collaboration' && (
+                            <>
+                                <Form.Item
+                                    label="Author 2 Name"
+                                    name="name2"
+                                    rules={[
+                                        {
+                                            required: { isCollaboration },
+                                            message: 'Please input the name!',
+                                        },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
 
-                <Form.Item
-                    label="Phone Number (main author)"
-                    name="phoneNumberMain"
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                'Please input the phone number of the main author!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
+                                <Form.Item
+                                    label="Author 2's University"
+                                    name="university2"
+                                    rules={[
+                                        {
+                                            required: { isCollaboration },
+                                            message:
+                                                'Please input the university!',
+                                        },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
 
-                <Form.Item label="Essay" name="essay">
-                    <Upload maxCount={1}>
-                        <Button icon={<UploadOutlined />}>Select File</Button>
-                    </Upload>
-                </Form.Item>
+                                <Form.Item
+                                    label="Author 2's Major"
+                                    name="major2"
+                                    rules={[
+                                        {
+                                            required: { isCollaboration },
+                                            message: 'Please input the major!',
+                                        },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
 
-                <Popconfirm
-                    title="Are you sure? You cannot edit or resubmit after submitting"
-                    onConfirm={() => form.submit()}
-                    placement="topLeft"
-                >
-                    <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Popconfirm>
-            </Form>
-        </Card>
+                                <Form.Item
+                                    label="Author 2's Valid Student ID Number"
+                                    name="studentIdNumber2"
+                                    rules={[
+                                        {
+                                            required: { isCollaboration },
+                                            message:
+                                                'Please input the valid student ID number!',
+                                        },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Author 2's Valid Student ID"
+                                    name="studentId2"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                'Please choose the valid student ID file!',
+                                            validator: () => {
+                                                if (
+                                                    isCollaboration &&
+                                                    studentId2FileList.length !==
+                                                        1
+                                                ) {
+                                                    return Promise.reject();
+                                                }
+                                                return Promise.resolve();
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    <Upload
+                                        maxCount={1}
+                                        accept=".gif,.jpg,.jpeg,.png"
+                                        beforeUpload={(file) =>
+                                            beforeUpload('studentId2', file)
+                                        }
+                                        onRemove={() => onRemove('studentId2')}
+                                        fileList={studentId2FileList}
+                                    >
+                                        <Button icon={<UploadOutlined />}>
+                                            Select File
+                                        </Button>
+                                        <Typography>
+                                            (.gif/.jpg/.jpeg/.png file only,
+                                            max: 5 MB)
+                                        </Typography>
+                                    </Upload>
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Author 2's KTP/Passport Number"
+                                    name="ktpPassportNumber2"
+                                    rules={[
+                                        {
+                                            required: { isCollaboration },
+                                            message:
+                                                'Please input the KTP/Passport number!',
+                                        },
+                                    ]}
+                                >
+                                    <Input />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Author 2's KTP/Passport"
+                                    name="ktpPassport2"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                'Please choose the valid KTP/Passport file!',
+                                            validator: () => {
+                                                if (
+                                                    isCollaboration &&
+                                                    ktp2FileList.length !== 1
+                                                ) {
+                                                    return Promise.reject();
+                                                }
+                                                return Promise.resolve();
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    <Upload
+                                        maxCount={1}
+                                        accept=".gif,.jpg,.jpeg,.png"
+                                        beforeUpload={(file) =>
+                                            beforeUpload('ktp2', file)
+                                        }
+                                        onRemove={() => onRemove('ktp2')}
+                                        fileList={ktp2FileList}
+                                    >
+                                        <Button icon={<UploadOutlined />}>
+                                            Select File
+                                        </Button>
+                                        <Typography>
+                                            (.gif/.jpg/.jpeg/.png file only,
+                                            max: 5 MB)
+                                        </Typography>
+                                    </Upload>
+                                </Form.Item>
+                            </>
+                        )}
+
+                        <Form.Item
+                            label={
+                                isCollaboration
+                                    ? 'Email Address (Main Author)'
+                                    : 'Email Address'
+                            }
+                            name="emailAddressMain"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        'Please input the email address of the main author!',
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label={
+                                isCollaboration
+                                    ? 'Phone Number (Main Author)'
+                                    : 'Phone Number'
+                            }
+                            name="phoneNumberMain"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        'Please input the phone number of the main author!',
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Abstract"
+                            name="abstract"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose the abstract file!',
+                                },
+                                () => ({
+                                    validator() {
+                                        if (abstractFileList.length === 1) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject();
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Upload
+                                maxCount={1}
+                                accept=".pdf"
+                                beforeUpload={(file) =>
+                                    beforeUpload('abstract', file)
+                                }
+                                onRemove={() => onRemove('abstract')}
+                                fileList={abstractFileList}
+                            >
+                                <Button icon={<UploadOutlined />}>
+                                    Select File
+                                </Button>
+                                <Typography>
+                                    (.pdf file only, max: 5 MB)
+                                </Typography>
+                            </Upload>
+                        </Form.Item>
+
+                        <Popconfirm
+                            title="Are you sure? You cannot edit or resubmit after submitting"
+                            onConfirm={() => form.submit()}
+                            placement="topLeft"
+                        >
+                            <Form.Item {...tailLayout}>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    disabled={isUploading}
+                                >
+                                    Submit
+                                </Button>
+                            </Form.Item>
+                        </Popconfirm>
+                    </Form>
+
+                    <Card style={{ textAlign: 'center' }}>
+                        <Typography>
+                            If there is any question, kindly seek advice from
+                            the committee and contact us at:
+                        </Typography>
+                        <Typography>
+                            Email:{' '}
+                            <a href="mailto:isicxsci@gmail.com">
+                                isicxsci@gmail.com
+                            </a>
+                        </Typography>
+                        <Typography>Phone: +447927878411 (Ilham) </Typography>
+                        <Typography>
+                            Instagram:{' '}
+                            <a href={'https://www.instagram.com/isic.ppiuk/'}>
+                                @isic.ppiuk
+                            </a>
+                        </Typography>
+                    </Card>
+                </Card>
+            </Content>
+        </Layout>
     );
 }
 
