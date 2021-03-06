@@ -17,6 +17,7 @@ import BranchListView from './views/member-database/BranchListView';
 import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
 import MVPAwardIndexView from './views/mvp-award/MVPAwardIndexView';
 import MVPAwardSubmissionView from './views/mvp-award/MVPAwardSubmissionView';
+import IsicSciEssayFormView from './views/isic-sci-essay/IsicSciEssayFormView';
 
 const routes = [
     {
@@ -90,6 +91,7 @@ const routes = [
             { path: '*', element: <Navigate to="/app/profile/me" /> },
         ],
     },
+    { path: 'isic-sci-essay', element: <IsicSciEssayFormView /> },
     { path: 'authorize', element: <AuthorizeView /> },
 ];
 
