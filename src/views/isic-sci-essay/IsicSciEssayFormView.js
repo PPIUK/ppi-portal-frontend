@@ -199,7 +199,7 @@ function IsicSciEssayFormView() {
             })
             .then(() => {
                 setIsUploading(false);
-                navigate(`/isic-sci-essay/${submissionId}/submitted`);
+                navigate(`/essay-isic-sci-2021/${submissionId}/submitted`);
             })
             .catch((error) => {
                 Modal.error({
