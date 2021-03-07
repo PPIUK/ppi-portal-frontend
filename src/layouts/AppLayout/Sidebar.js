@@ -64,6 +64,15 @@ function Sidebar() {
                     MVP Submissions
                 </Menu.Item>
             )}
+            {auth.user.roles.includes('isicSciEssayAccess') && (
+                <Menu.Item
+                    icon={<UnorderedListOutlined />}
+                    key="/app/essay-isic-sci/submissions"
+                >
+                    <Link to="/app/essay-isic-sci/submissions" />
+                    ISIC x SCI Essays
+                </Menu.Item>
+            )}
         </Menu>
     );
 }

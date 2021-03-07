@@ -19,6 +19,7 @@ import MVPAwardIndexView from './views/mvp-award/MVPAwardIndexView';
 import MVPAwardSubmissionView from './views/mvp-award/MVPAwardSubmissionView';
 import IsicSciEssayFormView from './views/isic-sci-essay/IsicSciEssayFormView';
 import IsicSciEssayFormSubmittedView from './views/isic-sci-essay/IsicSciEssayFormSubmittedView';
+import IsicSciEssaySubmissionView from './views/isic-sci-essay/IsicSciEssaySubmissionView';
 
 const routes = [
     {
@@ -65,6 +66,16 @@ const routes = [
                         element: <MVPAwardSubmissionView />,
                     },
                     { path: '/', element: <MVPAwardFormView /> },
+                ],
+            },
+            {
+                path: 'essay-isic-sci',
+                element: <Outlet />,
+                children: [
+                    {
+                        path: 'submissions',
+                        element: <IsicSciEssaySubmissionView />,
+                    },
                 ],
             },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
