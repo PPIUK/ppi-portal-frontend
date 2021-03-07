@@ -42,22 +42,31 @@ function IsicSciEssayFormView() {
     const navigate = useNavigate();
 
     const beforeUpload = (type, file) => {
-        switch (type) {
-            case 'abstract':
-                setAbstractFileList([file]);
-                break;
-            case 'studentId1':
-                setStudentId1FileList([file]);
-                break;
-            case 'studentId2':
-                setStudentId2FileList([file]);
-                break;
-            case 'ktp1':
-                setKtp1FileList([file]);
-                break;
-            case 'ktp2':
-                setKtp2FileList([file]);
-                break;
+        if (file.size > 5242880) {
+            //5 MB
+            onRemove(type);
+            Modal.error({
+                title: 'Error',
+                content: 'File size is too big. Maximum 5 MB!',
+            });
+        } else {
+            switch (type) {
+                case 'abstract':
+                    setAbstractFileList([file]);
+                    break;
+                case 'studentId1':
+                    setStudentId1FileList([file]);
+                    break;
+                case 'studentId2':
+                    setStudentId2FileList([file]);
+                    break;
+                case 'ktp1':
+                    setKtp1FileList([file]);
+                    break;
+                case 'ktp2':
+                    setKtp2FileList([file]);
+                    break;
+            }
         }
         return false;
     };
@@ -662,15 +671,13 @@ function IsicSciEssayFormView() {
                                 {
                                     required: true,
                                     message: 'Please choose the abstract file!',
-                                },
-                                () => ({
-                                    validator() {
+                                    validator: () => {
                                         if (abstractFileList.length === 1) {
                                             return Promise.resolve();
                                         }
                                         return Promise.reject();
                                     },
-                                }),
+                                },
                             ]}
                         >
                             <Upload
