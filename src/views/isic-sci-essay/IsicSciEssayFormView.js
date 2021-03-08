@@ -140,7 +140,6 @@ function IsicSciEssayFormView() {
         axios
             .post('/api/forms/isicsciessay/submit', vals)
             .then((res) => {
-                console.log(res.data.submissionId);
                 submissionId = res.data.submissionId;
                 return axios.post(
                     `/api/forms/isicsciessay/${submissionId}/abstract`,
