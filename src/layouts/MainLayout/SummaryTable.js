@@ -43,15 +43,21 @@ const uniTableCols = [
 function SummaryTable() {
     const [branchData, setBranchData] = useState(null);
     const [uniData, setUniData] = useState(null);
+    const [totalMembers, setTotalMembers] = useState(null);
 
     useEffect(() => {
         axios
             .get('/api/public/members/uni')
             .then((resp) => setUniData(resp.data.data));
 
-        axios
-            .get('/api/public/members/branch')
-            .then((resp) => setBranchData(resp.data.data));
+        axios.get('/api/public/members/branch').then((resp) => {
+            setBranchData(resp.data.data);
+            setTotalMembers(
+                resp.data.data
+                    .map((branch) => branch.count)
+                    .reduce((acc, count) => count + acc)
+            );
+        });
     }, []);
     return (
         <Card {...tableStyle}>
@@ -60,7 +66,9 @@ function SummaryTable() {
                     width={100}
                     src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
                 />
-                <Typography.Title level={2}>Member Statistics</Typography.Title>
+                <Typography.Title level={2}>
+                    {totalMembers} Members
+                </Typography.Title>
             </Space>
 
             <Tabs defaultActiveKey="Branch">
