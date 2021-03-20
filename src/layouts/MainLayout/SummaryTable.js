@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Tabs, Typography, Skeleton, Table, Space, Image } from 'antd';
-import { School, CallSplit } from '@material-ui/icons';
+import { BarChart, PieChart, CallSplit, School } from '@material-ui/icons';
 
 import axios from 'axios';
+import TableauEmbed from '../../components/TableauEmbed';
 
 const tableStyle = {
     style: {
@@ -45,6 +46,12 @@ function SummaryTable() {
     const [uniData, setUniData] = useState(null);
     const [totalMembers, setTotalMembers] = useState(null);
 
+    const generalTableauUrl =
+        'https://public.tableau.com/views/PPIUKCondition/PPIUK-Overall?:language=en&:display_count=y';
+
+    const branchesTableauUrl =
+        'https://public.tableau.com/views/PPIBranchesCondition/PPIBranches?:language=en&:display_count=y';
+
     useEffect(() => {
         axios
             .get('/api/public/members/uni')
@@ -71,7 +78,33 @@ function SummaryTable() {
                 </Typography.Title>
             </Space>
 
-            <Tabs defaultActiveKey="Branch">
+            <Tabs defaultActiveKey="General Infographic">
+                <Tabs.TabPane
+                    tab={
+                        <span>
+                            <BarChart
+                                style={{ fontSize: 15, marginRight: '5px' }}
+                            />
+                            General Infographic
+                        </span>
+                    }
+                    key="General Infographic"
+                >
+                    <TableauEmbed url={generalTableauUrl} />
+                </Tabs.TabPane>
+                <Tabs.TabPane
+                    tab={
+                        <span>
+                            <PieChart
+                                style={{ fontSize: 15, marginRight: '5px' }}
+                            />
+                            Per Branch Infographic
+                        </span>
+                    }
+                    key="Per Branch Infographic"
+                >
+                    <TableauEmbed url={branchesTableauUrl} />
+                </Tabs.TabPane>
                 <Tabs.TabPane
                     tab={
                         <span>
