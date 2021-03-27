@@ -11,7 +11,7 @@ import { useAuth } from '../../../utils/useAuth';
 
 const formStyle = {
     style: {
-        margin: '3rem 3rem',
+        margin: '2rem 2rem',
     },
 };
 

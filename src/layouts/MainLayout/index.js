@@ -15,22 +15,22 @@ function MainLayout() {
                 minHeight: '100vh',
             }}
         >
-            <Row justify="space-around" align="top">
-                <Col flex="auto">
-                    <SummaryTable />
-                </Col>
-                {screens.lg && (
-                    <Col span={10}>
-                        <Outlet />
-                    </Col>
-                )}
-            </Row>
             <Row justify="center">
                 {!screens.lg && (
                     <Col flex="auto">
                         <Outlet />
                     </Col>
                 )}
+            </Row>
+            <Row justify="space-around" align="top">
+                {screens.lg && (
+                    <Col span={6}>
+                        <Outlet />
+                    </Col>
+                )}
+                <Col flex="auto">
+                    <SummaryTable />
+                </Col>
             </Row>
         </Layout>
     );

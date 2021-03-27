@@ -3,16 +3,13 @@ import { Grid } from 'antd';
 
 const { tableau } = window;
 
-// TODO: proper sizing
 function TableauEmbed({ url }) {
     const [viz, setViz] = useState(null);
     const ref = useRef(null);
     const screens = Grid.useBreakpoint();
 
     const options = {
-        // width: '100%',
-        // height: '100%',
-        device: screens.sm ? 'default' : 'tablet',
+        device: screens.xs ? 'mobile' : 'desktop',
     };
 
     const initViz = () => {
@@ -21,13 +18,12 @@ function TableauEmbed({ url }) {
             setViz(null);
         }
         const tableauViz = new tableau.Viz(ref.current, url, options);
-        // tableauViz.setFrameSize(600, 1000);
         setViz(tableauViz);
     };
 
     useEffect(() => {
         initViz();
-    }, []);
+    }, [screens]);
 
     return <div ref={ref} />;
 }
