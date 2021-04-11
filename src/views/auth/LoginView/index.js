@@ -9,6 +9,9 @@ import {
     Divider,
     Typography,
     Alert,
+    Image,
+    Grid,
+    Space,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
@@ -20,7 +23,7 @@ import './index.css';
 
 const formStyle = {
     style: {
-        margin: '3rem 3rem',
+        margin: '2rem 2rem',
     },
 };
 
@@ -44,6 +47,7 @@ function LoginView({ appOAuthLogin }) {
     const [form] = Form.useForm();
     const auth = useAuth();
     const navigate = useNavigate();
+    const screens = Grid.useBreakpoint();
 
     const [loginFeedback, setLoginFeedback] = useState(null);
 
@@ -80,21 +84,36 @@ function LoginView({ appOAuthLogin }) {
 
     return (
         <Card {...formStyle}>
-            <Typography.Title level={2} style={{ textAlign: 'center' }}>
-                Login
-            </Typography.Title>
-            <Typography.Text type="secondary" style={{ textAlign: 'center' }}>
-                If you have filled out the{' '}
-                <Typography.Text strong>PPI UK Census</Typography.Text>, please{' '}
-                <Link to="/forgot" component={Typography.Link}>
-                    reset your password
-                </Link>
-                . Otherwise you may{' '}
-                <Link to="/register" component={Typography.Link}>
-                    register
-                </Link>{' '}
-                as normal
-            </Typography.Text>
+            <Space direction="vertical">
+                <Space style={{ width: '100%', justifyContent: 'center' }}>
+                    {!screens.lg && (
+                        <Image
+                            width={100}
+                            src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
+                        />
+                    )}
+                    <Typography.Title level={2} style={{ textAlign: 'center' }}>
+                        Login
+                    </Typography.Title>
+                </Space>
+                <Typography.Text
+                    type="secondary"
+                    style={{ textAlign: 'center' }}
+                >
+                    If you have filled out the{' '}
+                    <Typography.Text strong>PPI UK Census</Typography.Text>,
+                    please{' '}
+                    <Link to="/forgot" component={Typography.Link}>
+                        reset your password
+                    </Link>
+                    . Otherwise you may{' '}
+                    <Link to="/register" component={Typography.Link}>
+                        register
+                    </Link>{' '}
+                    as normal
+                </Typography.Text>
+            </Space>
+
             <Divider />
             <Form form={form} onFinish={onLoginSubmit}>
                 <Form.Item

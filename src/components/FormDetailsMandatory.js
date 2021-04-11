@@ -249,11 +249,6 @@ const branchOptions = [
     { value: 'York' },
 ];
 
-// add some layout to keep the form organised on different screen sizes
-const formItemLayout = {
-    labelCol: { span: 6 },
-};
-
 // define validation rules for the form fields
 const uniEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
@@ -441,8 +436,8 @@ export default function FormDetailsMandatory() {
 
     return (
         <Form
-            {...formItemLayout}
             form={form}
+            layout="vertical"
             name="register"
             onFinish={onRegisterSubmit}
             scrollToFirstError
