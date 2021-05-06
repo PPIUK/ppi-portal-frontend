@@ -4,7 +4,6 @@ import {
     UserOutlined,
     AreaChartOutlined,
     BookOutlined,
-    FormOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons';
 
@@ -51,10 +50,6 @@ function Sidebar() {
                     <Menu.Item hidden>Pending Verification</Menu.Item>
                 </Menu.SubMenu>
             )}
-            <Menu.Item icon={<FormOutlined />} key="/app/mvp-award/">
-                <Link to="/app/mvp-award/" />
-                MVP Awards
-            </Menu.Item>
             {auth.user.roles.includes('mvpAwardsAccess') && (
                 <Menu.Item
                     icon={<UnorderedListOutlined />}
