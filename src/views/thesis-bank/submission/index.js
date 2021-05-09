@@ -241,7 +241,10 @@ export default function ThesisSubmissionView() {
     const onFormSubmit = (vals) => {
         const formData = new FormData();
         Object.entries(vals).map(([key, val]) => {
-            formData.append(key, val);
+            formData.append(
+                key,
+                typeof val === 'string' ? val : JSON.stringify(val)
+            );
         });
         formData.append('file', file);
 
