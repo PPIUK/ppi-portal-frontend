@@ -4,7 +4,10 @@ import {
     UserOutlined,
     AreaChartOutlined,
     BookOutlined,
+    ReadOutlined,
     UnorderedListOutlined,
+    FileSearchOutlined,
+    FormOutlined,
 } from '@ant-design/icons';
 
 import { useAuth } from '../../utils/useAuth';
@@ -25,6 +28,30 @@ function Sidebar() {
                 <Link to="/app/profile/me" />
                 My Profile
             </Menu.Item>
+            <Menu.SubMenu icon={<ReadOutlined />} title="Thesis Bank">
+                <Menu.Item
+                    key="/app/thesis-bank/search"
+                    icon={<FileSearchOutlined />}
+                >
+                    <Link to={`/app/thesis-bank/search`} />
+                    Search
+                </Menu.Item>
+                <Menu.Item
+                    key="/app/thesis-bank/me"
+                    icon={<UnorderedListOutlined />}
+                >
+                    <Link to={`/app/thesis-bank/me`} />
+                    My Submissions
+                </Menu.Item>
+                <Menu.Item
+                    key="/app/thesis-bank/submission"
+                    icon={<FormOutlined />}
+                >
+                    <Link to={`/app/thesis-bank/submission`} />
+                    New Submission
+                </Menu.Item>
+                <Menu.Item hidden>Pending Verification</Menu.Item>
+            </Menu.SubMenu>
             {auth.user.roles.includes('verified') && (
                 <Menu.Item
                     icon={<AreaChartOutlined />}

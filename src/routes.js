@@ -17,9 +17,12 @@ import BranchListView from './views/member-database/BranchListView';
 import MVPAwardFormView from './views/mvp-award/MVPAwardFormView';
 import MVPAwardIndexView from './views/mvp-award/MVPAwardIndexView';
 import MVPAwardSubmissionView from './views/mvp-award/MVPAwardSubmissionView';
+
 import IsicSciEssayFormView from './views/isic-sci-essay/IsicSciEssayFormView';
 import IsicSciEssayFormSubmittedView from './views/isic-sci-essay/IsicSciEssayFormSubmittedView';
 import IsicSciEssaySubmissionView from './views/isic-sci-essay/IsicSciEssaySubmissionView';
+
+import ThesisSubmissionView from './views/thesis-bank/submission';
 
 const routes = [
     {
@@ -33,6 +36,16 @@ const routes = [
                     { path: 'me', element: <OwnProfileView /> },
                     { path: ':profileId', element: <ProfileView /> },
                     { path: '/', element: <Navigate to="/app/profile/me" /> },
+                ],
+            },
+            {
+                path: 'thesis-bank',
+                element: <Outlet />,
+                children: [
+                    { path: ':thesisId', element: <Outlet /> },
+                    { path: 'search', element: <Outlet /> },
+                    { path: 'me', element: <Outlet /> },
+                    { path: 'submission', element: <ThesisSubmissionView /> },
                 ],
             },
             {
