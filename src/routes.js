@@ -23,6 +23,8 @@ import IsicSciEssayFormSubmittedView from './views/isic-sci-essay/IsicSciEssayFo
 import IsicSciEssaySubmissionView from './views/isic-sci-essay/IsicSciEssaySubmissionView';
 
 import ThesisSubmissionView from './views/thesis-bank/submission';
+import ThesisMySubmissionsView from './views/thesis-bank/me';
+import ThesisSearchView from './views/thesis-bank/search';
 
 const routes = [
     {
@@ -43,8 +45,8 @@ const routes = [
                 element: <Outlet />,
                 children: [
                     { path: ':thesisId', element: <Outlet /> },
-                    { path: 'search', element: <Outlet /> },
-                    { path: 'me', element: <Outlet /> },
+                    { path: 'search', element: <ThesisSearchView /> },
+                    { path: 'me', element: <ThesisMySubmissionsView /> },
                     { path: 'submission', element: <ThesisSubmissionView /> },
                 ],
             },

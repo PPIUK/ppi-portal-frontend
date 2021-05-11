@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 
-import { AutoComplete, Button, Card, Form, Input, Select, Upload } from 'antd';
+import {
+    AutoComplete,
+    Button,
+    Card,
+    Form,
+    Input,
+    Modal,
+    Select,
+    Upload,
+} from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import {
     FormOutlined,
@@ -255,8 +264,11 @@ export default function ThesisSubmissionView() {
             .then((res) => {
                 navigate(`/thesis-bank/${res.data.id}`);
             })
-            .catch(() => {
-                // TODO: Add message handler
+            .catch((e) => {
+                Modal.error({
+                    title: 'Error',
+                    content: e.response.data.message,
+                });
             });
     };
 
