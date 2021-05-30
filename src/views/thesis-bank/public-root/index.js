@@ -1,80 +1,139 @@
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
-import { Tree } from 'antd';
-import { Link } from 'react-router-dom';
+import { Collapse, Typography } from 'antd';
+import ThesesTable from '../components/ThesesTable';
+
+const { Panel } = Collapse;
 
 export default function PublicThesesView() {
-    const initTreeData = [
+    const initData = [
         {
-            title: 'Clusters',
-            key: 'clusters',
-            children: [
-                {
-                    title: 'Economics and Business',
-                    key: 'Economics and Business',
-                },
-                {
-                    title: 'Education',
-                    key: 'Education',
-                },
-                {
-                    title: 'Energy',
-                    key: 'Energy',
-                },
-                {
-                    title: 'Health',
-                    key: 'Health',
-                },
-                {
-                    title: 'Infrastructure and Built Environment',
-                    key: 'Infrastructure and Built Environment',
-                },
-                {
-                    title: 'Politics and Law',
-                    key: 'Politics and Law',
-                },
-                {
-                    title: 'Social Development, Arts and Humanity',
-                    key: 'Social Development, Arts and Humanity',
-                },
-                {
-                    title: 'STEM',
-                    key: 'STEM',
-                },
-            ],
+            cluster: 'Economics and Business',
+        },
+        {
+            cluster: 'Education',
+        },
+        {
+            cluster: 'Energy',
+        },
+        {
+            cluster: 'Health',
+        },
+        {
+            cluster: 'Infrastructure and Built Environment',
+        },
+        {
+            cluster: 'Politics and Law',
+        },
+        {
+            cluster: 'Social Development, Arts and Humanity',
+        },
+        {
+            cluster: 'STEM',
         },
     ];
 
-    const [theses, setTheses] = useState(initTreeData);
+    const [theses, setTheses] = useState(null);
 
     useEffect(() => {
         axios.get('/api/thesis/').then((res) => {
-            let clusters = theses.find((item) => {
-                return item.key === 'clusters';
-            });
-            for (const cluster of clusters.children) {
-                let clusteredTheses = res.data.theses.filter((item) => {
-                    return item.cluster === cluster.key;
-                });
-                cluster.children = clusteredTheses.map((item) => {
-                    return {
-                        title: (
-                            <Link to={`/thesis/${item._id}`}>{item.title}</Link>
-                        ),
-                        key: item._id,
-                    };
+            for (const cluster of initData) {
+                cluster.theses = res.data.theses.filter((item) => {
+                    return item.cluster === cluster.cluster;
                 });
             }
-            setTheses([clusters]);
+            setTheses(initData);
         });
     }, []);
 
+    const selectCluster = (name) => {
+        return theses.find((item) => item.cluster === name).theses;
+    };
+
     return (
-        <Tree
-            defaultExpandedKeys={['clusters']}
-            selectable={false}
-            treeData={theses}
-        />
+        <div>
+            <Typography.Title level={3}>Clusters</Typography.Title>
+
+            <Collapse>
+                <Panel
+                    header="Economics and Business"
+                    key="Economics and Business"
+                >
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('Economics and Business')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel header="Education" key="Education">
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('Education')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel header="Energy" key="Energy">
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('Energy')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel header="Health" key="Health">
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('Health')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel
+                    header="Infrastructure and Built Environment"
+                    key="Infrastructure and Built Environment"
+                >
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster(
+                                'Infrastructure and Built Environment'
+                            )}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel header="Politics and Law" key="Politics and Law">
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('Politics and Law')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel
+                    header="Social Development, Arts and Humanity"
+                    key="Social Development, Arts and Humanity"
+                >
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster(
+                                'Social Development, Arts and Humanity'
+                            )}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+                <Panel header="STEM" key="STEM">
+                    {theses && (
+                        <ThesesTable
+                            theses={selectCluster('STEM')}
+                            isPublic={true}
+                        />
+                    )}
+                </Panel>
+            </Collapse>
+        </div>
     );
 }

@@ -4,7 +4,7 @@ import { Table } from 'antd';
 import { getColumnSearchProps } from '../../member-database/ColumnSearchProps';
 import { Link } from 'react-router-dom';
 
-export default function ThesesTable({ theses }) {
+export default function ThesesTable({ theses, isPublic }) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [searchText, setSearchText] = useState('');
@@ -19,11 +19,24 @@ export default function ThesesTable({ theses }) {
         setSearchedColumn,
     ];
 
+    const url = isPublic ? '/thesis/' : '/app/thesis-bank/';
+
     const cols = [
         {
             title: 'No',
             key: 'index',
             render: (value, item, index) => (page - 1) * pageSize + index + 1,
+        },
+        {
+            title: 'Year',
+            dataIndex: 'year',
+            key: 'year',
+            defaultSortOrder: 'descend',
+            sorter: {
+                compare: (a, b) =>
+                    a.year > b.year ? 1 : a.year < b.year ? -1 : 0,
+            },
+            ...getColumnSearchProps('year', ...colSearchParams),
         },
         {
             title: 'Type',
@@ -43,6 +56,8 @@ export default function ThesesTable({ theses }) {
                 compare: (a, b) => (a.title || '').localeCompare(b.title || ''),
             },
             ...getColumnSearchProps('title', ...colSearchParams),
+            // eslint-disable-next-line react/display-name
+            render: (title, row) => <Link to={url + row._id}>{title}</Link>,
         },
         {
             title: 'Corresponding Author',
@@ -62,6 +77,16 @@ export default function ThesesTable({ theses }) {
                 ) : (
                     <Link to={`/app/profile/${author.id}`}>{author.name}</Link>
                 ),
+        },
+        {
+            title: 'University',
+            dataIndex: 'university',
+            key: 'university',
+            sorter: {
+                compare: (a, b) =>
+                    (a.university || '').localeCompare(b.university || ''),
+            },
+            ...getColumnSearchProps('university', ...colSearchParams),
         },
     ];
     return (

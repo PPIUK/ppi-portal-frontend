@@ -30,6 +30,21 @@ export default function Thesis({ id }) {
                 <Typography>{thesis.abstract}</Typography>
                 <br />
                 <Typography>Item type: {thesis.itemType}</Typography>
+                <Typography>Year: {thesis.year}</Typography>
+                <Typography>
+                    Authors:{' '}
+                    {thesis.authors
+                        .map((author) => {
+                            return author._id === undefined ? (
+                                author.fullName
+                            ) : (
+                                <Link to={`/app/profile/${author._id}`}>
+                                    {author.fullName}
+                                </Link>
+                            );
+                        })
+                        .reduce((prev, curr) => [prev, ', ', curr])}
+                </Typography>
                 <Typography>
                     Contributor/Contact Person:{' '}
                     {thesis.correspondingAuthor._id === undefined ? (
