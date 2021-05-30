@@ -28,6 +28,7 @@ import ThesisSearchView from './views/thesis-bank/search';
 import PublicThesesView from './views/thesis-bank/public-root';
 import PublicLayout from './views/thesis-bank/layouts/PublicLayout';
 import PublicThesisView from './views/thesis-bank/public-thesis';
+import ThesisView from './views/thesis-bank/thesis';
 
 const routes = [
     {
@@ -47,7 +48,7 @@ const routes = [
                 path: 'thesis-bank',
                 element: <Outlet />,
                 children: [
-                    { path: ':thesisId', element: <Outlet /> },
+                    { path: ':thesisId', element: <ThesisView /> },
                     { path: 'search', element: <ThesisSearchView /> },
                     { path: 'me', element: <ThesisMySubmissionsView /> },
                     { path: 'submission', element: <ThesisSubmissionView /> },
