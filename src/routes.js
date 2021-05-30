@@ -25,6 +25,9 @@ import IsicSciEssaySubmissionView from './views/isic-sci-essay/IsicSciEssaySubmi
 import ThesisSubmissionView from './views/thesis-bank/submission';
 import ThesisMySubmissionsView from './views/thesis-bank/me';
 import ThesisSearchView from './views/thesis-bank/search';
+import PublicThesesView from './views/thesis-bank/public-root';
+import PublicLayout from './views/thesis-bank/layouts/PublicLayout';
+import PublicThesisView from './views/thesis-bank/public-thesis';
 
 const routes = [
     {
@@ -116,6 +119,21 @@ const routes = [
             { path: '505', element: <ServerErrorView /> },
             { path: '/', element: <Navigate to="/app/profile/me" /> },
             { path: '*', element: <Navigate to="/app/profile/me" /> },
+        ],
+    },
+
+    {
+        path: 'thesis',
+        element: <PublicLayout />,
+        children: [
+            {
+                path: '/:id',
+                element: <PublicThesisView />,
+            },
+            {
+                path: '/',
+                element: <PublicThesesView />,
+            },
         ],
     },
     {
