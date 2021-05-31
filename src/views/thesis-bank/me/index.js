@@ -13,7 +13,7 @@ export default function ThesisMySubmissionsView() {
 
     useEffect(() => {
         // fetch data
-        axios.get(`/api/thesis?createdBy=${auth.user._id}`).then((res) => {
+        axios.get(`/api/thesis?uploadedBy=${auth.user._id}`).then((res) => {
             setTheses(res.data.theses);
         });
     }, []);

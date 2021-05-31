@@ -23,7 +23,11 @@ export default function ThesisSearchView() {
                 </span>
             }
         >
-            {theses ? <ThesesTable theses={theses} /> : <Spin />}
+            {theses ? (
+                <ThesesTable theses={theses} isPublic={false} />
+            ) : (
+                <Spin />
+            )}
         </Card>
     );
 }
