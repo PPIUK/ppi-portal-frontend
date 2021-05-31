@@ -89,9 +89,57 @@ export default function ThesesTable({ theses, isPublic }) {
             ...getColumnSearchProps('university', ...colSearchParams),
         },
     ];
+
+    const clusterCol = [
+        {
+            title: 'Cluster',
+            dataIndex: 'cluster',
+            key: 'cluster',
+            sorter: {
+                compare: (a, b) =>
+                    (a.cluster || '').localeCompare(b.cluster || ''),
+            },
+            filters: [
+                {
+                    text: 'Economics and Business',
+                    value: 'Economics and Business',
+                },
+                {
+                    text: 'Education',
+                    value: 'Education',
+                },
+                {
+                    text: 'Energy',
+                    value: 'Energy',
+                },
+                {
+                    text: 'Health',
+                    value: 'Health',
+                },
+                {
+                    text: 'Infrastructure and Built Environment',
+                    value: 'Infrastructure and Built Environment',
+                },
+                {
+                    text: 'Politics and Law',
+                    value: 'Politics and Law',
+                },
+                {
+                    text: 'Social Development, Arts and Humanity',
+                    value: 'Social Development, Arts and Humanity',
+                },
+                {
+                    text: 'STEM',
+                    value: 'STEM',
+                },
+            ],
+            onFilter: (value, row) => row.cluster.indexOf(value) === 0,
+        },
+    ];
+
     return (
         <Table
-            columns={cols}
+            columns={isPublic ? cols : [...cols, ...clusterCol]}
             dataSource={theses}
             pagination={{
                 onChange(current) {
