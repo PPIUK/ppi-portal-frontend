@@ -4,6 +4,7 @@ import {
     AutoComplete,
     Button,
     Card,
+    DatePicker,
     Form,
     Input,
     Modal,
@@ -18,6 +19,7 @@ import {
     PlusOutlined,
 } from '@ant-design/icons';
 import Axios from 'axios';
+import moment from 'moment';
 import { useAuth } from '../../../utils/useAuth';
 
 const universityOptions = [
@@ -250,12 +252,15 @@ export default function ThesisSubmissionView() {
     const onFormSubmit = (vals) => {
         const formData = new FormData();
         Object.entries(vals).map(([key, val]) => {
-            formData.append(
-                key,
-                typeof val === 'string' ? val : JSON.stringify(val)
-            );
+            if (val !== undefined) {
+                formData.append(
+                    key,
+                    typeof val === 'string' ? val : JSON.stringify(val)
+                );
+            }
         });
         formData.append('file', file);
+        formData.set('year', moment(vals['year']).format('YYYY'));
 
         axios
             .post('/api/thesis', formData, {
@@ -304,6 +309,7 @@ export default function ThesisSubmissionView() {
                         <Select.Option value="Social Development, Arts and Humanity">
                             Social Development, Arts and Humanity
                         </Select.Option>
+                        <Select.Option value="STEM">STEM</Select.Option>
                     </Select>
                 </Form.Item>
                 <Form.Item
@@ -432,6 +438,19 @@ export default function ThesisSubmissionView() {
                                 .indexOf(inputValue.toUpperCase()) !== -1
                         }
                     />
+                </Form.Item>
+                <Form.Item
+                    name="year"
+                    label="Year"
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Missing year',
+                        },
+                    ]}
+                >
+                    <DatePicker picker="year" />
                 </Form.Item>
                 <Form.Item
                     name="itemType"
