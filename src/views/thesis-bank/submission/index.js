@@ -228,6 +228,7 @@ export default function ThesisSubmissionView() {
 
     const [file, setFile] = useState(null);
     const [usersSearch, setUsersSearch] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
     const onUsersSearch = (val) => {
         Axios.get('/api/profiles/search/name', {
@@ -241,16 +242,35 @@ export default function ThesisSubmissionView() {
             setUsersSearch(
                 resp.data.data.map((profile) => {
                     return {
+                        key: profile._id,
                         label: profile.fullName,
-                        value: profile._id,
+                        value: profile.fullName,
                     };
                 })
             );
         });
     };
 
+    const onUserSelect = (val, option) => {
+        setSelectedUsers([...selectedUsers, option]);
+    };
+
     const onFormSubmit = (vals) => {
         const formData = new FormData();
+        // Set authors
+        vals['authors'] = vals['authors'].map((author) => {
+            const foundId = selectedUsers.find((user) => {
+                return user.value === author;
+            });
+            return foundId !== undefined ? foundId.key : author;
+        });
+        // Set correspondingAuthor
+        const foundId = selectedUsers.find((user) => {
+            return user.value === vals['correspondingAuthor'];
+        });
+        vals['correspondingAuthor'] =
+            foundId !== undefined ? foundId.key : vals['correspondingAuthor'];
+
         Object.entries(vals).map(([key, val]) => {
             if (val !== undefined) {
                 formData.append(
@@ -360,6 +380,7 @@ export default function ThesisSubmissionView() {
                                         <AutoComplete
                                             options={usersSearch}
                                             onSearch={onUsersSearch}
+                                            onSelect={onUserSelect}
                                         >
                                             <Input placeholder="Start typing to search for members..." />
                                         </AutoComplete>
