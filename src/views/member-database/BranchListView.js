@@ -286,6 +286,8 @@ function BranchListView() {
                                 manuallyVerified,
                                 // eslint-disable-next-line no-unused-vars
                                 roles,
+                                // eslint-disable-next-line no-unused-vars
+                                referral,
                                 ...others
                             }) => others
                         )}
