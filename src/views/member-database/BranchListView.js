@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import { Card, Skeleton, Table, Typography } from 'antd';
+import { Button, Card, Skeleton, Table, Typography } from 'antd';
 import { getColumnSearchProps } from './ColumnSearchProps';
 import { useAuth } from '../../utils/useAuth';
 import { Navigate, useParams } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
 
 const baseURL =
     process.env.NODE_ENV == 'production'
@@ -274,21 +275,42 @@ function BranchListView() {
                 Branch Profile List
             </Typography.Title>
             {profilesData && (
-                <Table
-                    columns={profileTableCols}
-                    dataSource={profilesData}
-                    pagination={{
-                        onChange(current) {
-                            setPage(current);
-                        },
-                        onShowSizeChange(current, size) {
-                            setPageSize(size);
-                        },
-                        showSizeChanger: true,
-                        pageSizeOptions: [5, 10, 20, 50, 100],
-                    }}
-                    scroll={{ x: true }}
-                />
+                <div>
+                    <CSVLink
+                        filename={`PPI-UK-Branch-${params.branchName}.csv`}
+                        data={profilesData.map(
+                            ({
+                                // eslint-disable-next-line no-unused-vars
+                                emailVerified,
+                                // eslint-disable-next-line no-unused-vars
+                                manuallyVerified,
+                                // eslint-disable-next-line no-unused-vars
+                                roles,
+                                ...others
+                            }) => others
+                        )}
+                    >
+                        <Button type="primary">
+                            Download Branch Data as CSV file
+                        </Button>
+                    </CSVLink>
+
+                    <Table
+                        columns={profileTableCols}
+                        dataSource={profilesData}
+                        pagination={{
+                            onChange(current) {
+                                setPage(current);
+                            },
+                            onShowSizeChange(current, size) {
+                                setPageSize(size);
+                            },
+                            showSizeChanger: true,
+                            pageSizeOptions: [5, 10, 20, 50, 100],
+                        }}
+                        scroll={{ x: true }}
+                    />
+                </div>
             )}
             {!profilesData && <Skeleton />}
         </Card>
