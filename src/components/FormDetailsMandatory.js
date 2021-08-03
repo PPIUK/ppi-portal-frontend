@@ -250,6 +250,7 @@ const branchOptions = [
 ];
 
 // define validation rules for the form fields
+import allowedDomains from '../data/uniemails.json';
 const uniEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
     { required: true, message: 'Please enter your email!' },
@@ -257,6 +258,8 @@ const uniEmailRules = [
         validator(rule, value) {
             return new Promise((resolve, reject) => {
                 if (!value) return resolve();
+                if (!allowedDomains.includes(value.match(/@(.*)/)[1]))
+                    return reject('Not an allowed email domain');
                 axios
                     .post(
                         '/api/auth/account-lookup',
