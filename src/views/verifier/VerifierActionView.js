@@ -27,7 +27,7 @@ export default function VerifierActionView() {
                 },
             }).then((res) =>
                 res.data.data.roles.includes('verified')
-                    ? nav('/api/verifier/dashboard', { replace: true })
+                    ? nav('/app/verifier/dashboard', { replace: true })
                     : setProfileData(res.data.data)
             ),
         []
@@ -116,19 +116,20 @@ export default function VerifierActionView() {
                         Approve
                     </Button>
                 )}
-                {profileData && profileData.roles.includes('flagged') ? (
-                    <Popconfirm
-                        placement="top"
-                        title="Are you sure?"
-                        onConfirm={handlers.delete}
-                    >
-                        <Button type="danger">Delete</Button>
-                    </Popconfirm>
-                ) : (
-                    <Button type="danger" onClick={handlers.flag}>
-                        Flag
-                    </Button>
-                )}
+                {profileData &&
+                    (profileData.roles.includes('flagged') ? (
+                        <Popconfirm
+                            placement="top"
+                            title="Are you sure?"
+                            onConfirm={handlers.delete}
+                        >
+                            <Button type="danger">Delete</Button>
+                        </Popconfirm>
+                    ) : (
+                        <Button type="danger" onClick={handlers.flag}>
+                            Flag
+                        </Button>
+                    ))}
             </Space>
         </Card>
     );
