@@ -89,12 +89,12 @@ export default function VerifierDashboardView() {
                 </Col>
             </Row>
             <Row gutter={16}>
-                <Col flex={1}>
+                <Col flex="1 1 0px">
                     <Card>
                         <Table columns={columns} dataSource={pending} />
                     </Card>
                 </Col>
-                <Col flex={1}>
+                <Col flex="1 1 0px">
                     <Card>
                         <Table columns={columns} dataSource={flagged} />
                     </Card>
