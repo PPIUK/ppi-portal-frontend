@@ -29,12 +29,26 @@ import PublicThesesView from './views/thesis-bank/public-root';
 import PublicLayout from './views/thesis-bank/layouts/PublicLayout';
 import PublicThesisView from './views/thesis-bank/public-thesis';
 import ThesisView from './views/thesis-bank/thesis';
+import VerifierDashboardView from './views/verifier/VerifierDashboardView';
+import VerifierActionView from './views/verifier/VerifierActionView';
 
 const routes = [
     {
         path: 'app',
         element: <AppLayout />,
         children: [
+            {
+                path: 'verifier',
+                element: <Outlet />,
+                children: [
+                    { path: 'dashboard', element: <VerifierDashboardView /> },
+                    { path: 'review/:userId', element: <VerifierActionView /> },
+                    {
+                        path: '/',
+                        element: <Navigate to="/app/verifier/dashboard " />,
+                    },
+                ],
+            },
             {
                 path: 'profile',
                 element: <Outlet />,

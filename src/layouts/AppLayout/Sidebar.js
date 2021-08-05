@@ -95,6 +95,14 @@ function Sidebar() {
                     ISIC x SCI Essays
                 </Menu.Item>
             )}
+            {auth.user.roles.includes('verifier') && (
+                <Menu.Item
+                    icon={<UnorderedListOutlined />}
+                    key="/app/verifier/dashboard"
+                >
+                    <Link to="/app/verifier/dashboard">Verifier Dashboard</Link>
+                </Menu.Item>
+            )}
         </Menu>
     );
 }
