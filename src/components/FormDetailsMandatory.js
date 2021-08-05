@@ -259,7 +259,9 @@ const uniEmailRules = [
             return new Promise((resolve, reject) => {
                 if (!value) return resolve();
                 if (!allowedDomains.includes(value.match(/@(.*)/)[1]))
-                    return reject('Not an allowed email domain');
+                    return reject(
+                        'Campus email should match your university email domain'
+                    );
                 axios
                     .post(
                         '/api/auth/account-lookup',
