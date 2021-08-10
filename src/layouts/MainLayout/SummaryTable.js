@@ -55,6 +55,7 @@ function SummaryTable() {
     const [branchData, setBranchData] = useState(null);
     const [uniData, setUniData] = useState(null);
     const [totalMembers, setTotalMembers] = useState(null);
+    const [totalActiveMembers, setTotalActiveMembers] = useState(null);
     const screens = Grid.useBreakpoint();
 
     const generalTableauUrl =
@@ -76,6 +77,9 @@ function SummaryTable() {
                     .reduce((acc, count) => count + acc)
             );
         });
+        axios
+            .get('/api/public/members/active')
+            .then((resp) => setTotalActiveMembers(resp.data.count));
     }, []);
     return (
         <Card {...tableStyle}>
@@ -88,7 +92,8 @@ function SummaryTable() {
                 )}
 
                 <Typography.Title level={2} style={{ textAlign: 'center' }}>
-                    Statistics: {totalMembers} Members
+                    Statistics: {totalMembers} Members <br />
+                    active: {totalActiveMembers} Members
                 </Typography.Title>
             </Space>
 
