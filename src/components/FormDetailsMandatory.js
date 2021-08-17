@@ -8,6 +8,7 @@ import {
     AutoComplete,
     Divider,
     Alert,
+    Upload,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -251,6 +252,7 @@ const branchOptions = [
 
 // define validation rules for the form fields
 import allowedDomains from '../data/uniemails.json';
+import { UploadOutlined } from '@ant-design/icons';
 const uniEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
     { required: true, message: 'Please enter your email!' },
@@ -387,6 +389,13 @@ const branchRules = [
     },
 ];
 
+const studentProofRules = [
+    {
+        required: true,
+        message: 'Please upload a student ID card/CAS/LoA file',
+    },
+];
+
 export default function FormDetailsMandatory() {
     const [form] = useForm();
     const navigate = useNavigate();
@@ -396,8 +405,13 @@ export default function FormDetailsMandatory() {
         lineHeight: '30px',
     };
 
+    const [uploadStudentProofList, setUploadStudentProofList] = useState([]);
     const [other, setOther] = useState(false);
     const [submitState, setSubmitState] = useState('idle');
+
+    const onStudentProofFileChoose = (e) =>
+        setUploadStudentProofList([...e.fileList].slice(-1));
+
     useEffect(() => {
         if (submitState === 'success;')
             setTimeout(() => {
@@ -406,14 +420,29 @@ export default function FormDetailsMandatory() {
     }, [submitState]);
 
     const onRegisterSubmit = (vals) => {
+        let formData = new FormData();
+        for (const name in vals) {
+            if (vals[name]) {
+                formData.append(name, vals[name]);
+            }
+        }
+        if (vals.degreeLevel === 'Other') {
+            formData.delete('degreeLevel');
+            formData.append('degreeLevel', vals.degreeLevelOther);
+        }
+        if (uploadStudentProofList.length > 0) {
+            formData.append(
+                'studentProof',
+                uploadStudentProofList[0].originFileObj
+            );
+        }
+
         setSubmitState('submitting;');
         axios
-            .post('/api/auth/register/new', {
-                ...vals,
-                degreeLevel:
-                    vals.degreeLevel !== 'Other'
-                        ? vals.degreeLevel
-                        : vals.degreeLevelOther,
+            .post('/api/auth/register/new', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             })
             .then(() => {
                 setSubmitState('success;');
@@ -596,6 +625,21 @@ export default function FormDetailsMandatory() {
                 rules={endDateRules}
             >
                 <DatePicker />
+            </Form.Item>
+
+            <Form.Item
+                name="studentProof"
+                label="Student ID Card/CAS/LoA"
+                rules={studentProofRules}
+            >
+                <Upload
+                    maxCount={1}
+                    onChange={onStudentProofFileChoose}
+                    fileList={uploadStudentProofList}
+                    beforeUpload={() => false}
+                >
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
             </Form.Item>
 
             {feedbackAlert}
