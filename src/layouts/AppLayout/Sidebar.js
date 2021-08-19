@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
 import {
     UserOutlined,
@@ -9,6 +9,7 @@ import {
     FileSearchOutlined,
     FormOutlined,
 } from '@ant-design/icons';
+import Axios from 'axios';
 
 import { useAuth } from '../../utils/useAuth';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,6 +17,14 @@ import { Link, useLocation } from 'react-router-dom';
 function Sidebar() {
     const auth = useAuth();
     const location = useLocation();
+
+    const [votingCampaigns, setVotingCampaigns] = useState([]);
+
+    useEffect(() => {
+        Axios.get('/api/voting/active/vote').then((res) => {
+            setVotingCampaigns(res.data.data);
+        });
+    }, []);
 
     return (
         <Menu
@@ -103,6 +112,17 @@ function Sidebar() {
                     <Link to="/app/verifier/dashboard">Verifier Dashboard</Link>
                 </Menu.Item>
             )}
+            {auth.user.roles.includes('verified') &&
+                votingCampaigns.map((campaign) => (
+                    <Menu.Item
+                        icon={<FormOutlined />}
+                        key={'/app/voting-campaign/vote/' + campaign._id}
+                    >
+                        <Link to={'/app/voting-campaign/vote/' + campaign._id}>
+                            {campaign.name}
+                        </Link>
+                    </Menu.Item>
+                ))}
         </Menu>
     );
 }
