@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     Descriptions,
@@ -23,6 +23,8 @@ import { useAuth } from '../../utils/useAuth';
 import moment from 'moment';
 
 import axios from 'axios';
+
+import download from 'downloadjs';
 
 const universityOptions = [
     { value: 'University of Aberdeen' },
@@ -266,6 +268,7 @@ function OwnProfileView() {
     const [uploadProfilePictureList, setUploadProfilePictureList] = useState(
         []
     );
+    const [imageBlob, setImageBlob] = useState(null);
 
     const onStudentProofFileChoose = (e) =>
         setUploadStudentProofList([...e.fileList].slice(-1));
@@ -328,23 +331,9 @@ function OwnProfileView() {
                 headers: {
                     Authorization: `Bearer ${auth.accessToken}`,
                 },
+                responseType: 'blob',
             })
-            .then((resp) => {
-                const headerVal = resp.headers['content-disposition'];
-                const filename = headerVal
-                    .split(';')[1]
-                    .split('=')[1]
-                    .replace('"', '')
-                    .replace('"', '');
-                //FIXME: not sure what to do here
-                const blob = new Blob([resp.data]);
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', filename);
-                document.body.appendChild(link);
-                link.click();
-            });
+            .then((resp) => download(resp.data));
     };
 
     const imageUploadButton = (
@@ -352,6 +341,23 @@ function OwnProfileView() {
             <PlusOutlined />
             <div style={{ marginTop: 8 }}>Upload New Picture</div>
         </div>
+    );
+
+    useEffect(
+        () =>
+            axios
+                .get('/api/profiles/me/profilepicture', {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                    responseType: 'blob',
+                })
+                .then((resp) => {
+                    let reader = new FileReader();
+                    reader.readAsDataURL(resp.data);
+                    reader.onload = () => setImageBlob(reader.result);
+                }),
+        []
     );
 
     return (
@@ -570,7 +576,11 @@ function OwnProfileView() {
                         <Form.Item name="profilePicture" noStyle>
                             <Space>
                                 {auth.user.profilePicture ? (
-                                    <Image width={200} src="" /> //FIXME:not sure what to do here
+                                    <Image
+                                        width={200}
+                                        loading={imageBlob === null}
+                                        src={imageBlob}
+                                    />
                                 ) : null}
                                 <Upload
                                     accept="image/*"

@@ -32,6 +32,11 @@ import ThesisView from './views/thesis-bank/thesis';
 import VerifierDashboardView from './views/verifier/VerifierDashboardView';
 import VerifierActionView from './views/verifier/VerifierActionView';
 
+import VotingAdminElectionView from './views/voting/admin/ElectionView';
+import VotingAdminSummaryView from './views/voting/admin/SummaryView';
+import VotingElectionView from './views/voting/ElectionView';
+import VotingNominationView from './views/voting/NominationView';
+
 const routes = [
     {
         path: 'app',
@@ -46,6 +51,29 @@ const routes = [
                     {
                         path: '/',
                         element: <Navigate to="/app/verifier/dashboard " />,
+                    },
+                ],
+            },
+            {
+                path: 'voting',
+                element: <Outlet />,
+                children: [
+                    { path: 'admin', element: <VotingAdminSummaryView /> },
+                    {
+                        path: ':electionID/admin',
+                        element: <VotingAdminElectionView />,
+                    },
+                    {
+                        path: ':electionID/nomination',
+                        element: <VotingNominationView />,
+                    },
+                    {
+                        path: ':electionID/',
+                        element: <VotingElectionView />,
+                    },
+                    {
+                        path: '/',
+                        element: <Navigate to="/app/profile/me" />,
                     },
                 ],
             },
