@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     Descriptions,
@@ -8,13 +8,23 @@ import {
     Button,
     message,
     AutoComplete,
+    Upload,
+    Space,
+    Image,
 } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import {
+    DownloadOutlined,
+    UploadOutlined,
+    UserOutlined,
+    PlusOutlined,
+} from '@ant-design/icons';
 import { useAuth } from '../../utils/useAuth';
 
 import moment from 'moment';
 
 import axios from 'axios';
+
+import download from 'downloadjs';
 
 const universityOptions = [
     { value: 'University of Aberdeen' },
@@ -254,8 +264,37 @@ const branchOptions = [
 function OwnProfileView() {
     const auth = useAuth();
     const [form] = Form.useForm();
+    const [uploadStudentProofList, setUploadStudentProofList] = useState([]);
+    const [uploadProfilePictureList, setUploadProfilePictureList] = useState(
+        []
+    );
+    const [imageBlob, setImageBlob] = useState(null);
+
+    const onStudentProofFileChoose = (e) =>
+        setUploadStudentProofList([...e.fileList].slice(-1));
+
+    const onProfilePictureFileChoose = (e) =>
+        setUploadProfilePictureList([...e.fileList].slice(-1));
 
     const submitForm = (vals) => {
+        let formData = new FormData();
+        for (const name in vals) {
+            if (vals[name]) {
+                formData.append(name, vals[name]);
+            }
+        }
+        if (uploadStudentProofList.length > 0) {
+            formData.append(
+                'studentProof',
+                uploadStudentProofList[0].originFileObj
+            );
+        }
+        if (uploadProfilePictureList.length > 0) {
+            formData.append(
+                'profilePicture',
+                uploadProfilePictureList[0].originFileObj
+            );
+        }
         message.loading(
             {
                 content: 'Saving details...',
@@ -264,9 +303,10 @@ function OwnProfileView() {
             0
         );
         axios
-            .patch('/api/profiles/me', vals, {
+            .patch('/api/profiles/me', formData, {
                 headers: {
                     Authorization: `Bearer ${auth.accessToken}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             })
             .then(() => {
@@ -285,6 +325,41 @@ function OwnProfileView() {
                 });
             });
     };
+    const downloadStudentProof = () => {
+        axios
+            .get('/api/profiles/me/studentproof', {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+                responseType: 'blob',
+            })
+            .then((resp) => download(resp.data));
+    };
+
+    const imageUploadButton = (
+        <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload New Picture</div>
+        </div>
+    );
+
+    useEffect(
+        () =>
+            axios
+                .get('/api/profiles/me/profilepicture', {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                    responseType: 'blob',
+                })
+                .then((resp) => {
+                    let reader = new FileReader();
+                    reader.readAsDataURL(resp.data);
+                    reader.onload = () => setImageBlob(reader.result);
+                }),
+        []
+    );
+
     return (
         <Card
             title={
@@ -467,6 +542,61 @@ function OwnProfileView() {
                             noStyle
                         >
                             <Input />
+                        </Form.Item>
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                        label="Student Status Proof (Student ID Card/CAS/LoA)"
+                        span={3}
+                    >
+                        <Form.Item name="studentProof" noStyle>
+                            <Space>
+                                {auth.user.studentProof ? (
+                                    <Button
+                                        type="primary"
+                                        icon={<DownloadOutlined />}
+                                        onClick={downloadStudentProof}
+                                    >
+                                        Download Saved File
+                                    </Button>
+                                ) : null}
+                                <Upload
+                                    maxCount={1}
+                                    onChange={onStudentProofFileChoose}
+                                    fileList={uploadStudentProofList}
+                                    beforeUpload={() => false}
+                                >
+                                    <Button icon={<UploadOutlined />}>
+                                        Click to Upload New File
+                                    </Button>
+                                </Upload>
+                            </Space>
+                        </Form.Item>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Profile Picture" span={3}>
+                        <Form.Item name="profilePicture" noStyle>
+                            <Space>
+                                {auth.user.profilePicture ? (
+                                    <Image
+                                        width={200}
+                                        loading={imageBlob === null}
+                                        src={imageBlob}
+                                    />
+                                ) : null}
+                                <Upload
+                                    accept="image/*"
+                                    maxCount={1}
+                                    listType="picture-card"
+                                    showUploadList={{
+                                        showPreviewIcon: false,
+                                        showRemoveIcon: false,
+                                    }}
+                                    onChange={onProfilePictureFileChoose}
+                                    fileList={uploadProfilePictureList}
+                                    beforeUpload={() => false}
+                                >
+                                    {imageUploadButton}
+                                </Upload>
+                            </Space>
                         </Form.Item>
                     </Descriptions.Item>
                 </Descriptions>
