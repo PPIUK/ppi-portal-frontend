@@ -9,6 +9,7 @@ import {
     Divider,
     Alert,
     Upload,
+    Switch,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -286,6 +287,37 @@ const uniEmailRules = [
     }),
 ];
 
+const personalEmailRules = [
+    { type: 'email', message: 'Please enter a valid email!' },
+    ({ getFieldValue }) => ({
+        validator(rule, value) {
+            return new Promise((resolve, reject) => {
+                if (!getFieldValue('hasUniEmail') && !value) {
+                    return reject('Please enter your personal email!');
+                }
+                if (!value) return resolve();
+                axios
+                    .post(
+                        '/api/auth/account-lookup',
+                        { email: value },
+                        {
+                            validateStatus: false,
+                        }
+                    )
+                    .then((resp) => {
+                        switch (resp.status) {
+                            case 404:
+                                return resolve();
+                            default:
+                                return reject('Email is already registered!');
+                        }
+                    })
+                    .catch(() => reject('A server error occured'));
+            });
+        },
+    }),
+];
+
 const passwordRules = [{ required: true, message: 'Please enter a password!' }];
 const confirmPasswordRules = [
     {
@@ -394,6 +426,21 @@ const studentProofRules = [
         required: true,
         message: 'Please upload a student ID card/CAS/LoA file',
     },
+    ({ getFieldValue }) => ({
+        validator(rule, value) {
+            console.log(getFieldValue('studentProof'));
+            if (!value) {
+                return Promise.reject();
+            }
+            if (!value || getFieldValue('studentProof').fileList.length === 0) {
+                return Promise.reject(
+                    'Please upload a student ID card/CAS/LoA file'
+                );
+            }
+
+            return Promise.resolve();
+        },
+    }),
 ];
 
 export default function FormDetailsMandatory() {
@@ -409,8 +456,14 @@ export default function FormDetailsMandatory() {
     const [other, setOther] = useState(false);
     const [submitState, setSubmitState] = useState('idle');
 
+    const [hasUniEmail, setHasUniEmail] = useState(true);
+
     const onStudentProofFileChoose = (e) =>
         setUploadStudentProofList([...e.fileList].slice(-1));
+
+    const onHasUniEmailChange = (checked) => {
+        setHasUniEmail(checked);
+    };
 
     useEffect(() => {
         if (submitState === 'success;')
@@ -481,15 +534,49 @@ export default function FormDetailsMandatory() {
             </Form.Item>
 
             <Divider />
+            <Form.Item
+                name="hasUniEmail"
+                label="Have university email?"
+                valuePropName="checked"
+                initialValue={true}
+            >
+                <Switch
+                    checkedChildren="Yes"
+                    unCheckedChildren="Not yet"
+                    onChange={onHasUniEmailChange}
+                />
+            </Form.Item>
+
+            {!hasUniEmail && (
+                <Form.Item>
+                    Temporarily, if you do not have a university email yet, you
+                    are allowed to register using your personal email. You need
+                    to update your university email once you have access to it,
+                    no later than 31 September 2021.
+                </Form.Item>
+            )}
+
+            {hasUniEmail && (
+                <Form.Item
+                    name="email"
+                    label="University Email"
+                    rules={uniEmailRules}
+                    validateTrigger="onBlur"
+                    hasFeedback
+                >
+                    <Input placeholder="Email" />
+                </Form.Item>
+            )}
 
             <Form.Item
-                name="email"
-                label="Campus Email"
-                rules={uniEmailRules}
+                name="emailPersonal"
+                label="Personal Email"
+                rules={personalEmailRules}
+                required={!hasUniEmail}
                 validateTrigger="onBlur"
                 hasFeedback
             >
-                <Input placeholder="Email" />
+                <Input placeholder="Personal Email" />
             </Form.Item>
 
             <Form.Item

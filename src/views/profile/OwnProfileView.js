@@ -11,6 +11,7 @@ import {
     Upload,
     Space,
     Image,
+    Typography,
 } from 'antd';
 import {
     DownloadOutlined,
@@ -263,6 +264,7 @@ const branchOptions = [
 
 function OwnProfileView() {
     const auth = useAuth();
+    const [profile, setProfile] = useState(null);
     const [form] = Form.useForm();
     const [uploadStudentProofList, setUploadStudentProofList] = useState([]);
     const [uploadProfilePictureList, setUploadProfilePictureList] = useState(
@@ -317,6 +319,15 @@ function OwnProfileView() {
                     },
                     4.5
                 );
+                axios
+                    .get('/api/profiles/me', {
+                        headers: {
+                            Authorization: `Bearer ${auth.accessToken}`,
+                        },
+                    })
+                    .then((resp) => {
+                        setProfile(resp.data.data);
+                    });
             })
             .catch((e) => {
                 message.error({
@@ -333,7 +344,15 @@ function OwnProfileView() {
                 },
                 responseType: 'blob',
             })
-            .then((resp) => download(resp.data));
+            .then((resp) => {
+                const headerVal = resp.headers['content-disposition'];
+                const filename = headerVal
+                    .split(';')[1]
+                    .split('=')[1]
+                    .replace('"', '')
+                    .replace('"', '');
+                download(resp.data, filename);
+            });
     };
 
     const imageUploadButton = (
@@ -343,22 +362,31 @@ function OwnProfileView() {
         </div>
     );
 
-    useEffect(
-        () =>
-            axios
-                .get('/api/profiles/me/profilepicture', {
-                    headers: {
-                        Authorization: `Bearer ${auth.accessToken}`,
-                    },
-                    responseType: 'blob',
-                })
-                .then((resp) => {
-                    let reader = new FileReader();
-                    reader.readAsDataURL(resp.data);
-                    reader.onload = () => setImageBlob(reader.result);
-                }),
-        []
-    );
+    useEffect(() => {
+        axios
+            .get('/api/profiles/me', {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            })
+            .then((resp) => {
+                setProfile(resp.data.data);
+            })
+            .then(() => {
+                axios
+                    .get('/api/profiles/me/profilepicture', {
+                        headers: {
+                            Authorization: `Bearer ${auth.accessToken}`,
+                        },
+                        responseType: 'blob',
+                    })
+                    .then((resp) => {
+                        let reader = new FileReader();
+                        reader.readAsDataURL(resp.data);
+                        reader.onload = () => setImageBlob(reader.result);
+                    });
+            });
+    }, []);
 
     return (
         <Card
@@ -373,238 +401,251 @@ function OwnProfileView() {
                 </Button>
             }
         >
-            <Form form={form} onFinish={submitForm}>
-                <Descriptions bordered>
-                    <Descriptions.Item label="Branch" span={3}>
-                        <Form.Item
-                            name="branch"
-                            initialValue={auth.user.branch}
-                            noStyle
+            {profile && (
+                <Form form={form} onFinish={submitForm}>
+                    <Descriptions bordered>
+                        <Descriptions.Item label="Branch" span={3}>
+                            <Form.Item
+                                name="branch"
+                                initialValue={profile.branch}
+                                noStyle
+                            >
+                                <AutoComplete
+                                    style={{ width: '100%' }}
+                                    options={
+                                        auth.user.branch !== 'All'
+                                            ? branchOptions
+                                            : [
+                                                  { value: 'All' },
+                                                  ...branchOptions,
+                                              ]
+                                    }
+                                    filterOption={(inputValue, option) =>
+                                        option.value
+                                            .toUpperCase()
+                                            .indexOf(
+                                                inputValue.toUpperCase()
+                                            ) !== -1
+                                    }
+                                />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Full Name" span={3}>
+                            <Form.Item
+                                name="fullName"
+                                initialValue={profile.fullName}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Date of Birth" span={3}>
+                            <Form.Item
+                                name="dob"
+                                initialValue={moment(profile.dob)}
+                                noStyle
+                            >
+                                <DatePicker />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Origin City" span={3}>
+                            <Form.Item
+                                name="originCity"
+                                initialValue={profile.originCity}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Address (UK)" span={3}>
+                            <Form.Item
+                                name="addressUK"
+                                initialValue={profile.addressUK}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Postcode (UK)" span={3}>
+                            <Form.Item
+                                name="postcodeUK"
+                                initialValue={profile.postcodeUK}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="University" span={3}>
+                            <Form.Item
+                                name="university"
+                                initialValue={profile.university}
+                                noStyle
+                            >
+                                <AutoComplete
+                                    style={{ width: '100%' }}
+                                    options={universityOptions}
+                                    filterOption={(inputValue, option) =>
+                                        option.value
+                                            .toUpperCase()
+                                            .indexOf(
+                                                inputValue.toUpperCase()
+                                            ) !== -1
+                                    }
+                                />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Degree Level" span={3}>
+                            <Form.Item
+                                name="degreeLevel"
+                                initialValue={profile.degreeLevel}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Faculty" span={3}>
+                            <Form.Item
+                                name="faculty"
+                                initialValue={profile.faculty}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Course" span={3}>
+                            <Form.Item
+                                name="course"
+                                initialValue={profile.course}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Start Date" span={3}>
+                            <Form.Item
+                                name="startDate"
+                                initialValue={moment(profile.startDate)}
+                                noStyle
+                            >
+                                <DatePicker />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="End Date" span={3}>
+                            <Form.Item
+                                name="endDate"
+                                initialValue={moment(profile.endDate)}
+                                noStyle
+                            >
+                                <DatePicker />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Funding Source" span={3}>
+                            <Form.Item
+                                name="fundingSource"
+                                initialValue={profile.fundingSource}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Email (Uni)" span={3}>
+                            <Form.Item
+                                name="email"
+                                initialValue={profile.email}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                            {!profile.email && (
+                                <Typography.Text type="danger">
+                                    You need to update your university email no
+                                    later than 31 September 2021!
+                                </Typography.Text>
+                            )}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Email (Personal)" span={3}>
+                            <Form.Item
+                                name="emailPersonal"
+                                initialValue={profile.emailPersonal}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item
+                            label="Contact Number (WhatsApp)"
+                            span={3}
                         >
-                            <AutoComplete
-                                style={{ width: '100%' }}
-                                options={
-                                    auth.user.branch !== 'All'
-                                        ? branchOptions
-                                        : [{ value: 'All' }, ...branchOptions]
-                                }
-                                filterOption={(inputValue, option) =>
-                                    option.value
-                                        .toUpperCase()
-                                        .indexOf(inputValue.toUpperCase()) !==
-                                    -1
-                                }
-                            />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Full Name" span={3}>
-                        <Form.Item
-                            name="fullName"
-                            initialValue={auth.user.fullName}
-                            noStyle
+                            <Form.Item
+                                name="phoneWA"
+                                initialValue={profile.phoneWA}
+                                noStyle
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item
+                            label="Student Status Proof (Student ID Card/CAS/LoA)"
+                            span={3}
                         >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Date of Birth" span={3}>
-                        <Form.Item
-                            name="dob"
-                            initialValue={moment(auth.user.dob)}
-                            noStyle
-                        >
-                            <DatePicker />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Origin City" span={3}>
-                        <Form.Item
-                            name="originCity"
-                            initialValue={auth.user.originCity}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Address (UK)" span={3}>
-                        <Form.Item
-                            name="addressUK"
-                            initialValue={auth.user.addressUK}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Postcode (UK)" span={3}>
-                        <Form.Item
-                            name="postcodeUK"
-                            initialValue={auth.user.postcodeUK}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="University" span={3}>
-                        <Form.Item
-                            name="university"
-                            initialValue={auth.user.university}
-                            noStyle
-                        >
-                            <AutoComplete
-                                style={{ width: '100%' }}
-                                options={universityOptions}
-                                filterOption={(inputValue, option) =>
-                                    option.value
-                                        .toUpperCase()
-                                        .indexOf(inputValue.toUpperCase()) !==
-                                    -1
-                                }
-                            />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Degree Level" span={3}>
-                        <Form.Item
-                            name="degreeLevel"
-                            initialValue={auth.user.degreeLevel}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Faculty" span={3}>
-                        <Form.Item
-                            name="faculty"
-                            initialValue={auth.user.faculty}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Course" span={3}>
-                        <Form.Item
-                            name="course"
-                            initialValue={auth.user.course}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Start Date" span={3}>
-                        <Form.Item
-                            name="startDate"
-                            initialValue={moment(auth.user.startDate)}
-                            noStyle
-                        >
-                            <DatePicker />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="End Date" span={3}>
-                        <Form.Item
-                            name="endDate"
-                            initialValue={moment(auth.user.endDate)}
-                            noStyle
-                        >
-                            <DatePicker />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Funding Source" span={3}>
-                        <Form.Item
-                            name="fundingSource"
-                            initialValue={auth.user.fundingSource}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Email (Uni)" span={3}>
-                        <Form.Item
-                            name="email"
-                            initialValue={auth.user.email}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Email (Personal)" span={3}>
-                        <Form.Item
-                            name="emailPersonal"
-                            initialValue={auth.user.emailPersonal}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item
-                        label="Contact Number (WhatsApp)"
-                        span={3}
-                    >
-                        <Form.Item
-                            name="phoneWA"
-                            initialValue={auth.user.phoneWA}
-                            noStyle
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item
-                        label="Student Status Proof (Student ID Card/CAS/LoA)"
-                        span={3}
-                    >
-                        <Form.Item name="studentProof" noStyle>
-                            <Space>
-                                {auth.user.studentProof ? (
-                                    <Button
-                                        type="primary"
-                                        icon={<DownloadOutlined />}
-                                        onClick={downloadStudentProof}
+                            <Form.Item name="studentProof" noStyle>
+                                <Space>
+                                    {profile.studentProof ? (
+                                        <Button
+                                            type="primary"
+                                            icon={<DownloadOutlined />}
+                                            onClick={downloadStudentProof}
+                                        >
+                                            Download Saved File
+                                        </Button>
+                                    ) : null}
+                                    <Upload
+                                        maxCount={1}
+                                        onChange={onStudentProofFileChoose}
+                                        fileList={uploadStudentProofList}
+                                        beforeUpload={() => false}
                                     >
-                                        Download Saved File
-                                    </Button>
-                                ) : null}
-                                <Upload
-                                    maxCount={1}
-                                    onChange={onStudentProofFileChoose}
-                                    fileList={uploadStudentProofList}
-                                    beforeUpload={() => false}
-                                >
-                                    <Button icon={<UploadOutlined />}>
-                                        Click to Upload New File
-                                    </Button>
-                                </Upload>
-                            </Space>
-                        </Form.Item>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Profile Picture" span={3}>
-                        <Form.Item name="profilePicture" noStyle>
-                            <Space>
-                                {auth.user.profilePicture ? (
-                                    <Image
-                                        width={200}
-                                        loading={imageBlob === null}
-                                        src={imageBlob}
-                                    />
-                                ) : null}
-                                <Upload
-                                    accept="image/*"
-                                    maxCount={1}
-                                    listType="picture-card"
-                                    showUploadList={{
-                                        showPreviewIcon: false,
-                                        showRemoveIcon: false,
-                                    }}
-                                    onChange={onProfilePictureFileChoose}
-                                    fileList={uploadProfilePictureList}
-                                    beforeUpload={() => false}
-                                >
-                                    {imageUploadButton}
-                                </Upload>
-                            </Space>
-                        </Form.Item>
-                    </Descriptions.Item>
-                </Descriptions>
-                <br />
-                <Button block type="primary" onClick={() => form.submit()}>
-                    Save
-                </Button>
-            </Form>
+                                        <Button icon={<UploadOutlined />}>
+                                            Click to Upload New File
+                                        </Button>
+                                    </Upload>
+                                </Space>
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Profile Picture" span={3}>
+                            <Form.Item name="profilePicture" noStyle>
+                                <Space>
+                                    {profile.profilePicture ? (
+                                        <Image
+                                            width={200}
+                                            loading={imageBlob === null}
+                                            src={imageBlob}
+                                        />
+                                    ) : null}
+                                    <Upload
+                                        accept="image/*"
+                                        maxCount={1}
+                                        listType="picture-card"
+                                        showUploadList={{
+                                            showPreviewIcon: false,
+                                            showRemoveIcon: false,
+                                        }}
+                                        onChange={onProfilePictureFileChoose}
+                                        fileList={uploadProfilePictureList}
+                                        beforeUpload={() => false}
+                                    >
+                                        {imageUploadButton}
+                                    </Upload>
+                                </Space>
+                            </Form.Item>
+                        </Descriptions.Item>
+                    </Descriptions>
+                    <br />
+                    <Button block type="primary" onClick={() => form.submit()}>
+                        Save
+                    </Button>
+                </Form>
+            )}
         </Card>
     );
 }

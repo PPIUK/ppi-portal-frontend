@@ -118,12 +118,13 @@ export default function NominationView() {
                     'Content-Type': 'multipart/form-data',
                 }
             );
-        req.then(() =>
+        req.then(() => {
+            setSubmissionData({ ...submissionData, ...{ new: false } });
             message.success({
                 content: 'Saved successfully!',
                 key: 'saveLoading',
-            })
-        ).catch((e) =>
+            });
+        }).catch((e) =>
             message.error({
                 content: `Error: ${e.response.data.message}`,
                 key: 'saveLoading',
@@ -140,7 +141,15 @@ export default function NominationView() {
                 },
                 responseType: 'blob',
             }
-        ).then((resp) => download(resp.data));
+        ).then((resp) => {
+            const headerVal = resp.headers['content-disposition'];
+            const filename = headerVal
+                .split(';')[1]
+                .split('=')[1]
+                .replace('"', '')
+                .replace('"', '');
+            download(resp.data, filename);
+        });
     };
 
     return electionData && submissionData !== undefined ? (
