@@ -7,6 +7,11 @@ The frontend code for the PPI Portal project. Made using React.
 - React Router v6
 - Antd Component Library
 
+## Running Locally
+1. Run the [backend](https://github.com/PPIUK/ppi-portal-frontend)
+2. `npm start`
+3. When asked to run on another port, choose yes
+
 ## Contributing
 ### Feature Request
 Feature requests can be made in [Issues](https://github.com/PPIUK/ppi-portal-frontend/issues)->Feature Request Template
