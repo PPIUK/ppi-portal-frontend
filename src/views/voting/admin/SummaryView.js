@@ -186,28 +186,28 @@ export default function ElectionSummaryView() {
                         label="Nomination Phase Start Date"
                         rules={[{ required: true }]}
                     >
-                        <DatePicker />
+                        <DatePicker showTime />
                     </Form.Item>
                     <Form.Item
                         name="nominateEnd"
                         label="Nomination Phase End Date"
                         rules={[{ required: true }]}
                     >
-                        <DatePicker />
+                        <DatePicker showTime />
                     </Form.Item>
                     <Form.Item
                         name="voteStart"
                         label="Voting Phase Start Date"
                         rules={[{ required: true }]}
                     >
-                        <DatePicker />
+                        <DatePicker showTime />
                     </Form.Item>
                     <Form.Item
                         name="voteEnd"
                         label="Voting Phase End Date"
                         rules={[{ required: true }]}
                     >
-                        <DatePicker />
+                        <DatePicker showTime />
                     </Form.Item>
                 </Form>
             </Modal>
