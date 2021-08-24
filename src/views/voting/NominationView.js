@@ -165,6 +165,20 @@ export default function NominationView() {
                         showIcon
                     />
                 )}
+                {!submissionData.new && (
+                    <Alert
+                        message={
+                            'Thank you for your submission. ' +
+                            'You are allowed to complete or update your submission until the ' +
+                            'deadline. The successful candidate will be announced in due course. ' +
+                            'Follow our Instagram account @kpuppi_unitedkingdom or ' +
+                            'explore the hashtag #PPIUKMemilih for any update about PPI UK General ' +
+                            'Election 2021. Send us your enquiries to kpuppiuk@gmail.com'
+                        }
+                        type="success"
+                        showIcon
+                    />
+                )}
                 <Form form={form} onFinish={formSubmit}>
                     <Descriptions bordered>
                         <Descriptions.Item label="CV (pdf)" span={3}>
