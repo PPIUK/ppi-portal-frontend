@@ -8,7 +8,7 @@ The frontend code for the PPI Portal project. Made using React.
 - Antd Component Library
 
 ## Running Locally
-1. Run the [backend](https://github.com/PPIUK/ppi-portal-frontend)
+1. Run the [backend](https://github.com/PPIUK/ppi-portal-backend)
 2. `npm install` then `npm start`
 3. When asked to run on another port, choose yes. Optionally [set running port to 3001](https://stackoverflow.com/questions/40714583/how-to-specify-a-port-to-run-a-create-react-app-based-project)
 
