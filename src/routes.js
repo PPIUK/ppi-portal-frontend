@@ -31,7 +31,7 @@ import PublicThesisView from './views/thesis-bank/public-thesis';
 import ThesisView from './views/thesis-bank/thesis';
 import VerifierDashboardView from './views/verifier/VerifierDashboardView';
 import VerifierActionView from './views/verifier/VerifierActionView';
-import VotingPhaseView from './views/voting-campaigns/VotingPhaseView';
+import VotingPhaseView from './views/voting/VotingView';
 
 import VotingAdminElectionView from './views/voting/admin/ElectionView';
 import VotingAdminSummaryView from './views/voting/admin/SummaryView';
@@ -67,6 +67,10 @@ const routes = [
                     {
                         path: ':electionID/nomination',
                         element: <VotingNominationView />,
+                    },
+                    {
+                        path: ':electionID/vote',
+                        element: <VotingPhaseView />,
                     },
                     {
                         path: ':electionID/',
@@ -128,16 +132,6 @@ const routes = [
                         element: <MVPAwardSubmissionView />,
                     },
                     { path: '/', element: <MVPAwardFormView /> },
-                ],
-            },
-            {
-                path: 'voting-campaign',
-                element: <Outlet />,
-                children: [
-                    {
-                        path: 'vote/:campaignID',
-                        element: <VotingPhaseView />,
-                    },
                 ],
             },
             {

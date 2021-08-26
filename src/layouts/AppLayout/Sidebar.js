@@ -13,7 +13,6 @@ import Axios from 'axios';
 
 import { useAuth } from '../../utils/useAuth';
 import { Link, useLocation } from 'react-router-dom';
-import Axios from 'axios';
 
 function Sidebar() {
     const auth = useAuth();
@@ -88,23 +87,42 @@ function Sidebar() {
                 </Menu.Item>
                 <Menu.Item hidden>Pending Verification</Menu.Item>
             </Menu.SubMenu>
-            {elections?.nominatePhase.length > 0 && (
-                <Menu.SubMenu
-                    icon={<AreaChartOutlined />}
-                    title="Election Nomination"
-                >
-                    {elections.nominatePhase.map((election) => (
+            {elections &&
+                elections.all.map((election) => (
+                    <Menu.SubMenu
+                        key={election._id}
+                        icon={<AreaChartOutlined />}
+                        title={election.name}
+                    >
                         <Menu.Item
                             key={`/app/voting/${election._id}/nomination`}
+                            disabled={elections.votingPhase.includes(election)}
                         >
                             <Link
                                 to={`/app/voting/${election._id}/nomination`}
                             />
-                            {election.name}
+                            Candidate Registration
                         </Menu.Item>
-                    ))}
-                </Menu.SubMenu>
-            )}
+                        <Menu.Item
+                            key={`/app/voting/${election._id}/voting`}
+                            disabled={elections.nominatePhase.includes(
+                                election
+                            )}
+                        >
+                            <Link to={`/app/voting/${election._id}/voting`} />
+                            Voting
+                        </Menu.Item>
+                        <Menu.Item
+                            key={`/app/voting/${election._id}`}
+                            disabled={elections.nominatePhase.includes(
+                                election
+                            )}
+                        >
+                            <Link to={`/app/voting/${election._id}`} />
+                            Statistics
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                ))}
             {auth.user.roles.includes('verified') && (
                 <Menu.Item
                     icon={<AreaChartOutlined />}
