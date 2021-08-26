@@ -13,10 +13,37 @@ import Axios from 'axios';
 
 import { useAuth } from '../../utils/useAuth';
 import { Link, useLocation } from 'react-router-dom';
+import Axios from 'axios';
 
 function Sidebar() {
     const auth = useAuth();
     const location = useLocation();
+    const [elections, setElections] = useState(null);
+
+    useEffect(
+        () =>
+            Axios.get('/api/voting', {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            }).then((res) => {
+                let now = new Date();
+                setElections({
+                    all: res.data.data,
+                    nominatePhase: res.data.data.filter(
+                        (v) =>
+                            now >= new Date(v.nominateStart) &&
+                            now <= new Date(v.nominateEnd)
+                    ),
+                    votingPhase: res.data.data.filter(
+                        (v) =>
+                            now >= new Date(v.voteStart) &&
+                            now <= new Date(v.voteEnd)
+                    ),
+                });
+            }),
+        []
+    );
 
     const [votingCampaigns, setVotingCampaigns] = useState([]);
 
@@ -29,7 +56,7 @@ function Sidebar() {
     return (
         <Menu
             theme="dark"
-            mode="inline"
+            mode="vertical"
             style={{ marginTop: '20px' }}
             selectedKeys={[location.pathname]}
         >
@@ -61,6 +88,23 @@ function Sidebar() {
                 </Menu.Item>
                 <Menu.Item hidden>Pending Verification</Menu.Item>
             </Menu.SubMenu>
+            {elections?.nominatePhase.length > 0 && (
+                <Menu.SubMenu
+                    icon={<AreaChartOutlined />}
+                    title="Election Nomination"
+                >
+                    {elections.nominatePhase.map((election) => (
+                        <Menu.Item
+                            key={`/app/voting/${election._id}/nomination`}
+                        >
+                            <Link
+                                to={`/app/voting/${election._id}/nomination`}
+                            />
+                            {election.name}
+                        </Menu.Item>
+                    ))}
+                </Menu.SubMenu>
+            )}
             {auth.user.roles.includes('verified') && (
                 <Menu.Item
                     icon={<AreaChartOutlined />}
@@ -68,6 +112,12 @@ function Sidebar() {
                 >
                     <Link to="/app/member-database/search" />
                     Member Summary
+                </Menu.Item>
+            )}
+            {auth.user.roles.includes('voteOrganiser') && (
+                <Menu.Item icon={<AreaChartOutlined />} key="/app/voting/admin">
+                    <Link to="/app/voting/admin" />
+                    Elections Admin
                 </Menu.Item>
             )}
             {auth.user.roles.includes('dataAccess') && (
@@ -85,15 +135,6 @@ function Sidebar() {
                     </Menu.Item>
                     <Menu.Item hidden>Pending Verification</Menu.Item>
                 </Menu.SubMenu>
-            )}
-            {auth.user.roles.includes('mvpAwardsAccess') && (
-                <Menu.Item
-                    icon={<UnorderedListOutlined />}
-                    key="/app/mvp-award/submissions"
-                >
-                    <Link to="/app/mvp-award/submissions" />
-                    MVP Submissions
-                </Menu.Item>
             )}
             {auth.user.roles.includes('isicSciEssayAccess') && (
                 <Menu.Item

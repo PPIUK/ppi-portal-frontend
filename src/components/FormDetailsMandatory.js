@@ -8,6 +8,8 @@ import {
     AutoComplete,
     Divider,
     Alert,
+    Upload,
+    Switch,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -251,6 +253,7 @@ const branchOptions = [
 
 // define validation rules for the form fields
 import allowedDomains from '../data/uniemails.json';
+import { UploadOutlined } from '@ant-design/icons';
 const uniEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
     { required: true, message: 'Please enter your email!' },
@@ -262,6 +265,37 @@ const uniEmailRules = [
                     return reject(
                         'Campus email should match your university email domain'
                     );
+                axios
+                    .post(
+                        '/api/auth/account-lookup',
+                        { email: value },
+                        {
+                            validateStatus: false,
+                        }
+                    )
+                    .then((resp) => {
+                        switch (resp.status) {
+                            case 404:
+                                return resolve();
+                            default:
+                                return reject('Email is already registered!');
+                        }
+                    })
+                    .catch(() => reject('A server error occured'));
+            });
+        },
+    }),
+];
+
+const personalEmailRules = [
+    { type: 'email', message: 'Please enter a valid email!' },
+    ({ getFieldValue }) => ({
+        validator(rule, value) {
+            return new Promise((resolve, reject) => {
+                if (!getFieldValue('hasUniEmail') && !value) {
+                    return reject('Please enter your personal email!');
+                }
+                if (!value) return resolve();
                 axios
                     .post(
                         '/api/auth/account-lookup',
@@ -387,6 +421,28 @@ const branchRules = [
     },
 ];
 
+const studentProofRules = [
+    {
+        required: true,
+        message: 'Please upload a student ID card/CAS/LoA file',
+    },
+    ({ getFieldValue }) => ({
+        validator(rule, value) {
+            console.log(getFieldValue('studentProof'));
+            if (!value) {
+                return Promise.reject();
+            }
+            if (!value || getFieldValue('studentProof').fileList.length === 0) {
+                return Promise.reject(
+                    'Please upload a student ID card/CAS/LoA file'
+                );
+            }
+
+            return Promise.resolve();
+        },
+    }),
+];
+
 export default function FormDetailsMandatory() {
     const [form] = useForm();
     const navigate = useNavigate();
@@ -396,8 +452,19 @@ export default function FormDetailsMandatory() {
         lineHeight: '30px',
     };
 
+    const [uploadStudentProofList, setUploadStudentProofList] = useState([]);
     const [other, setOther] = useState(false);
     const [submitState, setSubmitState] = useState('idle');
+
+    const [hasUniEmail, setHasUniEmail] = useState(true);
+
+    const onStudentProofFileChoose = (e) =>
+        setUploadStudentProofList([...e.fileList].slice(-1));
+
+    const onHasUniEmailChange = (checked) => {
+        setHasUniEmail(checked);
+    };
+
     useEffect(() => {
         if (submitState === 'success;')
             setTimeout(() => {
@@ -406,14 +473,29 @@ export default function FormDetailsMandatory() {
     }, [submitState]);
 
     const onRegisterSubmit = (vals) => {
+        let formData = new FormData();
+        for (const name in vals) {
+            if (vals[name]) {
+                formData.append(name, vals[name]);
+            }
+        }
+        if (vals.degreeLevel === 'Other') {
+            formData.delete('degreeLevel');
+            formData.append('degreeLevel', vals.degreeLevelOther);
+        }
+        if (uploadStudentProofList.length > 0) {
+            formData.append(
+                'studentProof',
+                uploadStudentProofList[0].originFileObj
+            );
+        }
+
         setSubmitState('submitting;');
         axios
-            .post('/api/auth/register/new', {
-                ...vals,
-                degreeLevel:
-                    vals.degreeLevel !== 'Other'
-                        ? vals.degreeLevel
-                        : vals.degreeLevelOther,
+            .post('/api/auth/register/new', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             })
             .then(() => {
                 setSubmitState('success;');
@@ -452,15 +534,49 @@ export default function FormDetailsMandatory() {
             </Form.Item>
 
             <Divider />
+            <Form.Item
+                name="hasUniEmail"
+                label="Have university email?"
+                valuePropName="checked"
+                initialValue={true}
+            >
+                <Switch
+                    checkedChildren="Yes"
+                    unCheckedChildren="Not yet"
+                    onChange={onHasUniEmailChange}
+                />
+            </Form.Item>
+
+            {!hasUniEmail && (
+                <Form.Item>
+                    Temporarily, if you do not have a university email yet, you
+                    are allowed to register using your personal email. You need
+                    to update your university email once you have access to it,
+                    no later than 31 September 2021.
+                </Form.Item>
+            )}
+
+            {hasUniEmail && (
+                <Form.Item
+                    name="email"
+                    label="University Email"
+                    rules={uniEmailRules}
+                    validateTrigger="onBlur"
+                    hasFeedback
+                >
+                    <Input placeholder="Email" />
+                </Form.Item>
+            )}
 
             <Form.Item
-                name="email"
-                label="Campus Email"
-                rules={uniEmailRules}
+                name="emailPersonal"
+                label="Personal Email"
+                rules={personalEmailRules}
+                required={!hasUniEmail}
                 validateTrigger="onBlur"
                 hasFeedback
             >
-                <Input placeholder="Email" />
+                <Input placeholder="Personal Email" />
             </Form.Item>
 
             <Form.Item
@@ -596,6 +712,21 @@ export default function FormDetailsMandatory() {
                 rules={endDateRules}
             >
                 <DatePicker />
+            </Form.Item>
+
+            <Form.Item
+                name="studentProof"
+                label="Student ID Card/CAS/LoA"
+                rules={studentProofRules}
+            >
+                <Upload
+                    maxCount={1}
+                    onChange={onStudentProofFileChoose}
+                    fileList={uploadStudentProofList}
+                    beforeUpload={() => false}
+                >
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
             </Form.Item>
 
             {feedbackAlert}
