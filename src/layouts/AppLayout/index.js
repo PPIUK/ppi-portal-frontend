@@ -15,17 +15,23 @@ import './index.css';
 function AppLayout() {
     const auth = useAuth();
     const [collapsed, setCollapsed] = useState(false);
+    const [showToggle, setShowToggle] = useState(false);
     const onCollapse = (val) => setCollapsed(val);
 
     if (!auth.user) return <Navigate to="/login" />;
     return (
         <Layout>
             <Sider
+                breakpoint="lg"
                 collapsible
                 collapsed={collapsed}
                 onCollapse={onCollapse}
+                onBreakpoint={(hit) =>
+                    hit ? setShowToggle(true) : setShowToggle(false)
+                }
+                zeroWidthTriggerStyle={showToggle ? {} : { display: 'none' }}
+                collapsedWidth="0"
                 style={{
-                    overflow: 'auto',
                     height: '100vh',
                     position: 'fixed',
                     left: 0,
@@ -35,7 +41,9 @@ function AppLayout() {
                 <div className="logo" />
                 <Sidebar />
             </Sider>
-            <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
+            <Layout
+                style={{ marginLeft: collapsed ? 0 : showToggle ? 0 : 200 }}
+            >
                 <Header
                     style={{
                         backgroundColor: '#fff',
@@ -51,9 +59,10 @@ function AppLayout() {
                 </Header>
                 <Content
                     style={{
-                        margin: '24px 16px',
                         marginTop: 64,
                         padding: 24,
+                        paddingLeft: collapsed ? 0 : showToggle ? 0 : 24,
+                        paddingRight: collapsed ? 0 : showToggle ? 0 : 24,
                         minHeight: '100vh',
                         overflow: 'initial',
                     }}
