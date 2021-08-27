@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import {
+    Avatar,
     Button,
     Card,
     Divider,
@@ -13,7 +14,7 @@ import {
     Timeline,
     Typography,
 } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../utils/useAuth';
 import { useParams } from 'react-router-dom';
@@ -22,9 +23,9 @@ import moment from 'moment';
 const { confirm } = Modal;
 
 function VotingPhaseView() {
-    const { campaignID } = useParams();
+    const { electionID } = useParams();
     const auth = useAuth();
-    const [campaign, setCampaign] = useState(null);
+    const [electionData, setElectionData] = useState(null);
     const [candidateProfiles, setCandidateProfiles] = useState([]);
 
     const [isVoteButtonVisible, setIsVoteButtonVisible] = useState(true);
@@ -51,11 +52,10 @@ function VotingPhaseView() {
             title: `Vote for ${profile.fullName}`,
             icon: <ExclamationCircleOutlined />,
             content: `Are you sure you want to vote for ${profile.fullName}?
-             You can only do this once and you cannot undo this action.
-             ${profile._id}`,
+             You can only do this once and you cannot undo this action.`,
             onOk() {
                 Axios.post(
-                    `/api/voting/${campaignID}/vote/${profile._id}`,
+                    `/api/voting/${electionID}/vote/${profile._id}`,
                     {},
                     {
                         headers: {
@@ -78,14 +78,14 @@ function VotingPhaseView() {
         setCandidateProfiles([]);
         setIsVoteButtonVisible(true);
         setHasVoted(false);
-        Axios.get(`/api/voting/${campaignID}`, {
+        Axios.get(`/api/voting/${electionID}`, {
             headers: {
                 Authorization: `Bearer ${auth.accessToken}`,
             },
         })
             .then((res) => {
                 const campaign = res.data.data;
-                setCampaign(campaign);
+                setElectionData(campaign);
 
                 let profiles = [];
                 let promises = [];
@@ -108,7 +108,7 @@ function VotingPhaseView() {
                 );
             })
             .then(() => {
-                Axios.get(`/api/voting/${campaignID}/eligibility`, {
+                Axios.get(`/api/voting/${electionID}/eligibility`, {
                     headers: {
                         Authorization: `Bearer ${auth.accessToken}`,
                     },
@@ -120,7 +120,7 @@ function VotingPhaseView() {
                 });
             })
             .then(() => {
-                Axios.get(`/api/voting/${campaignID}/hasVoted`, {
+                Axios.get(`/api/voting/${electionID}/hasVoted`, {
                     headers: {
                         Authorization: `Bearer ${auth.accessToken}`,
                     },
@@ -131,19 +131,49 @@ function VotingPhaseView() {
                     }
                 });
             });
-    }, [campaignID]);
+    }, [electionID]);
+
+    //FIXME: how to get image
+    useEffect(() => {
+        if (candidateProfiles.length > 0) {
+            let profiles = [];
+            let promises = [];
+            candidateProfiles.forEach((candidate) => {
+                promises.push(
+                    Axios.get(
+                        `/api/profiles/${candidate.candidateID}/profilepicture`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${auth.accessToken}`,
+                            },
+                            responseType: 'blob',
+                        }
+                    ).then((resp) => {
+                        let reader = new FileReader();
+                        reader.readAsDataURL(resp.data);
+                        reader.onload = () => reader.result;
+                        candidate.profilePicture = reader;
+                        profiles.push(candidate);
+                    })
+                );
+            });
+            Promise.all(promises).then(() => setCandidateProfiles(profiles));
+        }
+    }, [candidateProfiles]);
 
     return (
-        <Card title={campaign !== null && campaign.name}>
-            {campaign !== null && candidateProfiles.length > 0 && (
+        <Card title={electionData !== null && electionData.name}>
+            {electionData !== null && candidateProfiles.length > 0 && (
                 <Space direction="vertical" style={{ width: '100%' }}>
-                    <Typography.Text>{campaign.description}</Typography.Text>
+                    <Typography.Text>
+                        {electionData.description}
+                    </Typography.Text>
                     <Divider />
                     <Space size="large" align="start">
                         <Card>
                             <Statistic.Countdown
                                 title="Voting closes in"
-                                value={campaign.voteEnd}
+                                value={electionData.voteEnd}
                                 onFinish={() => {
                                     setIsVoteButtonVisible(false);
                                 }}
@@ -152,25 +182,25 @@ function VotingPhaseView() {
                         <Timeline>
                             <Timeline.Item color="green">
                                 Candidate nomination phase started:{' '}
-                                {moment(campaign.nominateStart).format(
+                                {moment(electionData.nominateStart).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="green">
                                 Candidate nomination phase ended:{' '}
-                                {moment(campaign.nominateEnd).format(
+                                {moment(electionData.nominateEnd).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="blue">
                                 Voting phase started:{' '}
-                                {moment(campaign.voteStart).format(
+                                {moment(electionData.voteStart).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="gray">
                                 Voting phase ends:{' '}
-                                {moment(campaign.voteEnd).format(
+                                {moment(electionData.voteEnd).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
@@ -198,7 +228,7 @@ function VotingPhaseView() {
                     <List
                         size="large"
                         itemLayout="horizontal"
-                        dataSource={campaign.candidates}
+                        dataSource={electionData.candidates}
                         renderItem={(candidate) => {
                             const profile = candidateProfiles.find(
                                 (prof) => prof._id === candidate.candidateID
@@ -235,7 +265,23 @@ function VotingPhaseView() {
                                     ]}
                                 >
                                     <List.Item.Meta
-                                        // avatar={} //TODO: get profile picture and display
+                                        avatar={
+                                            profile.profilePicture ? (
+                                                <Image
+                                                    width={20}
+                                                    loading={
+                                                        !profile.profilePicture
+                                                    }
+                                                    src={profile.profilePicture}
+                                                />
+                                            ) : (
+                                                <Avatar
+                                                    shape="square"
+                                                    size={20}
+                                                    icon={<UserOutlined />}
+                                                />
+                                            )
+                                        }
                                         title={profile.fullName}
                                         description={`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
                                     />

@@ -44,14 +44,6 @@ function Sidebar() {
         []
     );
 
-    const [votingCampaigns, setVotingCampaigns] = useState([]);
-
-    useEffect(() => {
-        Axios.get('/api/voting/active/vote').then((res) => {
-            setVotingCampaigns(res.data.data);
-        });
-    }, []);
-
     return (
         <Menu
             theme="dark"
@@ -96,7 +88,9 @@ function Sidebar() {
                     >
                         <Menu.Item
                             key={`/app/voting/${election._id}/nomination`}
-                            disabled={elections.votingPhase.includes(election)}
+                            disabled={
+                                !elections.nominatePhase.includes(election)
+                            }
                         >
                             <Link
                                 to={`/app/voting/${election._id}/nomination`}
@@ -104,12 +98,10 @@ function Sidebar() {
                             Candidate Registration
                         </Menu.Item>
                         <Menu.Item
-                            key={`/app/voting/${election._id}/voting`}
-                            disabled={elections.nominatePhase.includes(
-                                election
-                            )}
+                            key={`/app/voting/${election._id}/vote`}
+                            disabled={!elections.votingPhase.includes(election)}
                         >
-                            <Link to={`/app/voting/${election._id}/voting`} />
+                            <Link to={`/app/voting/${election._id}/vote`} />
                             Voting
                         </Menu.Item>
                         <Menu.Item
@@ -171,17 +163,6 @@ function Sidebar() {
                     <Link to="/app/verifier/dashboard">Verifier Dashboard</Link>
                 </Menu.Item>
             )}
-            {auth.user.roles.includes('verified') &&
-                votingCampaigns.map((campaign) => (
-                    <Menu.Item
-                        icon={<FormOutlined />}
-                        key={'/app/voting-campaign/vote/' + campaign._id}
-                    >
-                        <Link to={'/app/voting-campaign/vote/' + campaign._id}>
-                            {campaign.name}
-                        </Link>
-                    </Menu.Item>
-                ))}
         </Menu>
     );
 }
