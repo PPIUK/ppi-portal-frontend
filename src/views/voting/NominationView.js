@@ -386,10 +386,14 @@ export default function NominationView() {
                     </Card>
                 )}
             {currentTime < new Date(electionData.nominateStart) && (
-                <Card title={electionData.name}>Nomination phase has not started</Card>
+                <Card title={electionData.name}>
+                    Nomination phase has not started
+                </Card>
             )}
             {currentTime > new Date(electionData.nominateEnd) && (
-                <Card title={electionData.name}>Nomination phase has ended</Card>
+                <Card title={electionData.name}>
+                    Nomination phase has ended
+                </Card>
             )}
         </>
     ) : (
