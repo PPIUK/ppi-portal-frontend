@@ -91,10 +91,14 @@ function SummaryTable() {
                     />
                 )}
 
-                <Typography.Title level={2} style={{ textAlign: 'center' }}>
-                    Statistics: {totalMembers} Members <br />
-                    active: {totalActiveMembers} Members
-                </Typography.Title>
+                <Space direction="vertical">
+                    <Typography.Title level={2} style={{ textAlign: 'center' }}>
+                        Statistics: {totalMembers} Registered
+                    </Typography.Title>
+                    <Typography.Title level={2} style={{ textAlign: 'center' }}>
+                        Active: {totalActiveMembers} Members
+                    </Typography.Title>
+                </Space>
             </Space>
 
             <Tabs defaultActiveKey="General Infographic">
