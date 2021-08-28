@@ -20,6 +20,8 @@ import Axios from 'axios';
 import moment from 'moment';
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import Modal from 'antd/lib/modal/Modal';
+import CandidateInfo from '../components/CandidateInfo';
 
 const { TabPane } = Tabs;
 
@@ -30,6 +32,10 @@ export default function ElectionAdminView() {
     const [electionBanner, setElectionBanner] = useState(null);
     const [bannerList, setBannerList] = useState([]);
     const [candidateProfiles, setCandidateProfiles] = useState([]);
+
+    const [modalProfile, setModalProfile] = useState(null);
+    const [modalSubmission, setModalSubmission] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const navigate = useNavigate();
     const [form] = Form.useForm();
@@ -117,7 +123,29 @@ export default function ElectionAdminView() {
                                 },
                             }
                         ).then((resp) => {
-                            profiles.push(resp.data.data);
+                            let profile = resp.data.data;
+                            return profile.profilePicture
+                                ? Axios.get(
+                                      `/api/profiles/${candidate.candidateID}/profilepicture`,
+                                      {
+                                          headers: {
+                                              Authorization: `Bearer ${auth.accessToken}`,
+                                          },
+                                          responseType: 'blob',
+                                      }
+                                  ).then((pic) => {
+                                      return new Promise((resolve) => {
+                                          let reader = new FileReader();
+                                          reader.readAsDataURL(pic.data);
+                                          reader.onload = () => {
+                                              profile.profilePicture =
+                                                  reader.result;
+                                              profiles.push(resp.data.data);
+                                              resolve();
+                                          };
+                                      });
+                                  })
+                                : profiles.push(profile);
                         })
                     );
                 });
@@ -142,6 +170,16 @@ export default function ElectionAdminView() {
 
     return electionData ? (
         <>
+            <Modal
+                visible={modalVisible}
+                footer={null}
+                onCancel={() => setModalVisible(false)}
+            >
+                <CandidateInfo
+                    profile={modalProfile}
+                    submission={modalSubmission}
+                />
+            </Modal>
             <Card title={electionData.name}>
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="Edit Election Details" key="1">
@@ -331,13 +369,29 @@ export default function ElectionAdminView() {
                                             <Button
                                                 type="primary"
                                                 key="more-info"
+                                                onClick={() => {
+                                                    setModalProfile(profile);
+                                                    setModalSubmission(
+                                                        candidate
+                                                    );
+                                                    setModalVisible(true);
+                                                }}
                                             >
                                                 <a>More Info</a>
                                             </Button>,
                                         ]}
                                     >
                                         <List.Item.Meta
-                                            // avatar={} //TODO: get profile picture and display
+                                            avatar={
+                                                profile.profilePicture ? (
+                                                    <Image
+                                                        width={50}
+                                                        src={
+                                                            profile.profilePicture
+                                                        }
+                                                    />
+                                                ) : null
+                                            }
                                             title={profile.fullName}
                                             description={`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
                                         />
