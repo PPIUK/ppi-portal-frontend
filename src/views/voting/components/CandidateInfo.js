@@ -69,6 +69,7 @@ export default function CandidateInfo({ profile, submission }) {
                                                 headers: {
                                                     Authorization: `Bearer ${auth.accessToken}`,
                                                 },
+                                                responseType: 'blob',
                                             }
                                         ).then((resp) => {
                                             const headerVal =
