@@ -355,50 +355,57 @@ export default function ElectionAdminView() {
                         </Form>
                     </TabPane>
                     <TabPane tab="View Candidates" key="2">
-                        <List
-                            size="large"
-                            itemLayout="horizontal"
-                            dataSource={electionData.candidates}
-                            renderItem={(candidate) => {
-                                const profile = candidateProfiles.find(
-                                    (prof) => prof._id === candidate.candidateID
-                                );
-                                return (
-                                    <List.Item
-                                        actions={[
-                                            <Button
-                                                type="primary"
-                                                key="more-info"
-                                                onClick={() => {
-                                                    setModalProfile(profile);
-                                                    setModalSubmission(
-                                                        candidate
-                                                    );
-                                                    setModalVisible(true);
-                                                }}
-                                            >
-                                                <a>More Info</a>
-                                            </Button>,
-                                        ]}
-                                    >
-                                        <List.Item.Meta
-                                            avatar={
-                                                profile.profilePicture ? (
-                                                    <Image
-                                                        width={50}
-                                                        src={
-                                                            profile.profilePicture
-                                                        }
-                                                    />
-                                                ) : null
-                                            }
-                                            title={profile.fullName}
-                                            description={`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
-                                        />
-                                    </List.Item>
-                                );
-                            }}
-                        />
+                        {candidateProfiles ? (
+                            <List
+                                size="large"
+                                itemLayout="horizontal"
+                                dataSource={electionData.candidates}
+                                renderItem={(candidate) => {
+                                    const profile = candidateProfiles.find(
+                                        (prof) =>
+                                            prof._id === candidate.candidateID
+                                    );
+                                    return (
+                                        <List.Item
+                                            actions={[
+                                                <Button
+                                                    type="primary"
+                                                    key="more-info"
+                                                    onClick={() => {
+                                                        setModalProfile(
+                                                            profile
+                                                        );
+                                                        setModalSubmission(
+                                                            candidate
+                                                        );
+                                                        setModalVisible(true);
+                                                    }}
+                                                >
+                                                    <a>More Info</a>
+                                                </Button>,
+                                            ]}
+                                        >
+                                            <List.Item.Meta
+                                                avatar={
+                                                    profile.profilePicture ? (
+                                                        <Image
+                                                            width={50}
+                                                            src={
+                                                                profile.profilePicture
+                                                            }
+                                                        />
+                                                    ) : null
+                                                }
+                                                title={profile.fullName}
+                                                description={`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
+                                            />
+                                        </List.Item>
+                                    );
+                                }}
+                            />
+                        ) : (
+                            <Skeleton />
+                        )}
                     </TabPane>
                 </Tabs>
             </Card>

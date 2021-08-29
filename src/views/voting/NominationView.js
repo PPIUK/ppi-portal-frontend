@@ -30,6 +30,7 @@ export default function NominationView() {
     const [electionData, setElectionData] = useState(null);
     const [electionBanner, setElectionBanner] = useState(null);
     const [submissionData, setSubmissionData] = useState(undefined);
+    const [loading, setLoading] = useState(false);
 
     const [cvFileList, setCVFileList] = useState([]);
     const [orgExp, setOrgExp] = useState([]);
@@ -72,6 +73,7 @@ export default function NominationView() {
     }, [electionID]);
 
     const formSubmit = (vals) => {
+        setLoading(true);
         let formData = new FormData();
         formData.append('candidateID', auth.user._id);
         for (const name in vals) {
@@ -126,12 +128,14 @@ export default function NominationView() {
                 content: 'Saved successfully!',
                 key: 'saveLoading',
             });
-        }).catch((e) =>
-            message.error({
-                content: `Error: ${e.response.data.message}`,
-                key: 'saveLoading',
-            })
-        );
+        })
+            .catch((e) =>
+                message.error({
+                    content: `Error: ${e.response.data.message}`,
+                    key: 'saveLoading',
+                })
+            )
+            .then(() => setLoading(false));
     };
 
     const downloadFile = (endpoint) => () => {
@@ -379,6 +383,7 @@ export default function NominationView() {
                                 type="primary"
                                 style={{ width: '100%', marginTop: '12px' }}
                                 onClick={() => form.submit()}
+                                loading={loading}
                             >
                                 Save
                             </Button>
