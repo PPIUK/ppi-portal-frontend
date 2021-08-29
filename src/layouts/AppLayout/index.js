@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Navigate, Outlet } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
 import { Layout } from 'antd';
 import { CopyrightOutlined } from '@ant-design/icons';
 
@@ -14,11 +14,14 @@ import './index.css';
 
 function AppLayout() {
     const auth = useAuth();
+    const location = useLocation();
     const [collapsed, setCollapsed] = useState(false);
     const [showToggle, setShowToggle] = useState(false);
     const onCollapse = (val) => setCollapsed(val);
 
-    if (!auth.user) return <Navigate to="/login" />;
+    if (!auth.user)
+        return <Navigate to={`/login?redirect=${location.pathname}`} />;
+
     return (
         <Layout>
             <Sider

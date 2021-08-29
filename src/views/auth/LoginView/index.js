@@ -17,7 +17,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../../utils/useAuth';
 
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import './index.css';
 
@@ -46,6 +46,7 @@ const loginErrorAlert = (message) => {
 function LoginView({ appOAuthLogin }) {
     const [form] = Form.useForm();
     const auth = useAuth();
+    const query = new URLSearchParams(useLocation().search);
     const navigate = useNavigate();
     const screens = Grid.useBreakpoint();
 
@@ -58,7 +59,9 @@ function LoginView({ appOAuthLogin }) {
                     appOAuthLogin === undefined ||
                     Object.keys(appOAuthLogin).length === 0
                 ) {
-                    navigate('/app/profile/me');
+                    let redirPath = query.get('redirect') || '/app/profile/me';
+                    console.log(redirPath);
+                    navigate(redirPath);
                 }
             })
             .catch((err) => {
@@ -80,7 +83,12 @@ function LoginView({ appOAuthLogin }) {
             });
     };
 
-    if (auth.user) return <Navigate to="/app/profile/me"></Navigate>;
+    if (auth.user)
+        return (
+            <Navigate
+                to={query.get('redirect') || '/app/profile/me'}
+            ></Navigate>
+        );
 
     return (
         <Card {...formStyle}>
