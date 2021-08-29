@@ -1,25 +1,29 @@
 import React from 'react';
-import { Card, Layout, Space, Typography } from 'antd';
+import { Card, Grid, Layout, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router';
 
 const { Content } = Layout;
 
+const { useBreakpoint } = Grid;
+
 export default function PublicLayout() {
+    const screens = useBreakpoint();
+
     return (
         <Layout
             style={{
                 background:
                     'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(0,212,240,1) 20%, rgba(4,0,255,1) 100%',
-                minHeight: '100vh',
+                minHeight: !screens.xs ? '100vh' : 0,
             }}
         >
             <Content
                 style={{
-                    margin: '24px 48px',
+                    margin: !screens.xs ? '24px 48px' : 0,
                     marginTop: 24,
-                    padding: 30,
-                    minHeight: '100vh',
+                    padding: !screens.xs ? 30 : 0,
+                    minHeight: !screens.xs ? '100vh' : 0,
                     overflow: 'initial',
                 }}
             >

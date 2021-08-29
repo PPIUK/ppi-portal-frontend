@@ -60,7 +60,7 @@ export default function Thesis({ id }) {
                 <Typography>University: {thesis.university}</Typography>
                 {thesis.link && (
                     <Typography>
-                        URL: <a>{thesis.link}</a>
+                        URL: <a href={thesis.link}>{thesis.link}</a>
                     </Typography>
                 )}
                 {thesis.fileId && (
