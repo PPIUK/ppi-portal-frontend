@@ -31,7 +31,7 @@ export default function ElectionAdminView() {
     const [electionData, setElectionData] = useState(null);
     const [electionBanner, setElectionBanner] = useState(null);
     const [bannerList, setBannerList] = useState([]);
-    const [candidateProfiles, setCandidateProfiles] = useState([]);
+    const [candidateProfiles, setCandidateProfiles] = useState(null);
 
     const [modalProfile, setModalProfile] = useState(null);
     const [modalSubmission, setModalSubmission] = useState(null);
