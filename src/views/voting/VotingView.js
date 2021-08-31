@@ -5,6 +5,7 @@ import {
     Button,
     Card,
     Divider,
+    Grid,
     Image,
     List,
     message,
@@ -19,8 +20,10 @@ import { ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../utils/useAuth';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import CandidateInfo from './components/CandidateInfo';
 
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
 
 function VotingPhaseView() {
     const { electionID } = useParams();
@@ -36,6 +39,8 @@ function VotingPhaseView() {
 
     const [chosenCandidate, setChosenCandidate] = useState(null);
     const [chosenProfile, setChosenProfile] = useState(null);
+
+    const screens = useBreakpoint();
 
     const showInfoModal = (candidate, profile) => {
         setChosenCandidate(candidate);
@@ -99,7 +104,29 @@ function VotingPhaseView() {
                                 },
                             }
                         ).then((resp) => {
-                            profiles.push(resp.data.data);
+                            let profile = resp.data.data;
+                            return profile.profilePicture
+                                ? Axios.get(
+                                      `/api/profiles/${candidate.candidateID}/profilepicture`,
+                                      {
+                                          headers: {
+                                              Authorization: `Bearer ${auth.accessToken}`,
+                                          },
+                                          responseType: 'blob',
+                                      }
+                                  ).then((pic) => {
+                                      return new Promise((resolve) => {
+                                          let reader = new FileReader();
+                                          reader.readAsDataURL(pic.data);
+                                          reader.onload = () => {
+                                              profile.profilePicture =
+                                                  reader.result;
+                                              profiles.push(resp.data.data);
+                                              resolve();
+                                          };
+                                      });
+                                  })
+                                : profiles.push(profile);
                         })
                     );
                 });
@@ -132,34 +159,6 @@ function VotingPhaseView() {
                 });
             });
     }, [electionID]);
-
-    //FIXME: how to get image
-    useEffect(() => {
-        if (candidateProfiles.length > 0) {
-            let profiles = [];
-            let promises = [];
-            candidateProfiles.forEach((candidate) => {
-                promises.push(
-                    Axios.get(
-                        `/api/profiles/${candidate.candidateID}/profilepicture`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${auth.accessToken}`,
-                            },
-                            responseType: 'blob',
-                        }
-                    ).then((resp) => {
-                        let reader = new FileReader();
-                        reader.readAsDataURL(resp.data);
-                        reader.onload = () => reader.result;
-                        candidate.profilePicture = reader;
-                        profiles.push(candidate);
-                    })
-                );
-            });
-            Promise.all(promises).then(() => setCandidateProfiles(profiles));
-        }
-    }, [candidateProfiles]);
 
     return (
         <Card title={electionData !== null && electionData.name}>
@@ -227,7 +226,7 @@ function VotingPhaseView() {
                     <Typography.Title level={4}>Candidates</Typography.Title>
                     <List
                         size="large"
-                        itemLayout="horizontal"
+                        itemLayout={!screens.xs ? 'horizontal' : 'vertical'}
                         dataSource={electionData.candidates}
                         renderItem={(candidate) => {
                             const profile = candidateProfiles.find(
@@ -295,35 +294,12 @@ function VotingPhaseView() {
                             visible={isInfoModalVisible}
                             onCancel={handleInfoModalCancel}
                             footer={null}
+                            width={350}
                         >
-                            <Space>
-                                <Image width={200} />
-                                {
-                                    //TODO: figure out how to get the image from profile picture
-                                }
-                                <div>
-                                    Degree level: {chosenProfile.degreeLevel}
-                                    <br />
-                                    Course: {chosenProfile.course}
-                                    <br />
-                                    University: {chosenProfile.university}
-                                    <br />
-                                    <br />
-                                    <a>CV</a>
-                                    {
-                                        //TODO: figure out how to download the file
-                                    }
-                                    <br />
-                                    <a>Motivation Essay</a>
-                                    {
-                                        //TODO: figure out how to download the file
-                                    }
-                                    <br />
-                                    <a href={chosenCandidate.video}>
-                                        Vision and Mission Video
-                                    </a>
-                                </div>
-                            </Space>
+                            <CandidateInfo
+                                profile={chosenProfile}
+                                submission={chosenCandidate}
+                            />
                         </Modal>
                     )}
                 </Space>

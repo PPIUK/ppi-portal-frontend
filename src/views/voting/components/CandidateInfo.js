@@ -47,9 +47,7 @@ export default function CandidateInfo({ profile, submission }) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        <Typography.Link>
-                                            {value}
-                                        </Typography.Link>
+                                        <Typography.Link>URL</Typography.Link>
                                     </a>,
                                 ]}
                             >
