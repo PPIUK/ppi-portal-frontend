@@ -18,6 +18,7 @@ import {
 } from 'antd';
 import { useAuth } from '../../../utils/useAuth';
 import { useNavigate, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import moment from 'moment';
 import { PlusOutlined } from '@ant-design/icons';
@@ -50,15 +51,10 @@ export default function ElectionAdminView() {
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const baseURL =
-        process.env.NODE_ENV === 'production'
-            ? 'https://portal.ppiuk.org'
-            : 'http://localhost:3001';
-
     const nameLinkFormat = (text, row) => (
-        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+        <Link to={`/app/profile/${row._id}`} component={Typography.Link}>
             {text}
-        </Typography.Link>
+        </Link>
     );
 
     const dateFormat = (text) => (

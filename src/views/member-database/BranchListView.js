@@ -4,13 +4,8 @@ import moment from 'moment';
 import { Button, Card, Skeleton, Table, Typography } from 'antd';
 import { getColumnSearchProps } from './ColumnSearchProps';
 import { useAuth } from '../../utils/useAuth';
-import { Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { CSVLink } from 'react-csv';
-
-const baseURL =
-    process.env.NODE_ENV == 'production'
-        ? 'https://portal.ppiuk.org'
-        : 'http://localhost:3001';
 
 const tableStyle = {
     style: {
@@ -63,9 +58,9 @@ function BranchListView() {
     );
 
     const nameLinkFormat = (text, row) => (
-        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+        <Link to={`/app/profile/${row._id}`} component={Typography.Link}>
             {text}
-        </Typography.Link>
+        </Link>
     );
 
     let columnSearchParams = [

@@ -3,12 +3,7 @@ import axios from 'axios';
 import { Card, Skeleton, Table, Typography } from 'antd';
 import { getColumnSearchProps } from './ColumnSearchProps';
 import { useAuth } from '../../utils/useAuth';
-import { Navigate } from 'react-router-dom';
-
-const baseURL =
-    process.env.NODE_ENV == 'production'
-        ? 'https://portal.ppiuk.org'
-        : 'http://localhost:3001';
+import { Link, Navigate } from 'react-router-dom';
 
 const tableStyle = {
     style: {
@@ -47,9 +42,9 @@ function DatabaseSearchView() {
     };
 
     const nameLinkFormat = (text, row) => (
-        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+        <Link to={`/app/profile/${row._id}`} component={Typography.Link}>
             {text}
-        </Typography.Link>
+        </Link>
     );
 
     let columnSearchParams = [
