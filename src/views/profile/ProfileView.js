@@ -55,6 +55,9 @@ export default function ProfileView() {
                     <Descriptions.Item label="Full Name" span={4}>
                         {profile.fullName}
                     </Descriptions.Item>
+                    <Descriptions.Item label="Branch" span={4}>
+                        {profile.branch}
+                    </Descriptions.Item>
                     <Descriptions.Item label="University" span={4}>
                         {profile.university}
                     </Descriptions.Item>
@@ -105,6 +108,11 @@ export default function ProfileView() {
                     {profile.addressUK && (
                         <Descriptions.Item label="UK Address" span={4}>
                             {profile.addressUK}
+                        </Descriptions.Item>
+                    )}
+                    {profile.postcodeUK && (
+                        <Descriptions.Item label="UK Postcode" span={4}>
+                            {profile.postcodeUK}
                         </Descriptions.Item>
                     )}
                 </Descriptions>
