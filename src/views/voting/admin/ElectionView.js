@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Button,
     Card,
@@ -12,7 +12,9 @@ import {
     Skeleton,
     Space,
     Tabs,
+    Table,
     Upload,
+    Typography,
 } from 'antd';
 import { useAuth } from '../../../utils/useAuth';
 import { useNavigate, useParams } from 'react-router';
@@ -22,6 +24,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Modal from 'antd/lib/modal/Modal';
 import CandidateInfo from '../components/CandidateInfo';
+import { getColumnSearchProps } from '../../member-database/ColumnSearchProps';
 
 const { TabPane } = Tabs;
 
@@ -33,12 +36,109 @@ export default function ElectionAdminView() {
     const [bannerList, setBannerList] = useState([]);
     const [candidateProfiles, setCandidateProfiles] = useState(null);
 
+    const [voterList, setVoterList] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+
     const [modalProfile, setModalProfile] = useState(null);
     const [modalSubmission, setModalSubmission] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    const baseURL =
+        process.env.NODE_ENV === 'production'
+            ? 'https://portal.ppiuk.org'
+            : 'http://localhost:3001';
+
+    const nameLinkFormat = (text, row) => (
+        <Typography.Link href={`${baseURL}/app/profile/${row._id}`}>
+            {text}
+        </Typography.Link>
+    );
+
+    const dateFormat = (text) => (
+        <Typography>
+            {text !== undefined ? moment(text).format('DD-MM-YYYY') : null}
+        </Typography>
+    );
+
+    let columnSearchParams = [
+        searchInput,
+        searchText,
+        setSearchText,
+        searchedColumn,
+        setSearchedColumn,
+    ];
+
+    const voterTableCols = [
+        {
+            title: 'No',
+            key: 'index',
+            render: (value, item, index) => (page - 1) * pageSize + index + 1,
+        },
+        {
+            title: 'Name',
+            dataIndex: 'fullName',
+            key: 'fullName',
+            sorter: {
+                compare: (a, b) =>
+                    (a.fullName || '').localeCompare(b.fullName || ''),
+            },
+            ...getColumnSearchProps('fullName', ...columnSearchParams),
+            render: nameLinkFormat,
+        },
+        {
+            title: 'Degree Level',
+            dataIndex: 'degreeLevel',
+            key: 'degreeLevel',
+            sorter: {
+                compare: (a, b) =>
+                    (a.degreeLevel || '').localeCompare(b.degreeLevel || ''),
+            },
+            ...getColumnSearchProps('degreeLevel', ...columnSearchParams),
+        },
+        {
+            title: 'Start Date',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            sorter: {
+                compare: (a, b) =>
+                    a.startDate > b.startDate
+                        ? 1
+                        : a.startDate < b.startDate
+                        ? -1
+                        : 0,
+            },
+            ...getColumnSearchProps('startDate', ...columnSearchParams),
+            render: dateFormat,
+        },
+        {
+            title: 'End Date',
+            dataIndex: 'endDate',
+            key: 'endDate',
+            sorter: {
+                compare: (a, b) =>
+                    a.endDate > b.endDate ? 1 : a.endDate < b.endDate ? -1 : 0,
+            },
+            ...getColumnSearchProps('endDate', ...columnSearchParams),
+            render: dateFormat,
+        },
+        {
+            title: 'Branch',
+            dataIndex: 'branch',
+            key: 'branch',
+            sorter: {
+                compare: (a, b) =>
+                    (a.branch || '').localeCompare(b.branch || ''),
+            },
+            ...getColumnSearchProps('branch', ...columnSearchParams),
+        },
+    ];
 
     const submitForm = (vals) => {
         let formData = new FormData();
@@ -166,6 +266,13 @@ export default function ElectionAdminView() {
                 reader.onload = () => setElectionBanner(reader.result);
             })
             .catch(() => setElectionBanner(null));
+        Axios.get(`/api/voting/admin/${electionID}/voters`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setVoterList(res.data.data);
+        });
     }, [electionID]);
 
     return electionData ? (
@@ -402,6 +509,27 @@ export default function ElectionAdminView() {
                                         </List.Item>
                                     );
                                 }}
+                            />
+                        ) : (
+                            <Skeleton />
+                        )}
+                    </TabPane>
+                    <TabPane tab="View Final Voter List" key="3">
+                        {voterList ? (
+                            <Table
+                                columns={voterTableCols}
+                                dataSource={voterList}
+                                pagination={{
+                                    onChange(current) {
+                                        setPage(current);
+                                    },
+                                    onShowSizeChange(current, size) {
+                                        setPageSize(size);
+                                    },
+                                    showSizeChanger: true,
+                                    pageSizeOptions: [5, 10, 20, 50, 100],
+                                }}
+                                scroll={{ x: true }}
                             />
                         ) : (
                             <Skeleton />
