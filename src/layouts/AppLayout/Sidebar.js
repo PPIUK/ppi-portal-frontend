@@ -105,12 +105,14 @@ function Sidebar() {
                             Voting
                         </Menu.Item>
                         <Menu.Item
-                            key={`/app/voting/${election._id}`}
+                            key={`/app/voting/${election._id}/statistics`}
                             disabled={elections.nominatePhase.includes(
                                 election
                             )}
                         >
-                            <Link to={`/app/voting/${election._id}`} />
+                            <Link
+                                to={`/app/voting/${election._id}/statistics`}
+                            />
                             Statistics
                         </Menu.Item>
                     </Menu.SubMenu>

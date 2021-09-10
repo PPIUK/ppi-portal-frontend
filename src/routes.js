@@ -35,7 +35,7 @@ import VotingPhaseView from './views/voting/VotingView';
 
 import VotingAdminElectionView from './views/voting/admin/ElectionView';
 import VotingAdminSummaryView from './views/voting/admin/SummaryView';
-import VotingElectionView from './views/voting/ElectionView';
+import VotingPublicStatisticsView from './views/voting/PublicStatisticsView';
 import VotingNominationView from './views/voting/NominationView';
 
 const routes = [
@@ -73,8 +73,8 @@ const routes = [
                         element: <VotingPhaseView />,
                     },
                     {
-                        path: ':electionID/',
-                        element: <VotingElectionView />,
+                        path: ':electionID/statistics',
+                        element: <VotingPublicStatisticsView />,
                     },
                     {
                         path: '/',

@@ -26,6 +26,7 @@ import axios from 'axios';
 import Modal from 'antd/lib/modal/Modal';
 import CandidateInfo from '../components/CandidateInfo';
 import { getColumnSearchProps } from '../../member-database/ColumnSearchProps';
+import StatisticsCharts from '../components/StatisticsCharts';
 
 const { TabPane } = Tabs;
 
@@ -43,6 +44,8 @@ export default function ElectionAdminView() {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+
+    const [statisticsData, setStatisticsData] = useState([]);
 
     const [modalProfile, setModalProfile] = useState(null);
     const [modalSubmission, setModalSubmission] = useState(null);
@@ -209,7 +212,7 @@ export default function ElectionAdminView() {
                 setElectionData(election);
                 let profiles = [];
                 let promises = [];
-                election.candidates.forEach((candidate) => {
+                election.candidatePool.forEach((candidate) => {
                     promises.push(
                         Axios.get(
                             `/api/profiles/${candidate.candidateID}/public`,
@@ -269,6 +272,26 @@ export default function ElectionAdminView() {
         }).then((res) => {
             setVoterList(res.data.data);
         });
+        Axios.get(`/api/voting/admin/${electionID}/stats`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setStatisticsData(res.data.data);
+        });
+    }, [electionID]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            Axios.get(`/api/voting/admin/${electionID}/stats`, {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            }).then((res) => {
+                setStatisticsData(res.data.data);
+            });
+        }, 1000);
+        return () => clearInterval(interval);
     }, [electionID]);
 
     return electionData ? (
@@ -526,6 +549,18 @@ export default function ElectionAdminView() {
                                     pageSizeOptions: [5, 10, 20, 50, 100],
                                 }}
                                 scroll={{ x: true }}
+                            />
+                        ) : (
+                            <Skeleton />
+                        )}
+                    </TabPane>
+                    <TabPane tab="View Live Statistics" key="4">
+                        {statisticsData ? (
+                            <StatisticsCharts
+                                statistics={statisticsData}
+                                votingData={electionData.voting}
+                                candidateProfiles={candidateProfiles}
+                                candidatePool={electionData.candidatePool}
                             />
                         ) : (
                             <Skeleton />
