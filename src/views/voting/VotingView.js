@@ -20,7 +20,6 @@ import { ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../utils/useAuth';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
-import CandidateInfo from './components/CandidateInfo';
 
 const { confirm } = Modal;
 const { useBreakpoint } = Grid;
@@ -33,25 +32,11 @@ function VotingPhaseView() {
     const [candidateProfiles, setCandidateProfiles] = useState([]);
 
     const [isVoteButtonVisible, setIsVoteButtonVisible] = useState(true);
-    const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
 
     const [hasVoted, setHasVoted] = useState(false);
     const [isEligible, setIsEligible] = useState(false);
 
-    const [chosenCandidate, setChosenCandidate] = useState(null);
-    const [chosenProfile, setChosenProfile] = useState(null);
-
     const screens = useBreakpoint();
-
-    const showInfoModal = (candidate, profile) => {
-        setChosenCandidate(candidate);
-        setChosenProfile(profile);
-        setIsInfoModalVisible(true);
-    };
-
-    const handleInfoModalCancel = () => {
-        setIsInfoModalVisible(false);
-    };
 
     const showVoteConfirm = (profile) => {
         confirm({
@@ -237,8 +222,33 @@ function VotingPhaseView() {
                     )}
                     {!isEligible && (
                         <div style={{ textAlign: 'center' }}>
+                            {
+                                //FIXME: this should be dynamic
+                            }
                             <Typography.Title level={5}>
-                                You are not eligible to vote in this campaign.
+                                <p>Apologies.</p>
+
+                                <p>
+                                    According to the Regulatory Document of the
+                                    PPI UK General Election 2021/22 Chapter 20
+                                    about Eligible Voters, you are not eligible
+                                    to vote in the election.
+                                </p>
+
+                                <p>
+                                    Access the document{' '}
+                                    <a href="https://ppiuk.org/wp-content/uploads/Dokumen-Ketentuan-Pemilihan-Umum-PPI-UK-21-22-070921.pdf">
+                                        here.
+                                    </a>
+                                </p>
+
+                                <p>
+                                    If you think that this is incorrect, contact
+                                    us now via{' '}
+                                    <a href="mailto:kpuppiuk@gmail.com">
+                                        kpuppiuk@gmail.com
+                                    </a>
+                                </p>
                             </Typography.Title>
                             <Divider />
                         </div>
@@ -252,34 +262,9 @@ function VotingPhaseView() {
                             const profile = candidateProfiles.find(
                                 (prof) => prof.voteID === candidate
                             );
-                            // FIXME: bad, but I can't really be bothered to fix rn
-                            //        serverside filtering needed in the future
-                            const {
-                                // eslint-disable-next-line no-unused-vars
-                                organisationExp,
-                                // eslint-disable-next-line no-unused-vars
-                                notInOfficeStatement,
-                                // eslint-disable-next-line no-unused-vars
-                                cv,
-                                ...submission
-                            } = electionData.candidatePool.find(
-                                (c) => c._id === candidate
-                            );
                             return (
                                 <List.Item
                                     actions={[
-                                        <Button
-                                            type="primary"
-                                            onClick={() =>
-                                                showInfoModal(
-                                                    submission,
-                                                    profile
-                                                )
-                                            }
-                                            key="more-info"
-                                        >
-                                            <a>More Info</a>
-                                        </Button>,
                                         isVoteButtonVisible && (
                                             <Button
                                                 type="primary"
@@ -327,25 +312,6 @@ function VotingPhaseView() {
                             );
                         }}
                     />
-                    {chosenCandidate !== null && (
-                        <Modal
-                            title={chosenProfile.fullName}
-                            visible={isInfoModalVisible}
-                            onCancel={handleInfoModalCancel}
-                            footer={null}
-                            width={350}
-                        >
-                            <CandidateInfo
-                                profile={chosenProfile}
-                                submission={chosenCandidate}
-                                number={
-                                    roundData.candidates.indexOf(
-                                        chosenProfile.voteID
-                                    ) + 1
-                                }
-                            />
-                        </Modal>
-                    )}
                 </Space>
             )}
         </Card>
