@@ -87,6 +87,10 @@ function VotingPhaseView() {
                     const votingRound = res.data.data;
                     setRoundData(votingRound);
 
+                    if (new Date() >= new Date(votingRound.endDate)) {
+                        setIsVoteButtonVisible(false);
+                    }
+
                     let profiles = [];
                     let promises = [];
                     votingRound.candidates.forEach((candidateID) => {
@@ -196,21 +200,45 @@ function VotingPhaseView() {
                                     'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
-                            <Timeline.Item color="blue">
+                            <Timeline.Item
+                                color={
+                                    new Date() < new Date(roundData.endDate)
+                                        ? 'blue'
+                                        : 'green'
+                                }
+                            >
                                 Voting phase started:{' '}
                                 {moment(roundData.startDate).format(
                                     'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
-                            <Timeline.Item color="gray">
-                                Voting phase ends:{' '}
-                                {moment(roundData.endDate).format(
-                                    'DD MMMM YYYY, HH:mm:ss'
-                                )}
-                            </Timeline.Item>
+                            {new Date() < new Date(roundData.endDate) && (
+                                <Timeline.Item color="gray">
+                                    Voting phase ends:{' '}
+                                    {moment(roundData.endDate).format(
+                                        'DD MMMM YYYY, HH:mm:ss'
+                                    )}
+                                </Timeline.Item>
+                            )}
+                            {new Date() >= new Date(roundData.endDate) && (
+                                <Timeline.Item color="green">
+                                    Voting phase ended:{' '}
+                                    {moment(roundData.endDate).format(
+                                        'DD MMMM YYYY, HH:mm:ss'
+                                    )}
+                                </Timeline.Item>
+                            )}
                         </Timeline>
                     </Space>
                     <Divider />
+                    {new Date() >= new Date(roundData.endDate) && (
+                        <div style={{ textAlign: 'center' }}>
+                            <Typography.Title level={5}>
+                                Voting phase for this round has ended.
+                            </Typography.Title>
+                            <Divider />
+                        </div>
+                    )}
                     {hasVoted && (
                         <div style={{ textAlign: 'center' }}>
                             <Typography.Title level={5}>
