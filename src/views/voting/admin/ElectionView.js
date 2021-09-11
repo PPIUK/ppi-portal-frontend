@@ -440,36 +440,6 @@ export default function ElectionAdminView() {
                                         <DatePicker showTime />
                                     </Form.Item>
                                 </Descriptions.Item>
-                                <Descriptions.Item
-                                    label="Voting Phase Start Date"
-                                    span={3}
-                                >
-                                    <Form.Item
-                                        name="voteStart"
-                                        initialValue={moment(
-                                            electionData.voteStart
-                                        )}
-                                        rules={[{ required: true }]}
-                                        noStyle
-                                    >
-                                        <DatePicker showTime />
-                                    </Form.Item>
-                                </Descriptions.Item>
-                                <Descriptions.Item
-                                    label="Voting Phase End Date"
-                                    span={3}
-                                >
-                                    <Form.Item
-                                        name="voteEnd"
-                                        initialValue={moment(
-                                            electionData.voteEnd
-                                        )}
-                                        rules={[{ required: true }]}
-                                        noStyle
-                                    >
-                                        <DatePicker showTime />
-                                    </Form.Item>
-                                </Descriptions.Item>
                             </Descriptions>
                             <Button
                                 block
@@ -533,7 +503,8 @@ export default function ElectionAdminView() {
                             <Skeleton />
                         )}
                     </TabPane>
-                    <TabPane tab="View Final Voter List" key="3">
+                    <TabPane tab="Manage Voting Rounds" key="3"></TabPane>
+                    <TabPane tab="View Final Voter List" key="4">
                         {voterList ? (
                             <Table
                                 columns={voterTableCols}
@@ -554,7 +525,7 @@ export default function ElectionAdminView() {
                             <Skeleton />
                         )}
                     </TabPane>
-                    <TabPane tab="View Live Statistics" key="4">
+                    <TabPane tab="View Live Statistics" key="5">
                         {statisticsData ? (
                             <StatisticsCharts
                                 statistics={statisticsData}

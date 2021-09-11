@@ -34,11 +34,6 @@ function Sidebar() {
                             now >= new Date(v.nominateStart) &&
                             now <= new Date(v.nominateEnd)
                     ),
-                    votingPhase: res.data.data.filter(
-                        (v) =>
-                            now >= new Date(v.voteStart) &&
-                            now <= new Date(v.voteEnd)
-                    ),
                 });
             }),
         []
@@ -97,13 +92,16 @@ function Sidebar() {
                             />
                             Candidate Registration
                         </Menu.Item>
-                        <Menu.Item
-                            key={`/app/voting/${election._id}/vote`}
-                            disabled={!elections.votingPhase.includes(election)}
-                        >
-                            <Link to={`/app/voting/${election._id}/vote`} />
-                            Voting
-                        </Menu.Item>
+                        {election.voting.map((round, roundID) => (
+                            <Menu.Item
+                                key={`/app/voting/${election._id}/vote/${roundID}`}
+                            >
+                                <Link
+                                    to={`/app/voting/${election._id}/vote/${roundID}`}
+                                />
+                                Voting Round {roundID + 1}
+                            </Menu.Item>
+                        ))}
                         <Menu.Item
                             key={`/app/voting/${election._id}/statistics`}
                             disabled={elections.nominatePhase.includes(

@@ -26,9 +26,10 @@ const { confirm } = Modal;
 const { useBreakpoint } = Grid;
 
 function VotingPhaseView() {
-    const { electionID } = useParams();
+    const { electionID, roundID } = useParams();
     const auth = useAuth();
     const [electionData, setElectionData] = useState(null);
+    const [roundData, setRoundData] = useState(null);
     const [candidateProfiles, setCandidateProfiles] = useState([]);
 
     const [isVoteButtonVisible, setIsVoteButtonVisible] = useState(true);
@@ -60,7 +61,7 @@ function VotingPhaseView() {
              You can only do this once and you cannot undo this action.`,
             onOk() {
                 Axios.post(
-                    `/api/voting/${electionID}/vote/${profile._id}`,
+                    `/api/voting/${electionID}/vote/${roundID}/${profile._id}`,
                     {},
                     {
                         headers: {
@@ -87,14 +88,22 @@ function VotingPhaseView() {
             headers: {
                 Authorization: `Bearer ${auth.accessToken}`,
             },
+        }).then((res) => {
+            const election = res.data.data;
+            setElectionData(election);
+        });
+        Axios.get(`/api/voting/${electionID}/round/${roundID}`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
         })
             .then((res) => {
-                const campaign = res.data.data;
-                setElectionData(campaign);
+                const votingRound = res.data.data;
+                setRoundData(votingRound);
 
                 let profiles = [];
                 let promises = [];
-                campaign.candidates.forEach((candidate) => {
+                votingRound.candidates.forEach((candidate) => {
                     promises.push(
                         Axios.get(
                             `/api/profiles/${candidate.candidateID}/public`,
@@ -147,7 +156,7 @@ function VotingPhaseView() {
                 });
             })
             .then(() => {
-                Axios.get(`/api/voting/${electionID}/hasVoted`, {
+                Axios.get(`/api/voting/${electionID}/hasVoted/${roundID}`, {
                     headers: {
                         Authorization: `Bearer ${auth.accessToken}`,
                     },
@@ -172,7 +181,7 @@ function VotingPhaseView() {
                         <Card>
                             <Statistic.Countdown
                                 title="Voting closes in"
-                                value={electionData.voteEnd}
+                                value={roundData.voteEnd}
                                 onFinish={() => {
                                     setIsVoteButtonVisible(false);
                                 }}
@@ -193,13 +202,13 @@ function VotingPhaseView() {
                             </Timeline.Item>
                             <Timeline.Item color="blue">
                                 Voting phase started:{' '}
-                                {moment(electionData.voteStart).format(
+                                {moment(roundData.voteStart).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="gray">
                                 Voting phase ends:{' '}
-                                {moment(electionData.voteEnd).format(
+                                {moment(roundData.voteEnd).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>

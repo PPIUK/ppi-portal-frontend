@@ -69,7 +69,7 @@ const routes = [
                         element: <VotingNominationView />,
                     },
                     {
-                        path: ':electionID/vote',
+                        path: ':electionID/vote/:roundID',
                         element: <VotingPhaseView />,
                     },
                     {
