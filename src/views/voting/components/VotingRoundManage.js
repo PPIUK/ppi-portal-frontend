@@ -1,6 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DatePicker, Form, Skeleton, Typography } from 'antd';
+import {
+    Button,
+    Checkbox,
+    DatePicker,
+    Form,
+    message,
+    Skeleton,
+    Typography,
+} from 'antd';
 import Axios from 'axios';
 import { useAuth } from '../../../utils/useAuth';
 import moment from 'moment';
@@ -55,11 +63,15 @@ export default function VotingRoundManage({
                         Authorization: `Bearer ${auth.accessToken}`,
                     },
                 }
-            ).then(() =>
-                Axios.get(`/api/voting/${electionID}`, {
-                    headers: { Authorization: `Bearer ${auth.accessToken}` },
-                }).then((res) => setElectionData(res.data.data))
             )
+                .then(() =>
+                    Axios.get(`/api/voting/${electionID}`, {
+                        headers: {
+                            Authorization: `Bearer ${auth.accessToken}`,
+                        },
+                    }).then((res) => setElectionData(res.data.data))
+                )
+                .catch((err) => message.error(err.response.data.message))
         );
     };
 
