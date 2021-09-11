@@ -1,12 +1,17 @@
 import { Col, Row, Typography } from 'antd';
 import React from 'react';
 import {
+    Bar,
+    BarChart,
+    CartesianGrid,
     Cell,
     Legend,
     Pie,
     PieChart,
     ResponsiveContainer,
     Tooltip,
+    XAxis,
+    YAxis,
 } from 'recharts';
 
 const VOTER_COLOURS = ['#0029ff', '#ff0000'];
@@ -90,75 +95,150 @@ const BRANCH_COLOURS = [
 
 function VotersStatisticsCharts({ statistics }) {
     return statistics.branchesCount.length > 0 ? (
-        <Row>
-            <Col xs={24} xl={12}>
-                <Typography.Title level={3}>Number of Voters</Typography.Title>
-                <ResponsiveContainer width="100%" height={200}>
-                    <PieChart width="100%">
-                        <Pie
-                            data={statistics.votersCount}
-                            startAngle={180}
-                            endAngle={0}
-                            innerRadius={50}
-                            outerRadius={75}
-                            fill="#8884d8"
-                            paddingAngle={5}
-                            dataKey="value"
-                            isAnimationActive={false}
-                            label
-                        >
-                            {statistics.votersCount.map((entry, index) => (
-                                <Cell
-                                    key={entry}
-                                    fill={
-                                        VOTER_COLOURS[
-                                            index % VOTER_COLOURS.length
-                                        ]
-                                    }
-                                />
-                            ))}
-                        </Pie>
-                        <Legend
-                            layout="vertical"
-                            verticalAlign="top"
-                            align="right"
-                        />
-                        <Tooltip />
-                    </PieChart>
-                </ResponsiveContainer>
-            </Col>
-            <Col xs={24} xl={12}>
-                <Typography.Title level={3}>
-                    Number of Voters by Branch
-                </Typography.Title>
-                <ResponsiveContainer width="100%" height={200}>
-                    <PieChart width="100%">
-                        <Pie
-                            data={statistics.branchesCount}
-                            dataKey="voters"
-                            isAnimationActive={false}
-                            legendType="rect"
-                            label
-                        >
-                            {BRANCHES.map((branch, index) => {
-                                return (
+        <>
+            <Row>
+                <Col xs={24} xl={8}>
+                    <Typography.Title level={3}>
+                        Number of Voters
+                    </Typography.Title>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <PieChart width="100%">
+                            <Pie
+                                data={statistics.votersCount}
+                                // startAngle={180}
+                                // endAngle={0}
+                                innerRadius={50}
+                                outerRadius={70}
+                                fill="#8884d8"
+                                paddingAngle={5}
+                                dataKey="value"
+                                isAnimationActive={false}
+                                label
+                            >
+                                {statistics.votersCount.map((entry, index) => (
                                     <Cell
-                                        key={branch}
+                                        key={entry}
                                         fill={
-                                            BRANCH_COLOURS[
-                                                index % BRANCH_COLOURS.length
+                                            VOTER_COLOURS[
+                                                index % VOTER_COLOURS.length
                                             ]
                                         }
                                     />
-                                );
-                            })}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
-            </Col>
-        </Row>
+                                ))}
+                            </Pie>
+                            <Legend
+                                layout="vertical"
+                                verticalAlign="top"
+                                align="right"
+                            />
+                            <Tooltip />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </Col>
+                <Col xs={24} xl={8}>
+                    <Typography.Title level={3}>
+                        Number of Voters by Branch
+                    </Typography.Title>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <PieChart width="100%">
+                            <Pie
+                                data={statistics.branchesCount}
+                                dataKey="voters"
+                                isAnimationActive={false}
+                                legendType="rect"
+                                label
+                            >
+                                {BRANCHES.map((branch, index) => {
+                                    return (
+                                        <Cell
+                                            key={branch}
+                                            fill={
+                                                BRANCH_COLOURS[
+                                                    index %
+                                                        BRANCH_COLOURS.length
+                                                ]
+                                            }
+                                        />
+                                    );
+                                })}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </Col>
+                <Col xs={24} xl={8}>
+                    <Typography.Title level={3}>
+                        Number of Voters by Degree Level
+                    </Typography.Title>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <PieChart width="100%">
+                            <Pie
+                                data={statistics.degreeLevelCount}
+                                dataKey="voters"
+                                isAnimationActive={false}
+                                legendType="rect"
+                                label
+                            >
+                                {statistics.degreeLevelCount.map(
+                                    (entry, index) => {
+                                        return (
+                                            <Cell
+                                                key={index}
+                                                fill={
+                                                    BRANCH_COLOURS[
+                                                        BRANCH_COLOURS.length -
+                                                            (index %
+                                                                BRANCH_COLOURS.length)
+                                                    ]
+                                                }
+                                            />
+                                        );
+                                    }
+                                )}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={24} xl={24}>
+                    {statistics.votersBranchCount && (
+                        <div>
+                            <Typography.Title level={3}>
+                                Number of Eligible Voters per Branch
+                            </Typography.Title>
+                            <ResponsiveContainer width="100%" height={600}>
+                                <BarChart data={statistics.votersBranchCount}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis allowDecimals={false} />
+                                    <Tooltip />
+                                    <Legend
+                                        verticalAlign="bottom"
+                                        align="center"
+                                    />
+                                    <Bar
+                                        key="hasVoted"
+                                        dataKey="hasVoted"
+                                        stackId="a"
+                                        fill={VOTER_COLOURS[0]}
+                                    />
+                                    <Bar
+                                        key="hasNotVoted"
+                                        dataKey="hasNotVoted"
+                                        stackId="a"
+                                        fill={VOTER_COLOURS[1]}
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
+                </Col>
+            </Row>
+        </>
     ) : (
         <Typography>There is no data for this election round.</Typography>
     );

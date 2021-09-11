@@ -152,7 +152,7 @@ function StatisticsCharts({
     }, []);
 
     useEffect(() => {
-        if (roundCandidates) {
+        if (roundCandidates && Object.keys(statistics).length > 0) {
             statistics.forEach((round, i) => {
                 const candidates = roundCandidates[i];
 
