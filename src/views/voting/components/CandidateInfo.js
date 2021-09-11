@@ -12,7 +12,7 @@ const titleMap = {
     motivationEssay: 'Motivation Essay',
 };
 
-export default function CandidateInfo({ profile, submission }) {
+export default function CandidateInfo({ profile, submission, number }) {
     const auth = useAuth();
     const { electionID } = useParams();
     return (
@@ -25,9 +25,9 @@ export default function CandidateInfo({ profile, submission }) {
                     <Typography.Title level={5}>
                         {profile.fullName}
                     </Typography.Title>
-                    <Typography.Text>
-                        {`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
-                    </Typography.Text>
+                    {number && (
+                        <Typography.Text>{`Number ${number}`}</Typography.Text>
+                    )}
                 </Space>
             </Space>
             <List
