@@ -95,6 +95,9 @@ function Sidebar() {
                         {election.voting.map((round, roundID) => (
                             <Menu.Item
                                 key={`/app/voting/${election._id}/vote/${roundID}`}
+                                disabled={
+                                    new Date() < new Date(round.startDate)
+                                }
                             >
                                 <Link
                                     to={`/app/voting/${election._id}/vote/${roundID}`}

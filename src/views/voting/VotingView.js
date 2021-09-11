@@ -60,8 +60,9 @@ function VotingPhaseView() {
             content: `Are you sure you want to vote for ${profile.fullName}?
              You can only do this once and you cannot undo this action.`,
             onOk() {
+                message.info('Processing...');
                 Axios.post(
-                    `/api/voting/${electionID}/vote/${roundID}/${profile._id}`,
+                    `/api/voting/${electionID}/vote/${roundID}/${profile.voteID}`,
                     {},
                     {
                         headers: {
@@ -72,6 +73,7 @@ function VotingPhaseView() {
                     .then(() => {
                         setIsVoteButtonVisible(false);
                         setHasVoted(true);
+                        message.success('Voted successfully!');
                     })
                     .catch((err) => {
                         message.error(err.data.message);
@@ -91,82 +93,91 @@ function VotingPhaseView() {
         }).then((res) => {
             const election = res.data.data;
             setElectionData(election);
-        });
-        Axios.get(`/api/voting/${electionID}/round/${roundID}`, {
-            headers: {
-                Authorization: `Bearer ${auth.accessToken}`,
-            },
-        })
-            .then((res) => {
-                const votingRound = res.data.data;
-                setRoundData(votingRound);
+            Axios.get(`/api/voting/${electionID}/round/${roundID}`, {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            })
+                .then((res) => {
+                    const votingRound = res.data.data;
+                    setRoundData(votingRound);
 
-                let profiles = [];
-                let promises = [];
-                votingRound.candidates.forEach((candidate) => {
-                    promises.push(
-                        Axios.get(
-                            `/api/profiles/${candidate.candidateID}/public`,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${auth.accessToken}`,
-                                },
-                            }
-                        ).then((resp) => {
-                            let profile = resp.data.data;
-                            return profile.profilePicture
-                                ? Axios.get(
-                                      `/api/profiles/${candidate.candidateID}/profilepicture`,
-                                      {
-                                          headers: {
-                                              Authorization: `Bearer ${auth.accessToken}`,
-                                          },
-                                          responseType: 'blob',
-                                      }
-                                  ).then((pic) => {
-                                      return new Promise((resolve) => {
-                                          let reader = new FileReader();
-                                          reader.readAsDataURL(pic.data);
-                                          reader.onload = () => {
-                                              profile.profilePicture =
-                                                  reader.result;
-                                              profiles.push(resp.data.data);
-                                              resolve();
-                                          };
+                    let profiles = [];
+                    let promises = [];
+                    votingRound.candidates.forEach((candidateID) => {
+                        let candidate = election.candidatePool.find(
+                            (c) => c._id == candidateID
+                        );
+                        promises.push(
+                            Axios.get(
+                                `/api/profiles/${candidate.candidateID}/public`,
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${auth.accessToken}`,
+                                    },
+                                }
+                            ).then((resp) => {
+                                let profile = resp.data.data;
+                                return profile.profilePicture
+                                    ? Axios.get(
+                                          `/api/profiles/${candidate.candidateID}/profilepicture`,
+                                          {
+                                              headers: {
+                                                  Authorization: `Bearer ${auth.accessToken}`,
+                                              },
+                                              responseType: 'blob',
+                                          }
+                                      ).then((pic) => {
+                                          return new Promise((resolve) => {
+                                              let reader = new FileReader();
+                                              reader.readAsDataURL(pic.data);
+                                              reader.onload = () => {
+                                                  profile.profilePicture =
+                                                      reader.result;
+                                                  profiles.push({
+                                                      ...profile,
+                                                      voteID: candidate._id,
+                                                  });
+                                                  resolve();
+                                              };
+                                          });
+                                      })
+                                    : profiles.push({
+                                          ...profile,
+                                          voteID: candidate._id,
                                       });
-                                  })
-                                : profiles.push(profile);
-                        })
+                            })
+                        );
+                    });
+                    Promise.all(promises).then(() =>
+                        setCandidateProfiles(profiles)
                     );
+                })
+                .then(() => {
+                    Axios.get(`/api/voting/${electionID}/eligibility`, {
+                        headers: {
+                            Authorization: `Bearer ${auth.accessToken}`,
+                        },
+                    }).then((resp) => {
+                        setIsEligible(resp.data.data);
+                        if (resp.data.data === false) {
+                            setIsVoteButtonVisible(false);
+                        }
+                    });
+                })
+                .then(() => {
+                    Axios.get(`/api/voting/${electionID}/hasVoted/${roundID}`, {
+                        headers: {
+                            Authorization: `Bearer ${auth.accessToken}`,
+                        },
+                    }).then((resp) => {
+                        setHasVoted(resp.data.data);
+                        if (resp.data.data === true) {
+                            setIsVoteButtonVisible(false);
+                        }
+                    });
                 });
-                Promise.all(promises).then(() =>
-                    setCandidateProfiles(profiles)
-                );
-            })
-            .then(() => {
-                Axios.get(`/api/voting/${electionID}/eligibility`, {
-                    headers: {
-                        Authorization: `Bearer ${auth.accessToken}`,
-                    },
-                }).then((resp) => {
-                    setIsEligible(resp.data.data);
-                    if (resp.data.data === false) {
-                        setIsVoteButtonVisible(false);
-                    }
-                });
-            })
-            .then(() => {
-                Axios.get(`/api/voting/${electionID}/hasVoted/${roundID}`, {
-                    headers: {
-                        Authorization: `Bearer ${auth.accessToken}`,
-                    },
-                }).then((resp) => {
-                    setHasVoted(resp.data.data);
-                    if (resp.data.data === true) {
-                        setIsVoteButtonVisible(false);
-                    }
-                });
-            });
+        });
     }, [electionID]);
 
     return (
@@ -181,7 +192,7 @@ function VotingPhaseView() {
                         <Card>
                             <Statistic.Countdown
                                 title="Voting closes in"
-                                value={roundData.voteEnd}
+                                value={roundData.endDate}
                                 onFinish={() => {
                                     setIsVoteButtonVisible(false);
                                 }}
@@ -202,13 +213,13 @@ function VotingPhaseView() {
                             </Timeline.Item>
                             <Timeline.Item color="blue">
                                 Voting phase started:{' '}
-                                {moment(roundData.voteStart).format(
+                                {moment(roundData.startDate).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="gray">
                                 Voting phase ends:{' '}
-                                {moment(roundData.voteEnd).format(
+                                {moment(roundData.endDate).format(
                                     'DD MMMM YYYY, hh:mm:ss'
                                 )}
                             </Timeline.Item>
@@ -236,10 +247,23 @@ function VotingPhaseView() {
                     <List
                         size="large"
                         itemLayout={!screens.xs ? 'horizontal' : 'vertical'}
-                        dataSource={electionData.candidates}
+                        dataSource={roundData.candidates}
                         renderItem={(candidate) => {
                             const profile = candidateProfiles.find(
-                                (prof) => prof._id === candidate.candidateID
+                                (prof) => prof.voteID === candidate
+                            );
+                            // FIXME: bad, but I can't really be bothered to fix rn
+                            //        serverside filtering needed in the future
+                            const {
+                                // eslint-disable-next-line no-unused-vars
+                                organisationExp,
+                                // eslint-disable-next-line no-unused-vars
+                                notInOfficeStatement,
+                                // eslint-disable-next-line no-unused-vars
+                                cv,
+                                ...submission
+                            } = electionData.candidatePool.find(
+                                (c) => c._id === candidate
                             );
                             return (
                                 <List.Item
@@ -248,7 +272,7 @@ function VotingPhaseView() {
                                             type="primary"
                                             onClick={() =>
                                                 showInfoModal(
-                                                    candidate,
+                                                    submission,
                                                     profile
                                                 )
                                             }

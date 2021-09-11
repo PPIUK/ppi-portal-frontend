@@ -15,7 +15,6 @@ const titleMap = {
 export default function CandidateInfo({ profile, submission }) {
     const auth = useAuth();
     const { electionID } = useParams();
-
     return (
         <Space direction="vertical" size={36}>
             <Space align="start" size={12}>

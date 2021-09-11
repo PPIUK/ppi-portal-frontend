@@ -15,6 +15,7 @@ import {
     Table,
     Upload,
     Typography,
+    Collapse,
 } from 'antd';
 import { useAuth } from '../../../utils/useAuth';
 import { useNavigate, useParams } from 'react-router';
@@ -27,6 +28,7 @@ import Modal from 'antd/lib/modal/Modal';
 import CandidateInfo from '../components/CandidateInfo';
 import { getColumnSearchProps } from '../../member-database/ColumnSearchProps';
 import StatisticsCharts from '../components/StatisticsCharts';
+import VotingRoundManage from '../components/VotingRoundManage';
 
 const { TabPane } = Tabs;
 
@@ -53,6 +55,34 @@ export default function ElectionAdminView() {
 
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    const newRound = () => {
+        let startDate = new Date(
+            electionData.voting.length > 0
+                ? electionData.voting[electionData.voting.length - 1].endDate
+                : new Date()
+        );
+
+        let endDate = new Date(
+            electionData.voting.length > 0
+                ? electionData.voting[electionData.voting.length - 1].endDate
+                : new Date()
+        );
+        startDate.setDate(startDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() + 2);
+        Axios.post(
+            `/api/voting/admin/${electionID}/round`,
+            {
+                startDate,
+                endDate,
+            },
+            { headers: { Authorization: `Bearer ${auth.accessToken}` } }
+        ).then(() =>
+            Axios.get(`/api/voting/${electionID}`, {
+                headers: { Authorization: `Bearer ${auth.accessToken}` },
+            }).then((res) => setElectionData(res.data.data))
+        );
+    };
 
     const nameLinkFormat = (text, row) => (
         <Link to={`/app/profile/${row._id}`} component={Typography.Link}>
@@ -503,7 +533,27 @@ export default function ElectionAdminView() {
                             <Skeleton />
                         )}
                     </TabPane>
-                    <TabPane tab="Manage Voting Rounds" key="3"></TabPane>
+                    <TabPane tab="Manage Voting Rounds" key="3">
+                        <Button type="primary" onClick={newRound}>
+                            + New Round
+                        </Button>
+                        <Collapse>
+                            {electionData.voting.map((round, i) => (
+                                <Collapse.Panel
+                                    key={i}
+                                    header={`Round ${i + 1}`}
+                                >
+                                    <VotingRoundManage
+                                        electionData={electionData}
+                                        electionID={electionID}
+                                        roundID={i}
+                                        round={round}
+                                        setElectionData={setElectionData}
+                                    />
+                                </Collapse.Panel>
+                            ))}
+                        </Collapse>
+                    </TabPane>
                     <TabPane tab="View Final Voter List" key="4">
                         {voterList ? (
                             <Table
