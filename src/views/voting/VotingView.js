@@ -202,25 +202,25 @@ function VotingPhaseView() {
                             <Timeline.Item color="green">
                                 Candidate nomination phase started:{' '}
                                 {moment(electionData.nominateStart).format(
-                                    'DD MMMM YYYY, hh:mm:ss'
+                                    'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="green">
                                 Candidate nomination phase ended:{' '}
                                 {moment(electionData.nominateEnd).format(
-                                    'DD MMMM YYYY, hh:mm:ss'
+                                    'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="blue">
                                 Voting phase started:{' '}
                                 {moment(roundData.startDate).format(
-                                    'DD MMMM YYYY, hh:mm:ss'
+                                    'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
                             <Timeline.Item color="gray">
                                 Voting phase ends:{' '}
                                 {moment(roundData.endDate).format(
-                                    'DD MMMM YYYY, hh:mm:ss'
+                                    'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
                         </Timeline>
@@ -315,7 +315,13 @@ function VotingPhaseView() {
                                             )
                                         }
                                         title={profile.fullName}
-                                        description={`${profile.degreeLevel} ${profile.course}, ${profile.university}`}
+                                        description={
+                                            'Number ' +
+                                            (roundData.candidates.indexOf(
+                                                candidate
+                                            ) +
+                                                1)
+                                        }
                                     />
                                 </List.Item>
                             );
@@ -332,6 +338,11 @@ function VotingPhaseView() {
                             <CandidateInfo
                                 profile={chosenProfile}
                                 submission={chosenCandidate}
+                                number={
+                                    roundData.candidates.indexOf(
+                                        chosenProfile.voteID
+                                    ) + 1
+                                }
                             />
                         </Modal>
                     )}
