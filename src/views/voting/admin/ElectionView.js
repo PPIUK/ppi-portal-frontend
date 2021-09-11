@@ -485,7 +485,7 @@ export default function ElectionAdminView() {
                             <List
                                 size="large"
                                 itemLayout="horizontal"
-                                dataSource={electionData.candidates}
+                                dataSource={electionData.candidatePool}
                                 renderItem={(candidate) => {
                                     const profile = candidateProfiles.find(
                                         (prof) =>
