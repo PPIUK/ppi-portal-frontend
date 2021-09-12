@@ -354,7 +354,17 @@ function OwnProfileView() {
         let formData = new FormData();
         for (const name in vals) {
             if (vals[name]) {
-                formData.append(name, vals[name]);
+                if (
+                    ['dob', 'startDate', 'endDate'].includes(name) &&
+                    !vals[name].isSame(moment(profile[name]))
+                ) {
+                    formData.append(name, vals[name]);
+                } else if (
+                    !['dob', 'startDate', 'endDate'].includes(name) &&
+                    vals[name] !== profile[name]
+                ) {
+                    formData.append(name, vals[name]);
+                }
             }
         }
         if (uploadStudentProofList.length > 0) {
@@ -480,7 +490,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="branch"
                                 initialValue={profile.branch}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <AutoComplete
                                     style={{ width: '100%' }}
@@ -506,7 +516,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="fullName"
                                 initialValue={profile.fullName}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <Input />
                             </Form.Item>
@@ -515,7 +525,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="dob"
                                 initialValue={moment(profile.dob)}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <DatePicker />
                             </Form.Item>
@@ -551,7 +561,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="university"
                                 initialValue={profile.university}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <AutoComplete
                                     style={{ width: '100%' }}
@@ -570,7 +580,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="degreeLevel"
                                 initialValue={profile.degreeLevel}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <Input />
                             </Form.Item>
@@ -597,7 +607,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="startDate"
                                 initialValue={moment(profile.startDate)}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <DatePicker />
                             </Form.Item>
@@ -606,7 +616,7 @@ function OwnProfileView() {
                             <Form.Item
                                 name="endDate"
                                 initialValue={moment(profile.endDate)}
-                                noStyle
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <DatePicker />
                             </Form.Item>
@@ -627,6 +637,7 @@ function OwnProfileView() {
                                 rules={uniEmailRules}
                                 validateTrigger="onBlur"
                                 hasFeedback
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
                             >
                                 <Input />
                             </Form.Item>
@@ -664,7 +675,10 @@ function OwnProfileView() {
                             label="Student Status Proof (Student ID Card/CAS/LoA)"
                             span={3}
                         >
-                            <Form.Item name="studentProof" noStyle>
+                            <Form.Item
+                                name="studentProof"
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
+                            >
                                 <Space>
                                     {profile.studentProof ? (
                                         <Button
