@@ -15,6 +15,7 @@ import {
     Table,
     Upload,
     Typography,
+    Collapse,
 } from 'antd';
 import { useAuth } from '../../../utils/useAuth';
 import { useNavigate, useParams } from 'react-router';
@@ -26,6 +27,8 @@ import axios from 'axios';
 import Modal from 'antd/lib/modal/Modal';
 import CandidateInfo from '../components/CandidateInfo';
 import { getColumnSearchProps } from '../../member-database/ColumnSearchProps';
+import StatisticsCharts from '../components/StatisticsCharts';
+import VotingRoundManage from '../components/VotingRoundManage';
 
 const { TabPane } = Tabs;
 
@@ -44,12 +47,42 @@ export default function ElectionAdminView() {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
 
+    const [statisticsData, setStatisticsData] = useState([]);
+
     const [modalProfile, setModalProfile] = useState(null);
     const [modalSubmission, setModalSubmission] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    const newRound = () => {
+        let startDate = new Date(
+            electionData.voting.length > 0
+                ? electionData.voting[electionData.voting.length - 1].endDate
+                : new Date()
+        );
+
+        let endDate = new Date(
+            electionData.voting.length > 0
+                ? electionData.voting[electionData.voting.length - 1].endDate
+                : new Date()
+        );
+        startDate.setDate(startDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() + 2);
+        Axios.post(
+            `/api/voting/admin/${electionID}/round`,
+            {
+                startDate,
+                endDate,
+            },
+            { headers: { Authorization: `Bearer ${auth.accessToken}` } }
+        ).then(() =>
+            Axios.get(`/api/voting/${electionID}`, {
+                headers: { Authorization: `Bearer ${auth.accessToken}` },
+            }).then((res) => setElectionData(res.data.data))
+        );
+    };
 
     const nameLinkFormat = (text, row) => (
         <Link to={`/app/profile/${row._id}`} component={Typography.Link}>
@@ -209,7 +242,7 @@ export default function ElectionAdminView() {
                 setElectionData(election);
                 let profiles = [];
                 let promises = [];
-                election.candidates.forEach((candidate) => {
+                election.candidatePool.forEach((candidate) => {
                     promises.push(
                         Axios.get(
                             `/api/profiles/${candidate.candidateID}/public`,
@@ -269,6 +302,26 @@ export default function ElectionAdminView() {
         }).then((res) => {
             setVoterList(res.data.data);
         });
+        Axios.get(`/api/voting/admin/${electionID}/stats`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setStatisticsData(res.data.data);
+        });
+    }, [electionID]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            Axios.get(`/api/voting/admin/${electionID}/stats`, {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            }).then((res) => {
+                setStatisticsData(res.data.data);
+            });
+        }, 1000);
+        return () => clearInterval(interval);
     }, [electionID]);
 
     return electionData ? (
@@ -417,36 +470,6 @@ export default function ElectionAdminView() {
                                         <DatePicker showTime />
                                     </Form.Item>
                                 </Descriptions.Item>
-                                <Descriptions.Item
-                                    label="Voting Phase Start Date"
-                                    span={3}
-                                >
-                                    <Form.Item
-                                        name="voteStart"
-                                        initialValue={moment(
-                                            electionData.voteStart
-                                        )}
-                                        rules={[{ required: true }]}
-                                        noStyle
-                                    >
-                                        <DatePicker showTime />
-                                    </Form.Item>
-                                </Descriptions.Item>
-                                <Descriptions.Item
-                                    label="Voting Phase End Date"
-                                    span={3}
-                                >
-                                    <Form.Item
-                                        name="voteEnd"
-                                        initialValue={moment(
-                                            electionData.voteEnd
-                                        )}
-                                        rules={[{ required: true }]}
-                                        noStyle
-                                    >
-                                        <DatePicker showTime />
-                                    </Form.Item>
-                                </Descriptions.Item>
                             </Descriptions>
                             <Button
                                 block
@@ -462,7 +485,7 @@ export default function ElectionAdminView() {
                             <List
                                 size="large"
                                 itemLayout="horizontal"
-                                dataSource={electionData.candidates}
+                                dataSource={electionData.candidatePool}
                                 renderItem={(candidate) => {
                                     const profile = candidateProfiles.find(
                                         (prof) =>
@@ -510,7 +533,28 @@ export default function ElectionAdminView() {
                             <Skeleton />
                         )}
                     </TabPane>
-                    <TabPane tab="View Final Voter List" key="3">
+                    <TabPane tab="Manage Voting Rounds" key="3">
+                        <Button type="primary" onClick={newRound}>
+                            + New Round
+                        </Button>
+                        <Collapse>
+                            {electionData.voting.map((round, i) => (
+                                <Collapse.Panel
+                                    key={i}
+                                    header={`Round ${i + 1}`}
+                                >
+                                    <VotingRoundManage
+                                        electionData={electionData}
+                                        electionID={electionID}
+                                        roundID={i}
+                                        round={round}
+                                        setElectionData={setElectionData}
+                                    />
+                                </Collapse.Panel>
+                            ))}
+                        </Collapse>
+                    </TabPane>
+                    <TabPane tab="View Final Voter List" key="4">
                         {voterList ? (
                             <Table
                                 columns={voterTableCols}
@@ -526,6 +570,18 @@ export default function ElectionAdminView() {
                                     pageSizeOptions: [5, 10, 20, 50, 100],
                                 }}
                                 scroll={{ x: true }}
+                            />
+                        ) : (
+                            <Skeleton />
+                        )}
+                    </TabPane>
+                    <TabPane tab="View Live Statistics" key="5">
+                        {statisticsData ? (
+                            <StatisticsCharts
+                                statistics={statisticsData}
+                                votingData={electionData.voting}
+                                candidateProfiles={candidateProfiles}
+                                candidatePool={electionData.candidatePool}
                             />
                         ) : (
                             <Skeleton />

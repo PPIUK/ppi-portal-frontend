@@ -29,9 +29,7 @@ const columns = [
         // eslint-disable-next-line react/display-name
         render: (text, record) => {
             let now = new Date();
-            if (now >= new Date(record.voteEnd)) return 'Archived';
-            if (now >= new Date(record.voteStart)) return 'Voting';
-            if (now >= new Date(record.nominateEnd)) return 'Grace Period';
+            if (now >= new Date(record.nominateEnd)) return 'Post Nomination'; // TODO: check the rounds
             if (now >= new Date(record.nominateStart)) return 'Nomination';
             return 'Inactive';
         },
@@ -191,20 +189,6 @@ export default function ElectionSummaryView() {
                     <Form.Item
                         name="nominateEnd"
                         label="Nomination Phase End Date"
-                        rules={[{ required: true }]}
-                    >
-                        <DatePicker showTime />
-                    </Form.Item>
-                    <Form.Item
-                        name="voteStart"
-                        label="Voting Phase Start Date"
-                        rules={[{ required: true }]}
-                    >
-                        <DatePicker showTime />
-                    </Form.Item>
-                    <Form.Item
-                        name="voteEnd"
-                        label="Voting Phase End Date"
                         rules={[{ required: true }]}
                     >
                         <DatePicker showTime />
