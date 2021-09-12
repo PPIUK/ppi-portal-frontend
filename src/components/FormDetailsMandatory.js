@@ -261,7 +261,18 @@ const uniEmailRules = [
         validator(rule, value) {
             return new Promise((resolve, reject) => {
                 if (!value) return resolve();
-                if (!allowedDomains.includes(value.match(/@(.*)/)[1]))
+                const splits = value.split(/[@.]+/);
+                let rootDomain;
+                if (splits[splits.length - 1] === 'edu') {
+                    rootDomain = splits.slice(-2).join('.');
+                } else if (splits.slice(-2).join('.') === 'ac.uk') {
+                    rootDomain = splits.slice(-3).join('.');
+                } else {
+                    return reject(
+                        'Campus email should match your university email domain'
+                    );
+                }
+                if (!allowedDomains.includes(rootDomain))
                     return reject(
                         'Campus email should match your university email domain'
                     );
