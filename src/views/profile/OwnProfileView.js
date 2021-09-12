@@ -486,6 +486,64 @@ function OwnProfileView() {
             {profile && (
                 <Form form={form} onFinish={submitForm}>
                     <Descriptions bordered>
+                        <Descriptions.Item
+                            label="Student Status Proof (Student ID Card/CAS/LoA)"
+                            span={3}
+                        >
+                            <Form.Item
+                                name="studentProof"
+                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
+                            >
+                                <Space>
+                                    {profile.studentProof ? (
+                                        <Button
+                                            type="primary"
+                                            icon={<DownloadOutlined />}
+                                            onClick={downloadStudentProof}
+                                        >
+                                            Download Saved File
+                                        </Button>
+                                    ) : null}
+                                    <Upload
+                                        maxCount={1}
+                                        onChange={onStudentProofFileChoose}
+                                        fileList={uploadStudentProofList}
+                                        beforeUpload={() => false}
+                                    >
+                                        <Button icon={<UploadOutlined />}>
+                                            Click to Upload New File
+                                        </Button>
+                                    </Upload>
+                                </Space>
+                            </Form.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Profile Picture" span={3}>
+                            <Form.Item name="profilePicture" noStyle>
+                                <Space>
+                                    {profile.profilePicture ? (
+                                        <Image
+                                            width={200}
+                                            loading={imageBlob === null}
+                                            src={imageBlob}
+                                        />
+                                    ) : null}
+                                    <Upload
+                                        accept="image/*"
+                                        maxCount={1}
+                                        listType="picture-card"
+                                        showUploadList={{
+                                            showPreviewIcon: false,
+                                            showRemoveIcon: false,
+                                        }}
+                                        onChange={onProfilePictureFileChoose}
+                                        fileList={uploadProfilePictureList}
+                                        beforeUpload={() => false}
+                                    >
+                                        {imageUploadButton}
+                                    </Upload>
+                                </Space>
+                            </Form.Item>
+                        </Descriptions.Item>
                         <Descriptions.Item label="Branch" span={3}>
                             <Form.Item
                                 name="branch"
@@ -669,64 +727,6 @@ function OwnProfileView() {
                                 noStyle
                             >
                                 <Input />
-                            </Form.Item>
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Student Status Proof (Student ID Card/CAS/LoA)"
-                            span={3}
-                        >
-                            <Form.Item
-                                name="studentProof"
-                                help="Warning: Changing this value will revoke your verified status. You will need to be manually verified again."
-                            >
-                                <Space>
-                                    {profile.studentProof ? (
-                                        <Button
-                                            type="primary"
-                                            icon={<DownloadOutlined />}
-                                            onClick={downloadStudentProof}
-                                        >
-                                            Download Saved File
-                                        </Button>
-                                    ) : null}
-                                    <Upload
-                                        maxCount={1}
-                                        onChange={onStudentProofFileChoose}
-                                        fileList={uploadStudentProofList}
-                                        beforeUpload={() => false}
-                                    >
-                                        <Button icon={<UploadOutlined />}>
-                                            Click to Upload New File
-                                        </Button>
-                                    </Upload>
-                                </Space>
-                            </Form.Item>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Profile Picture" span={3}>
-                            <Form.Item name="profilePicture" noStyle>
-                                <Space>
-                                    {profile.profilePicture ? (
-                                        <Image
-                                            width={200}
-                                            loading={imageBlob === null}
-                                            src={imageBlob}
-                                        />
-                                    ) : null}
-                                    <Upload
-                                        accept="image/*"
-                                        maxCount={1}
-                                        listType="picture-card"
-                                        showUploadList={{
-                                            showPreviewIcon: false,
-                                            showRemoveIcon: false,
-                                        }}
-                                        onChange={onProfilePictureFileChoose}
-                                        fileList={uploadProfilePictureList}
-                                        beforeUpload={() => false}
-                                    >
-                                        {imageUploadButton}
-                                    </Upload>
-                                </Space>
                             </Form.Item>
                         </Descriptions.Item>
                     </Descriptions>
