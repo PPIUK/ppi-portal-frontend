@@ -75,6 +75,11 @@ function LoginView({ appOAuthLogin }) {
                         loginErrorAlert('Email verification pending')
                     );
 
+                if (err.response.status === 403)
+                    return setLoginFeedback(
+                        loginErrorAlert(err.response.data.message)
+                    );
+
                 return setLoginFeedback(
                     loginErrorAlert(
                         'Internal server error. Please try again in a moment'

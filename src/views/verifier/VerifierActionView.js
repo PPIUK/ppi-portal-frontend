@@ -71,6 +71,16 @@ export default function VerifierActionView() {
                     },
                 }
             ).then(() => nav('/app/verifier/dashboard', { replace: true })),
+        block: () =>
+            Axios.post(
+                `/api/verifier/action/${userId}`,
+                { action: 'blocked' },
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                }
+            ).then(() => nav('/app/verifier/dashboard', { replace: true })),
         delete: () =>
             Axios.delete(`/api/verifier/action/${userId}`, {
                 headers: {
@@ -189,7 +199,23 @@ export default function VerifierActionView() {
                     </Button>
                 )}
                 {profileData &&
-                    (profileData.roles.includes('flagged') ? (
+                    (profileData.roles.includes('blocked') ||
+                        !profileData.roles.includes('flagged')) && (
+                        <Button type="danger" onClick={handlers.flag}>
+                            Flag
+                        </Button>
+                    )}
+                {profileData &&
+                    (profileData.roles.includes('flagged') ||
+                        !profileData.roles.includes('blocked')) && (
+                        <Button type="danger" onClick={handlers.block}>
+                            Block
+                        </Button>
+                    )}
+
+                {profileData &&
+                    (profileData.roles.includes('flagged') ||
+                        profileData.roles.includes('blocked')) && (
                         <Popconfirm
                             placement="top"
                             title="Are you sure?"
@@ -197,11 +223,7 @@ export default function VerifierActionView() {
                         >
                             <Button type="danger">Delete</Button>
                         </Popconfirm>
-                    ) : (
-                        <Button type="danger" onClick={handlers.flag}>
-                            Flag
-                        </Button>
-                    ))}
+                    )}
             </Space>
         </Card>
     );
