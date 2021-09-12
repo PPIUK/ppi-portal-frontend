@@ -72,7 +72,7 @@ function LoginView({ appOAuthLogin }) {
 
                 if (err.response.status === 401)
                     return setLoginFeedback(
-                        loginErrorAlert('Account pending verification or not activated. Please check your email inbox or spam folder.')
+                        loginErrorAlert('Account pending verification check your email inbox or spam')
                     );
 
                 return setLoginFeedback(
