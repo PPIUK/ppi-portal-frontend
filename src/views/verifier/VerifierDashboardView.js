@@ -1,4 +1,8 @@
-import { FileSearchOutlined, FlagOutlined } from '@ant-design/icons';
+import {
+    FileSearchOutlined,
+    FlagOutlined,
+    StopOutlined,
+} from '@ant-design/icons';
 import { Card, Col, Divider, Row, Statistic, Table, Tag } from 'antd';
 import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -27,6 +31,7 @@ export default function VerifierDashboardView() {
     const auth = useAuth();
     const [pending, setPending] = useState(null);
     const [flagged, setFlagged] = useState(null);
+    const [blocked, setBlocked] = useState(null);
 
     useEffect(() => {
         Axios.get('/api/verifier/pending', {
@@ -39,6 +44,11 @@ export default function VerifierDashboardView() {
                 Authorization: `Bearer ${auth.accessToken}`,
             },
         }).then((res) => setFlagged(res.data.profiles));
+        Axios.get('/api/verifier/blocked', {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => setBlocked(res.data.profiles));
     }, []);
     return (
         <>
@@ -84,11 +94,33 @@ export default function VerifierDashboardView() {
                                     </Col>
                                 </Row>
                             </Col>
+                            <Col flex="0">
+                                <Divider
+                                    type="vertical"
+                                    style={{ height: '100%' }}
+                                />
+                            </Col>
+                            <Col flex="1 1 0px">
+                                <Row justify="center">
+                                    <Col>
+                                        <Statistic
+                                            title="Blocked"
+                                            prefix={<StopOutlined />}
+                                            value={blocked ? blocked.length : 0}
+                                            loading={blocked === null}
+                                            valueStyle={{
+                                                color: '#cf1322',
+                                                textAlign: 'center',
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
                         </Row>
                     </Card>
                 </Col>
             </Row>
-            <Row gutter={16}>
+            <Row gutter={[16, 16]}>
                 <Col flex="1 1 0px">
                     <Card>
                         <Table columns={columns} dataSource={pending} />
@@ -97,6 +129,11 @@ export default function VerifierDashboardView() {
                 <Col flex="1 1 0px">
                     <Card>
                         <Table columns={columns} dataSource={flagged} />
+                    </Card>
+                </Col>
+                <Col flex="1 1 0px">
+                    <Card>
+                        <Table columns={columns} dataSource={blocked} />
                     </Card>
                 </Col>
             </Row>

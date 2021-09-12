@@ -280,6 +280,76 @@ function OwnProfileView() {
     const onProfilePictureFileChoose = (e) =>
         setUploadProfilePictureList([...e.fileList].slice(-1));
 
+    const uniEmailRules = [
+        { type: 'email', message: 'Please enter a valid email!' },
+        { required: true, message: 'Please enter your email!' },
+        () => ({
+            validator(rule, value) {
+                return new Promise((resolve, reject) => {
+                    if (!value) return resolve();
+                    if (value === profile.email) return resolve();
+                    if (!allowedDomains.includes(value.match(/@(.*)/)[1]))
+                        return reject(
+                            'Campus email should match your university email domain'
+                        );
+                    axios
+                        .post(
+                            '/api/auth/account-lookup',
+                            { email: value },
+                            {
+                                validateStatus: false,
+                            }
+                        )
+                        .then((resp) => {
+                            switch (resp.status) {
+                                case 404:
+                                    return resolve();
+                                default:
+                                    return reject(
+                                        'Email is already registered!'
+                                    );
+                            }
+                        })
+                        .catch(() => reject('A server error occured'));
+                });
+            },
+        }),
+    ];
+
+    const personalEmailRules = [
+        { type: 'email', message: 'Please enter a valid email!' },
+        ({ getFieldValue }) => ({
+            validator(rule, value) {
+                return new Promise((resolve, reject) => {
+                    if (!getFieldValue('hasUniEmail') && !value) {
+                        return reject('Please enter your personal email!');
+                    }
+                    if (!value) return resolve();
+                    if (value === profile.emailPersonal) return resolve();
+                    axios
+                        .post(
+                            '/api/auth/account-lookup',
+                            { email: value },
+                            {
+                                validateStatus: false,
+                            }
+                        )
+                        .then((resp) => {
+                            switch (resp.status) {
+                                case 404:
+                                    return resolve();
+                                default:
+                                    return reject(
+                                        'Email is already registered!'
+                                    );
+                            }
+                        })
+                        .catch(() => reject('A server error occured'));
+                });
+            },
+        }),
+    ];
+
     const submitForm = (vals) => {
         let formData = new FormData();
         for (const name in vals) {
@@ -554,62 +624,9 @@ function OwnProfileView() {
                             <Form.Item
                                 name="email"
                                 initialValue={profile.email}
-                                rules={[
-                                    {
-                                        type: 'email',
-                                        message: 'Please enter a valid email!',
-                                    },
-                                    {
-                                        required: true,
-                                        message: 'Please enter your email!',
-                                    },
-                                    () => ({
-                                        validator(rule, value) {
-                                            return new Promise(
-                                                (resolve, reject) => {
-                                                    if (!value)
-                                                        return resolve();
-                                                    if (
-                                                        !allowedDomains.includes(
-                                                            value.match(
-                                                                /@(.*)/
-                                                            )[1]
-                                                        )
-                                                    )
-                                                        return reject(
-                                                            'Campus email should match your university email domain'
-                                                        );
-                                                    axios
-                                                        .post(
-                                                            '/api/auth/account-lookup',
-                                                            { email: value },
-                                                            {
-                                                                validateStatus: false,
-                                                            }
-                                                        )
-                                                        .then((resp) => {
-                                                            switch (
-                                                                resp.status
-                                                            ) {
-                                                                case 404:
-                                                                    return resolve();
-                                                                default:
-                                                                    return reject(
-                                                                        'Email is already registered!'
-                                                                    );
-                                                            }
-                                                        })
-                                                        .catch(() =>
-                                                            reject(
-                                                                'A server error occured'
-                                                            )
-                                                        );
-                                                }
-                                            );
-                                        },
-                                    }),
-                                ]}
-                                noStyle
+                                rules={uniEmailRules}
+                                validateTrigger="onBlur"
+                                hasFeedback
                             >
                                 <Input />
                             </Form.Item>
@@ -624,7 +641,9 @@ function OwnProfileView() {
                             <Form.Item
                                 name="emailPersonal"
                                 initialValue={profile.emailPersonal}
-                                noStyle
+                                rules={personalEmailRules}
+                                validateTrigger="onBlur"
+                                hasFeedback
                             >
                                 <Input />
                             </Form.Item>
