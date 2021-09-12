@@ -27,6 +27,8 @@ import axios from 'axios';
 
 import download from 'downloadjs';
 
+import allowedDomains from '../../data/uniemails.json';
+
 const universityOptions = [
     { value: 'University of Aberdeen' },
     { value: 'Abertay University' },
@@ -552,6 +554,61 @@ function OwnProfileView() {
                             <Form.Item
                                 name="email"
                                 initialValue={profile.email}
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: 'Please enter a valid email!',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Please enter your email!',
+                                    },
+                                    () => ({
+                                        validator(rule, value) {
+                                            return new Promise(
+                                                (resolve, reject) => {
+                                                    if (!value)
+                                                        return resolve();
+                                                    if (
+                                                        !allowedDomains.includes(
+                                                            value.match(
+                                                                /@(.*)/
+                                                            )[1]
+                                                        )
+                                                    )
+                                                        return reject(
+                                                            'Campus email should match your university email domain'
+                                                        );
+                                                    axios
+                                                        .post(
+                                                            '/api/auth/account-lookup',
+                                                            { email: value },
+                                                            {
+                                                                validateStatus: false,
+                                                            }
+                                                        )
+                                                        .then((resp) => {
+                                                            switch (
+                                                                resp.status
+                                                            ) {
+                                                                case 404:
+                                                                    return resolve();
+                                                                default:
+                                                                    return reject(
+                                                                        'Email is already registered!'
+                                                                    );
+                                                            }
+                                                        })
+                                                        .catch(() =>
+                                                            reject(
+                                                                'A server error occured'
+                                                            )
+                                                        );
+                                                }
+                                            );
+                                        },
+                                    }),
+                                ]}
                                 noStyle
                             >
                                 <Input />

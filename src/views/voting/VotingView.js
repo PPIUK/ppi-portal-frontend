@@ -18,7 +18,7 @@ import {
 import { ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../utils/useAuth';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 
 const { confirm } = Modal;
@@ -27,6 +27,7 @@ const { useBreakpoint } = Grid;
 function VotingPhaseView() {
     const { electionID, roundID } = useParams();
     const auth = useAuth();
+    const navigate = useNavigate();
     const [electionData, setElectionData] = useState(null);
     const [roundData, setRoundData] = useState(null);
     const [candidateProfiles, setCandidateProfiles] = useState([]);
@@ -86,6 +87,9 @@ function VotingPhaseView() {
                 .then((res) => {
                     const votingRound = res.data.data;
                     setRoundData(votingRound);
+
+                    if (new Date() < new Date(votingRound.startDate))
+                        return navigate('/app/profile/me');
 
                     if (new Date() >= new Date(votingRound.endDate)) {
                         setIsVoteButtonVisible(false);
@@ -242,8 +246,9 @@ function VotingPhaseView() {
                     {hasVoted && (
                         <div style={{ textAlign: 'center' }}>
                             <Typography.Title level={5}>
-                                You have voted in this campaign. Thank you for
-                                your participation.
+                                {/* TODO: should probably be dynamic in the future */}
+                                You have voted in this General Election round.
+                                Thank you for your participation.
                             </Typography.Title>
                             <Divider />
                         </div>
