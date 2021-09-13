@@ -72,7 +72,8 @@ function LoginView({ appOAuthLogin }) {
 
                 if (err.response.status === 401)
                     return setLoginFeedback(
-                        loginErrorAlert('Email verification pending. Check your Inbox or Spam folder.')
+                        loginErrorAlert('Email verification pending.'+ 
+                                        'Check your Inbox or Spam folder.')
                     );
 
                 if (err.response.status === 403)
