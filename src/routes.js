@@ -37,6 +37,7 @@ import VotingAdminElectionView from './views/voting/admin/ElectionView';
 import VotingAdminSummaryView from './views/voting/admin/SummaryView';
 import VotingPublicStatisticsView from './views/voting/PublicStatisticsView';
 import VotingNominationView from './views/voting/NominationView';
+import TemporaryTokenView from './views/auth/TemporaryTokenView';
 
 const routes = [
     {
@@ -190,6 +191,7 @@ const routes = [
     },
     { path: 'essay-isic-sci-2021', element: <IsicSciEssayFormView /> },
     { path: 'authorize', element: <AuthorizeView /> },
+    { path: 'temp-token/:token', element: <TemporaryTokenView /> },
 ];
 
 export default routes;

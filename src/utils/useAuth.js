@@ -161,6 +161,41 @@ function useProvideAuth() {
                 return null;
             });
 
+    const temporaryTokenSignIn = (token) => {
+        return axios
+            .post('/api/auth/create-access-token', { token })
+            .then((response) => {
+                setAccessToken(response.data.access_token);
+                setRefreshToken(response.data.refresh_token);
+                localStorage.setItem(
+                    'oauth-access-token',
+                    response.data.access_token
+                );
+                localStorage.setItem(
+                    'oauth-refresh-token',
+                    response.data.refresh_token
+                );
+                return axios
+                    .get('/api/profiles/me', {
+                        headers: {
+                            Authorization: `Bearer ${response.data.access_token}`,
+                        },
+                    })
+                    .then((user) => {
+                        setUser(user.data.data);
+                        localStorage.setItem(
+                            'oauth-user',
+                            JSON.stringify(user.data.data)
+                        );
+                        return {
+                            accessToken: response.data.access_token,
+                            refreshToken: response.data.refresh_token,
+                            user: user.data.data,
+                        };
+                    });
+            });
+    };
+
     // renew access token onmount and every 15 minutes
     useEffect(() => {
         renewAccessToken();
@@ -180,5 +215,6 @@ function useProvideAuth() {
         signout,
         sendPasswordResetEmail,
         confirmPasswordReset,
+        temporaryTokenSignIn,
     };
 }
