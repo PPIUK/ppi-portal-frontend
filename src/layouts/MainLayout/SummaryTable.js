@@ -86,9 +86,12 @@ function SummaryTable() {
     }, []);
 
     useEffect(() => {
+        // FIXME: should be dynamic, can't be bothered now
+        const electionID = '611fed0682c639c1766608fc';
+        axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
+            setStatisticsData(res.data.data);
+        });
         const interval = setInterval(() => {
-            // FIXME: should be dynamic, can't be bothered now
-            const electionID = '611fed0682c639c1766608fc';
             axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
                 setStatisticsData(res.data.data);
             });
