@@ -92,7 +92,7 @@ function SummaryTable() {
             axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
                 setStatisticsData(res.data.data);
             });
-        }, 1000);
+        }, 60 * 1000);
         return () => clearInterval(interval);
     }, []);
 
