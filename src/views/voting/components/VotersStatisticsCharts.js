@@ -176,8 +176,11 @@ function VotersStatisticsCharts({ statistics }) {
                     <Typography.Title level={3} style={{ textAlign: 'center' }}>
                         Number of Voters by Branch
                     </Typography.Title>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <PieChart width="100%">
+                    <ResponsiveContainer width="100%" height={400}>
+                        <PieChart
+                            width="100%"
+                            margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
+                        >
                             <Pie
                                 data={statistics.branchesCount}
                                 dataKey="voters"
