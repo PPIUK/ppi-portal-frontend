@@ -19,12 +19,12 @@ function resetSuccess(message, navigate) {
     let secondsToGo = 5;
     const modal = Modal.info({
         title: 'Forgot Password',
-        content: `${message} You will be redirected in ${secondsToGo} seconds`,
+        content: `${message}. You will be redirected in ${secondsToGo} seconds`,
     });
     const timer = setInterval(() => {
         secondsToGo -= 1;
         modal.update({
-            content: `${message} You will be redirected in ${secondsToGo} seconds`,
+            content: `${message}. You will be redirected in ${secondsToGo} seconds`,
         });
     }, 1000);
     setTimeout(() => {
@@ -47,7 +47,7 @@ function ForgotPasswordView() {
             .catch(() => {})
             .then(() => {
                 resetSuccess(
-                    'You will receive a password reset link soon if the email entered was valid',
+                    'You will receive a password reset link. Please check inbox and spam',
                     navigate
                 );
             });

@@ -12,6 +12,7 @@ import {
     Image,
     Grid,
     Space,
+    message,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
@@ -20,6 +21,7 @@ import { useAuth } from '../../../utils/useAuth';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import './index.css';
+import Axios from 'axios';
 
 const formStyle = {
     style: {
@@ -27,12 +29,13 @@ const formStyle = {
     },
 };
 
-const loginErrorAlert = (message) => {
+const loginErrorAlert = (message, onclick) => {
     return (
         <Alert
             message={message}
             type="error"
             showIcon
+            onClick={onclick}
             style={{
                 borderBottomRightRadius: 0,
                 borderBottomLeftRadius: 0,
@@ -72,7 +75,18 @@ function LoginView({ appOAuthLogin }) {
 
                 if (err.response.status === 401)
                     return setLoginFeedback(
-                        loginErrorAlert('Check Inbox or Spam to verify email')
+                        loginErrorAlert(
+                            'Account pending verification. Check inbox or spam, it may take up to 10 minutes to arrive. Alternatively you can click this message to resend the email',
+                            () =>
+                                Axios.post(
+                                    '/api/auth/resend-verification'
+                                ).then(() => {
+                                    message.info(
+                                        'Verification email on its way, check inbox or spam.'
+                                    );
+                                    setLoginFeedback(null);
+                                })
+                        )
                     );
 
                 return setLoginFeedback(

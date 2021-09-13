@@ -18,12 +18,12 @@ function resetSuccess(message, navigate) {
     let secondsToGo = 5;
     const modal = Modal.info({
         title: 'Reset Password',
-        content: `${message} You will be redirected in ${secondsToGo} seconds`,
+        content: `${message}. You will be redirected in ${secondsToGo} seconds`,
     });
     const timer = setInterval(() => {
         secondsToGo -= 1;
         modal.update({
-            content: `${message} You will be redirected in ${secondsToGo} seconds`,
+            content: `${message}. You will be redirected in ${secondsToGo} seconds`,
         });
     }, 1000);
     setTimeout(() => {
