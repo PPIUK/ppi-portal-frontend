@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
+import moment from 'moment';
 import { useAuth } from '../../utils/useAuth';
 import { useParams } from 'react-router';
-import { Card, Collapse, Skeleton } from 'antd';
+import { Card, Collapse, Skeleton, Typography } from 'antd';
 import VotersStatisticsCharts from './components/VotersStatisticsCharts';
 
 const { Panel } = Collapse;
@@ -12,6 +13,7 @@ function PublicStatisticsView() {
     const { electionID } = useParams();
     const [electionData, setElectionData] = useState(null);
     const [statisticsData, setStatisticsData] = useState();
+    const [activeRound, setActiveRound] = useState();
 
     useEffect(() => {
         Axios.get(`/api/voting/${electionID}`, {
@@ -23,6 +25,32 @@ function PublicStatisticsView() {
             setElectionData(campaign);
         });
     }, [electionID]);
+
+    useEffect(() => {
+        if (electionData) {
+            if (electionData.voting.length === 1) {
+                setActiveRound(0);
+            } else {
+                const now = Date.now();
+                let set = false;
+                let i = 0;
+                while (i < electionData.voting.length) {
+                    if (
+                        electionData.voting[i].endDate <= now ||
+                        (i + 1 < electionData.voting.length &&
+                            electionData.voting[i + 1].startDate < now)
+                    ) {
+                        setActiveRound(i);
+                        set = true;
+                    }
+                    i++;
+                }
+                if (!set) {
+                    setActiveRound(0);
+                }
+            }
+        }
+    }, [electionData]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -39,13 +67,20 @@ function PublicStatisticsView() {
     return statisticsData ? (
         <>
             <Card title={electionData.name + ' Statistics'}>
-                <Collapse>
+                <Collapse defaultActiveKey={[String(activeRound)]}>
                     {statisticsData.map((round, roundIndex) => {
                         return (
                             <Panel
                                 header={`Round ${roundIndex + 1}`}
-                                key={roundIndex + 1}
+                                key={String(roundIndex)}
                             >
+                                <Typography.Title level={5}>
+                                    Current date and time:{' '}
+                                    {moment(Date.now()).format(
+                                        'DD MMMM YYYY, HH:mm:ss'
+                                    )}
+                                </Typography.Title>
+
                                 <VotersStatisticsCharts statistics={round} />
                             </Panel>
                         );

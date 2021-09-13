@@ -97,7 +97,7 @@ function VotersStatisticsCharts({ statistics }) {
     return statistics.branchesCount.length > 0 ? (
         <>
             <Row>
-                <Col xs={24} xl={8}>
+                <Col xs={24} xl={12}>
                     <Typography.Title level={3}>
                         Number of Voters
                     </Typography.Title>
@@ -127,47 +127,15 @@ function VotersStatisticsCharts({ statistics }) {
                                 ))}
                             </Pie>
                             <Legend
-                                layout="vertical"
-                                verticalAlign="top"
-                                align="right"
+                                layout="horizontal"
+                                verticalAlign="bottom"
+                                align="center"
                             />
                             <Tooltip />
                         </PieChart>
                     </ResponsiveContainer>
                 </Col>
-                <Col xs={24} xl={8}>
-                    <Typography.Title level={3}>
-                        Number of Voters by Branch
-                    </Typography.Title>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <PieChart width="100%">
-                            <Pie
-                                data={statistics.branchesCount}
-                                dataKey="voters"
-                                isAnimationActive={false}
-                                legendType="rect"
-                                label
-                            >
-                                {BRANCHES.map((branch, index) => {
-                                    return (
-                                        <Cell
-                                            key={branch}
-                                            fill={
-                                                BRANCH_COLOURS[
-                                                    index %
-                                                        BRANCH_COLOURS.length
-                                                ]
-                                            }
-                                        />
-                                    );
-                                })}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </Col>
-                <Col xs={24} xl={8}>
+                <Col xs={24} xl={12}>
                     <Typography.Title level={3}>
                         Number of Voters by Degree Level
                     </Typography.Title>
@@ -196,6 +164,40 @@ function VotersStatisticsCharts({ statistics }) {
                                         );
                                     }
                                 )}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={24} xl={24}>
+                    <Typography.Title level={3} style={{ textAlign: 'center' }}>
+                        Number of Voters by Branch
+                    </Typography.Title>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <PieChart width="100%">
+                            <Pie
+                                data={statistics.branchesCount}
+                                dataKey="voters"
+                                isAnimationActive={false}
+                                legendType="rect"
+                                label
+                            >
+                                {BRANCHES.map((branch, index) => {
+                                    return (
+                                        <Cell
+                                            key={branch}
+                                            fill={
+                                                BRANCH_COLOURS[
+                                                    index %
+                                                        BRANCH_COLOURS.length
+                                                ]
+                                            }
+                                        />
+                                    );
+                                })}
                             </Pie>
                             <Tooltip />
                             <Legend />

@@ -253,7 +253,16 @@ function VotingPhaseView() {
                             <Divider />
                         </div>
                     )}
-                    {!isEligible && (
+                    {!auth.user.roles.includes('verified') && (
+                        <div style={{ textAlign: 'center' }}>
+                            <Typography.Title level={5}>
+                                {/* TODO: should probably be dynamic in the future */}
+                                You account is awaiting verification.
+                            </Typography.Title>
+                            <Divider />
+                        </div>
+                    )}
+                    {auth.user.roles.includes('verified') && !isEligible && (
                         <div style={{ textAlign: 'center' }}>
                             {
                                 //FIXME: this should be dynamic

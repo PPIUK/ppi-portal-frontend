@@ -13,6 +13,8 @@ import { BarChart, PieChart, CallSplit, School } from '@material-ui/icons';
 
 import axios from 'axios';
 import TableauEmbed from '../../components/TableauEmbed';
+import moment from 'moment';
+import VotersStatisticsCharts from '../../views/voting/components/VotersStatisticsCharts';
 
 const tableStyle = {
     style: {
@@ -56,6 +58,7 @@ function SummaryTable() {
     const [uniData, setUniData] = useState(null);
     const [totalMembers, setTotalMembers] = useState(null);
     const [totalActiveMembers, setTotalActiveMembers] = useState(null);
+    const [statisticsData, setStatisticsData] = useState();
     const screens = Grid.useBreakpoint();
 
     const generalTableauUrl =
@@ -81,6 +84,18 @@ function SummaryTable() {
             .get('/api/public/members/active')
             .then((resp) => setTotalActiveMembers(resp.data.count));
     }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // FIXME: should be dynamic, can't be bothered now
+            const electionID = '611fed0682c639c1766608fc';
+            axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
+                setStatisticsData(res.data.data);
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <Card {...tableStyle}>
             <Space>
@@ -101,7 +116,28 @@ function SummaryTable() {
                 </Space>
             </Space>
 
-            <Tabs defaultActiveKey="General Infographic">
+            <Tabs defaultActiveKey="Election Round 1">
+                <Tabs.TabPane
+                    tab={
+                        <span>
+                            <BarChart
+                                style={{ fontSize: 15, marginRight: '5px' }}
+                            />
+                            General Election Round 1 Statistics
+                        </span>
+                    }
+                    key="Election Round 1"
+                >
+                    <Typography.Title level={5}>
+                        Current date and time:{' '}
+                        {moment(Date.now()).format('DD MMMM YYYY, HH:mm:ss')}
+                    </Typography.Title>
+                    {statisticsData && (
+                        <VotersStatisticsCharts
+                            statistics={statisticsData[0]}
+                        />
+                    )}
+                </Tabs.TabPane>
                 <Tabs.TabPane
                     tab={
                         <span>
