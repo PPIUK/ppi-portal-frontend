@@ -105,7 +105,7 @@ function SummaryTable() {
                 {screens.lg && (
                     <Image
                         width={100}
-                        src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
+                        src="https://ppiuk.org/wp-content/uploads/2017/02/ppiuk_1-e1486331368769.jpg"
                     />
                 )}
 
@@ -132,8 +132,8 @@ function SummaryTable() {
                     key="Election Round 1"
                 >
                     <Typography.Title level={5}>
-                        Current date and time:{' '}
-                        {moment(Date.now()).format('DD MMMM YYYY, HH:mm:ss')}
+                        Last voting date and time:{' '}
+                        {moment(new Date('December 14, 2021 12:00:00')).format('DD MMMM YYYY, HH:mm:ss')}
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
