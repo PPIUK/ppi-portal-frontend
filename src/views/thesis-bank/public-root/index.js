@@ -55,10 +55,7 @@ export default function PublicThesesView() {
         <div>
             <Typography.Title level={3}>Clusters</Typography.Title>
 
-            <Collapse 
-                bordered={false} 
-                defaultActiveKey={['1','2','3','4','5','6','7','8']} 
-                >
+            <Collapse bordered={false} defaultActiveKey={['1']}>
                 <Panel
                     header="Economics and Business"
                     key="Economics and Business"
