@@ -58,7 +58,6 @@ export default function PublicThesesView() {
             <Collapse 
                 bordered={false} 
                 defaultActiveKey={['1','2','3','4','5','6','7','8']} 
-                expandIconPosition={'right'}>
                 <Panel
                     header="Economics and Business"
                     key="Economics and Business"
