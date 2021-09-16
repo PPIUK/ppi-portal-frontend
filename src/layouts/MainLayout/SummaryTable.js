@@ -132,8 +132,7 @@ function SummaryTable() {
                     key="Election Round 1"
                 >
                     <Typography.Title level={5}>
-                        Last voting date and time:{' '}
-                        {moment(new Date('December 14, 2021 12:00:00')).format('DD MMMM YYYY, HH:mm:ss')}
+                        Last voting : September 14, 2021 at 11:59:59 AM
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
