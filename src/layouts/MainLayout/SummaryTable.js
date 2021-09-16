@@ -13,7 +13,6 @@ import { BarChart, PieChart, CallSplit, School } from '@material-ui/icons';
 
 import axios from 'axios';
 import TableauEmbed from '../../components/TableauEmbed';
-import moment from 'moment';
 import VotersStatisticsCharts from '../../views/voting/components/VotersStatisticsCharts';
 
 const tableStyle = {
@@ -132,7 +131,7 @@ function SummaryTable() {
                     key="Election Round 1"
                 >
                     <Typography.Title level={5}>
-                        Last voting : September 14, 2021 at 11:59:59 AM
+                        Last voting :  14 September 2021 at 11:59:59 AM
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
