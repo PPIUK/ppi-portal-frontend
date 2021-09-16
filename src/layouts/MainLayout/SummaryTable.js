@@ -131,7 +131,7 @@ function SummaryTable() {
                     key="Election Round 1"
                 >
                     <Typography.Title level={5}>
-                        Last voting :  14 September 2021 at 11:59:59 AM
+                        Last voting : 14 September 2021 at 11:59:59 AM
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
