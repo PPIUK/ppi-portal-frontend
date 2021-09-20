@@ -78,9 +78,9 @@ function LoginView({ appOAuthLogin }) {
                         loginErrorAlert(
                             'Account pending verification. Check inbox or spam, it may take up to 10 minutes to arrive. Alternatively you can click this message to resend the email',
                             () =>
-                                Axios.post(
-                                    '/api/auth/resend-verification'
-                                ).then(() => {
+                                Axios.post('/api/auth/resend-verification', {
+                                    username: vals.username,
+                                }).then(() => {
                                     message.info(
                                         'Verification email on its way, check inbox or spam.'
                                     );
