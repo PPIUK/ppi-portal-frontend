@@ -312,92 +312,92 @@ function StatisticsCharts({
                                 )}
                             </Col>
                         </Row>
-                        {/*<Row>*/}
-                        {/*    <Col xs={24} xl={24}>*/}
-                        {/*        {round.candidateToBranch && (*/}
-                        {/*            <div>*/}
-                        {/*                <Typography.Title level={3}>*/}
-                        {/*                    Branch Distribution per Candidate*/}
-                        {/*                </Typography.Title>*/}
-                        {/*                <ResponsiveContainer*/}
-                        {/*                    width="100%"*/}
-                        {/*                    height={600}*/}
-                        {/*                >*/}
-                        {/*                    <BarChart*/}
-                        {/*                        data={round.candidateToBranch}*/}
-                        {/*                    >*/}
-                        {/*                        <CartesianGrid strokeDasharray="3 3" />*/}
-                        {/*                        <XAxis dataKey="name" />*/}
-                        {/*                        <YAxis allowDecimals={false} />*/}
-                        {/*                        <Tooltip />*/}
-                        {/*                        <Legend />*/}
-                        {/*                        {BRANCHES.map((branch, i) => {*/}
-                        {/*                            return (*/}
-                        {/*                                <Bar*/}
-                        {/*                                    key={branch}*/}
-                        {/*                                    dataKey={branch}*/}
-                        {/*                                    stackId="a"*/}
-                        {/*                                    fill={*/}
-                        {/*                                        BRANCH_COLOURS[*/}
-                        {/*                                            i*/}
-                        {/*                                        ]*/}
-                        {/*                                    }*/}
-                        {/*                                />*/}
-                        {/*                            );*/}
-                        {/*                        })}*/}
-                        {/*                    </BarChart>*/}
-                        {/*                </ResponsiveContainer>*/}
-                        {/*            </div>*/}
-                        {/*        )}*/}
-                        {/*    </Col>*/}
-                        {/*</Row>*/}
-                        {/*<Row>*/}
-                        {/*    <Col xs={24} xl={24}>*/}
-                        {/*        {round.branchToCandidate && (*/}
-                        {/*            <div>*/}
-                        {/*                <Typography.Title level={3}>*/}
-                        {/*                    Candidate Distribution per Branch*/}
-                        {/*                </Typography.Title>*/}
-                        {/*                <ResponsiveContainer*/}
-                        {/*                    width="100%"*/}
-                        {/*                    height={600}*/}
-                        {/*                >*/}
-                        {/*                    <BarChart*/}
-                        {/*                        data={round.branchToCandidate}*/}
-                        {/*                    >*/}
-                        {/*                        <CartesianGrid strokeDasharray="3 3" />*/}
-                        {/*                        <XAxis dataKey="branch" />*/}
-                        {/*                        <YAxis allowDecimals={false} />*/}
-                        {/*                        <Tooltip />*/}
-                        {/*                        <Legend*/}
-                        {/*                            verticalAlign="bottom"*/}
-                        {/*                            align="center"*/}
-                        {/*                        />*/}
-                        {/*                        {roundCandidates[*/}
-                        {/*                            roundIndex*/}
-                        {/*                        ].map((cand, i) => {*/}
-                        {/*                            return (*/}
-                        {/*                                <Bar*/}
-                        {/*                                    key={cand.fullName}*/}
-                        {/*                                    dataKey={*/}
-                        {/*                                        cand.fullName*/}
-                        {/*                                    }*/}
-                        {/*                                    stackId="a"*/}
-                        {/*                                    fill={*/}
-                        {/*                                        CANDIDATE_COLOURS[*/}
-                        {/*                                            i %*/}
-                        {/*                                                CANDIDATE_COLOURS.length*/}
-                        {/*                                        ]*/}
-                        {/*                                    }*/}
-                        {/*                                />*/}
-                        {/*                            );*/}
-                        {/*                        })}*/}
-                        {/*                    </BarChart>*/}
-                        {/*                </ResponsiveContainer>*/}
-                        {/*            </div>*/}
-                        {/*        )}*/}
-                        {/*    </Col>*/}
-                        {/*</Row>*/}
+                        <Row>
+                            <Col xs={24} xl={24}>
+                                {round.candidateToBranch && (
+                                    <div>
+                                        <Typography.Title level={3}>
+                                            Branch Distribution per Candidate
+                                        </Typography.Title>
+                                        <ResponsiveContainer
+                                            width="100%"
+                                            height={600}
+                                        >
+                                            <BarChart
+                                                data={round.candidateToBranch}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="name" />
+                                                <YAxis allowDecimals={false} />
+                                                <Tooltip />
+                                                <Legend />
+                                                {BRANCHES.map((branch, i) => {
+                                                    return (
+                                                        <Bar
+                                                            key={branch}
+                                                            dataKey={branch}
+                                                            stackId="a"
+                                                            fill={
+                                                                BRANCH_COLOURS[
+                                                                    i
+                                                                ]
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                )}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={24} xl={24}>
+                                {round.branchToCandidate && (
+                                    <div>
+                                        <Typography.Title level={3}>
+                                            Candidate Distribution per Branch
+                                        </Typography.Title>
+                                        <ResponsiveContainer
+                                            width="100%"
+                                            height={600}
+                                        >
+                                            <BarChart
+                                                data={round.branchToCandidate}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="branch" />
+                                                <YAxis allowDecimals={false} />
+                                                <Tooltip />
+                                                <Legend
+                                                    verticalAlign="bottom"
+                                                    align="center"
+                                                />
+                                                {roundCandidates[
+                                                    roundIndex
+                                                ].map((cand, i) => {
+                                                    return (
+                                                        <Bar
+                                                            key={cand.fullName}
+                                                            dataKey={
+                                                                cand.fullName
+                                                            }
+                                                            stackId="a"
+                                                            fill={
+                                                                CANDIDATE_COLOURS[
+                                                                    i %
+                                                                        CANDIDATE_COLOURS.length
+                                                                ]
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                )}
+                            </Col>
+                        </Row>
                         {Object.keys(round).length === 0 && (
                             <Typography>
                                 There is no data for this election round.
