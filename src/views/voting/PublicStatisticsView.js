@@ -14,6 +14,7 @@ function PublicStatisticsView() {
     const [electionData, setElectionData] = useState(null);
     const [statisticsData, setStatisticsData] = useState();
     const [activeRound, setActiveRound] = useState();
+    const [isActiveVote, setIsActiveVote] = useState(null);
 
     useEffect(() => {
         Axios.get(`/api/voting/${electionID}`, {
@@ -23,6 +24,20 @@ function PublicStatisticsView() {
         }).then((res) => {
             const campaign = res.data.data;
             setElectionData(campaign);
+        });
+        Axios.get(`/api/voting/${electionID}/isActiveVote`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setIsActiveVote(res.data.data);
+        });
+        Axios.get(`/api/voting/pubstats/${electionID}`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setStatisticsData(res.data.data);
         });
     }, [electionID]);
 
@@ -53,17 +68,19 @@ function PublicStatisticsView() {
     }, [electionData]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            Axios.get(`/api/voting/pubstats/${electionID}`, {
-                headers: {
-                    Authorization: `Bearer ${auth.accessToken}`,
-                },
-            }).then((res) => {
-                setStatisticsData(res.data.data);
-            });
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [electionID]);
+        if (isActiveVote) {
+            const interval = setInterval(() => {
+                Axios.get(`/api/voting/pubstats/${electionID}`, {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                }).then((res) => {
+                    setStatisticsData(res.data.data);
+                });
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [electionID, isActiveVote]);
     return statisticsData ? (
         <>
             <Card title={electionData.name + ' Statistics'}>

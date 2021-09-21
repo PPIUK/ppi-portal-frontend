@@ -39,6 +39,7 @@ export default function ElectionAdminView() {
     const [electionBanner, setElectionBanner] = useState(null);
     const [bannerList, setBannerList] = useState([]);
     const [candidateProfiles, setCandidateProfiles] = useState(null);
+    const [isActiveVote, setIsActiveVote] = useState(null);
 
     const [voterList, setVoterList] = useState([]);
     const [page, setPage] = useState(1);
@@ -309,20 +310,29 @@ export default function ElectionAdminView() {
         }).then((res) => {
             setStatisticsData(res.data.data);
         });
+        Axios.get(`/api/voting/${electionID}/isActiveVote`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) => {
+            setIsActiveVote(res.data.data);
+        });
     }, [electionID]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            Axios.get(`/api/voting/admin/${electionID}/stats`, {
-                headers: {
-                    Authorization: `Bearer ${auth.accessToken}`,
-                },
-            }).then((res) => {
-                setStatisticsData(res.data.data);
-            });
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [electionID]);
+        if (isActiveVote) {
+            const interval = setInterval(() => {
+                Axios.get(`/api/voting/admin/${electionID}/stats`, {
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                }).then((res) => {
+                    setStatisticsData(res.data.data);
+                });
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [electionID, isActiveVote]);
 
     return electionData ? (
         <>
