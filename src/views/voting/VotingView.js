@@ -207,6 +207,22 @@ function VotingPhaseView() {
                                     'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
+                            {roundID === '1' && (
+                                <>
+                                    <Timeline.Item color="green">
+                                        Voting phase 1 started:{' '}
+                                        {moment(
+                                            electionData.voting[0].startDate
+                                        ).format('DD MMMM YYYY, HH:mm:ss')}
+                                    </Timeline.Item>
+                                    <Timeline.Item color="green">
+                                        Voting phase 1 ended:{' '}
+                                        {moment(
+                                            electionData.voting[0].endDate
+                                        ).format('DD MMMM YYYY, HH:mm:ss')}
+                                    </Timeline.Item>
+                                </>
+                            )}
                             <Timeline.Item
                                 color={
                                     new Date() < new Date(roundData.endDate)
@@ -214,14 +230,16 @@ function VotingPhaseView() {
                                         : 'green'
                                 }
                             >
-                                Voting phase started:{' '}
+                                Voting phase {roundID === '1' ? ' 2' : ''}{' '}
+                                started:{' '}
                                 {moment(roundData.startDate).format(
                                     'DD MMMM YYYY, HH:mm:ss'
                                 )}
                             </Timeline.Item>
                             {new Date() < new Date(roundData.endDate) && (
                                 <Timeline.Item color="gray">
-                                    Voting phase ends:{' '}
+                                    Voting phase {roundID === '1' ? ' 2' : ''}{' '}
+                                    ends:{' '}
                                     {moment(roundData.endDate).format(
                                         'DD MMMM YYYY, HH:mm:ss'
                                     )}
@@ -229,7 +247,8 @@ function VotingPhaseView() {
                             )}
                             {new Date() >= new Date(roundData.endDate) && (
                                 <Timeline.Item color="green">
-                                    Voting phase ended:{' '}
+                                    Voting phase {roundID === '1' ? ' 2' : ''}{' '}
+                                    ended:{' '}
                                     {moment(roundData.endDate).format(
                                         'DD MMMM YYYY, HH:mm:ss'
                                     )}

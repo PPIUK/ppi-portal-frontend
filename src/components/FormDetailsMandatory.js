@@ -563,7 +563,7 @@ export default function FormDetailsMandatory() {
                     Temporarily, if you do not have a university email yet, you
                     are allowed to register using your personal email. You need
                     to update your university email once you have access to it,
-                    no later than 31 September 2021.
+                    no later than 30 September 2021.
                 </Form.Item>
             )}
 
