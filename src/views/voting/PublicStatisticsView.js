@@ -50,12 +50,15 @@ function PublicStatisticsView() {
                 let set = false;
                 let i = 0;
                 while (i < electionData.voting.length) {
-                    if (
-                        electionData.voting[i].endDate <= now ||
-                        (i + 1 < electionData.voting.length &&
-                            electionData.voting[i + 1].startDate < now)
-                    ) {
+                    if (new Date(electionData.voting[i].endDate) <= now) {
                         setActiveRound(i);
+                        set = true;
+                    }
+                    if (
+                        i + 1 < electionData.voting.length &&
+                        new Date(electionData.voting[i + 1].startDate) < now
+                    ) {
+                        setActiveRound(i + 1);
                         set = true;
                     }
                     i++;

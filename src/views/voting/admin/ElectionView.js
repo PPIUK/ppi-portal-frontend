@@ -9,6 +9,7 @@ import {
     Input,
     List,
     message,
+    Radio,
     Skeleton,
     Space,
     Tabs,
@@ -41,6 +42,7 @@ export default function ElectionAdminView() {
     const [candidateProfiles, setCandidateProfiles] = useState(null);
     const [isActiveVote, setIsActiveVote] = useState(null);
 
+    const [selectedRound, setSelectedRound] = useState(0);
     const [voterList, setVoterList] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -169,6 +171,10 @@ export default function ElectionAdminView() {
             ...getColumnSearchProps('branch', ...columnSearchParams),
         },
     ];
+
+    const onRadioChange = (e) => {
+        setSelectedRound(e.target.value);
+    };
 
     const submitForm = (vals) => {
         let formData = new FormData();
@@ -565,10 +571,21 @@ export default function ElectionAdminView() {
                         </Collapse>
                     </TabPane>
                     <TabPane tab="View Final Voter List" key="4">
+                        <Radio.Group
+                            onChange={onRadioChange}
+                            defaultValue={0}
+                            buttonStyle="solid"
+                        >
+                            {electionData.voting.map((entry, index) => (
+                                <Radio.Button key={index} value={index}>
+                                    Round {index + 1}
+                                </Radio.Button>
+                            ))}
+                        </Radio.Group>
                         {voterList ? (
                             <Table
                                 columns={voterTableCols}
-                                dataSource={voterList}
+                                dataSource={voterList[selectedRound]}
                                 pagination={{
                                     onChange(current) {
                                         setPage(current);

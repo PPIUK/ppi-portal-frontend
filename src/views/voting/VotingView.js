@@ -62,7 +62,7 @@ function VotingPhaseView() {
                         message.success('Voted successfully!');
                     })
                     .catch((err) => {
-                        message.error(err.data.message);
+                        message.error(err.response.data.message);
                     });
             },
         });
@@ -147,11 +147,14 @@ function VotingPhaseView() {
                     );
                 })
                 .then(() => {
-                    Axios.get(`/api/voting/${electionID}/eligibility`, {
-                        headers: {
-                            Authorization: `Bearer ${auth.accessToken}`,
-                        },
-                    }).then((resp) => {
+                    Axios.get(
+                        `/api/voting/${electionID}/eligibility/${roundID}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${auth.accessToken}`,
+                            },
+                        }
+                    ).then((resp) => {
                         setIsEligible(resp.data.data);
                         if (resp.data.data === false) {
                             setIsVoteButtonVisible(false);
@@ -171,7 +174,7 @@ function VotingPhaseView() {
                     });
                 });
         });
-    }, [electionID]);
+    }, [electionID, roundID]);
 
     return (
         <Card title={electionData !== null && electionData.name}>
