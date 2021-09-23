@@ -1,33 +1,49 @@
-import {
-    DownloadOutlined,
-    FileSearchOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
+import { FileSearchOutlined } from '@ant-design/icons';
 import {
     Button,
     Card,
-    Descriptions,
     Divider,
-    Image,
+    List,
     Popconfirm,
     Skeleton,
     Space,
-    Tag,
+    Typography,
 } from 'antd';
 import Axios from 'axios';
-import download from 'downloadjs';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { compareTwoStrings } from 'string-similarity';
 import { useAuth } from '../../utils/useAuth';
+import ProfileDetails from './components/ProfileDetails';
 
 export default function VerifierActionView() {
     const auth = useAuth();
     const { userId } = useParams();
+
+    // FIXME: this is terribly inefficient, if it becomes a problem
+    //        make the filtering serverside and use another endpoint
+    //        for manual compares. Or add a provider for the /verifier
+    //        routes to act as a cache and update every once in a while
+    const [allProfiles, setAllProfiles] = useState(null);
+
     const [profileData, setProfileData] = useState(null);
-    const [profileImage, setProfileImage] = useState(null);
+    const [compareProfileData, setCompareProfileData] = useState(null);
     const nav = useNavigate();
 
     useEffect(() => {
+        Axios.get(`/api/profiles`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+        }).then((res) =>
+            setAllProfiles(
+                res.data.data.profiles.map((profile) => ({
+                    _id: profile._id,
+                    fullName: profile.fullName,
+                }))
+            )
+        );
+
         Axios.get(`/api/profiles/${userId}`, {
             headers: {
                 Authorization: `Bearer ${auth.accessToken}`,
@@ -37,17 +53,6 @@ export default function VerifierActionView() {
                 ? nav('/app/verifier/dashboard', { replace: true })
                 : setProfileData(res.data.data)
         );
-
-        Axios.get(`/api/profiles/${userId}/profilepicture`, {
-            headers: {
-                Authorization: `Bearer ${auth.accessToken}`,
-            },
-            responseType: 'blob',
-        }).then((res) => {
-            let reader = new FileReader();
-            reader.readAsDataURL(res.data);
-            reader.onload = () => setProfileImage(reader.result);
-        });
     }, []);
 
     const handlers = {
@@ -87,6 +92,14 @@ export default function VerifierActionView() {
                     Authorization: `Bearer ${auth.accessToken}`,
                 },
             }).then(() => nav('/app/verifier/dashboard', { replace: true })),
+        compare: (profile) =>
+            Axios.get(`/api/profiles/${profile._id}`, {
+                headers: {
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+            }).then((res) =>
+                setCompareProfileData({ _id: profile._id, ...res.data.data })
+            ),
     };
 
     return (
@@ -97,99 +110,59 @@ export default function VerifierActionView() {
                 </span>
             }
         >
-            {profileData ? (
-                <Descriptions bordered column={4}>
-                    <Descriptions.Item label="Profile Picture" span={4}>
-                        {profileData.profilePicture ? (
-                            <Image
-                                src={profileImage}
-                                loading={profileImage == null}
-                                style={{ maxWidth: '200px' }}
-                            />
-                        ) : (
-                            <UserOutlined style={{ fontSize: '64px' }} />
+            {allProfiles && profileData && (
+                <>
+                    <Typography.Title level={5}>
+                        Similar profiles
+                    </Typography.Title>
+                    <List
+                        bordered
+                        rowKey={(item) => item._id}
+                        itemLayout="horizontal"
+                        dataSource={allProfiles.filter(
+                            (profile) =>
+                                profile._id != userId &&
+                                compareTwoStrings(
+                                    profile.fullName,
+                                    profileData.fullName
+                                ) >= 0.8
                         )}
-                    </Descriptions.Item>
-                    <Descriptions.Item
-                        label="Email Verification Status"
-                        span={4}
-                    >
-                        <Tag
-                            color={profileData.emailVerified ? 'green' : 'red'}
-                        >
-                            {profileData.emailVerified
-                                ? 'Verified'
-                                : 'Unverified'}
-                        </Tag>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Proof of Student Status" span={4}>
-                        {profileData.studentProof ? (
-                            <Button
-                                type="primary"
-                                icon={<DownloadOutlined />}
-                                onClick={() =>
-                                    Axios.get(
-                                        `/api/profiles/${userId}/studentproof`,
-                                        {
-                                            headers: {
-                                                Authorization: `Bearer ${auth.accessToken}`,
-                                            },
-                                            responseType: 'blob',
-                                        }
-                                    ).then((resp) => {
-                                        const headerVal =
-                                            resp.headers['content-disposition'];
-                                        const filename = headerVal
-                                            .split(';')[1]
-                                            .split('=')[1]
-                                            .replace('"', '')
-                                            .replace('"', '');
-                                        download(resp.data, filename);
-                                    })
-                                }
+                        renderItem={(item) => (
+                            <List.Item
+                                onClick={() => handlers.compare(item)}
+                                style={{
+                                    cursor: 'pointer',
+                                }}
                             >
-                                Download Proof
-                            </Button>
-                        ) : (
-                            'No Proof'
+                                <List.Item.Meta
+                                    title={`${item.fullName} | ${item._id}`}
+                                    description={`Similarity: ${
+                                        compareTwoStrings(
+                                            item.fullName,
+                                            profileData.fullName
+                                        ) * 100
+                                    }% | Click to compare`}
+                                />
+                            </List.Item>
                         )}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Full Name" span={4}>
-                        {profileData.fullName}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="University" span={4}>
-                        {profileData.university}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Course" span={4}>
-                        {profileData.course}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Degree Level" span={4}>
-                        {profileData.degreeLevel}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Start Date" span={2}>
-                        {new Date(profileData.startDate).toLocaleDateString()}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="End Date" span={2}>
-                        {new Date(profileData.endDate).toLocaleDateString()}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Email" span={4}>
-                        {profileData.email}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Phone" span={4}>
-                        {profileData.phoneWA}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="DOB" span={4}>
-                        {new Date(profileData.dob).toLocaleDateString()}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Origin City" span={4}>
-                        {profileData.originCity}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="UK Address" span={4}>
-                        {profileData.addressUK}
-                    </Descriptions.Item>
-                </Descriptions>
+                    />
+                    <Divider />
+                </>
+            )}
+            {profileData ? (
+                <ProfileDetails profileData={{ _id: userId, ...profileData }} />
             ) : (
                 <Skeleton />
+            )}
+            {compareProfileData && (
+                <>
+                    <Divider plain>
+                        Comparing with: {compareProfileData.fullName} |{' '}
+                        {compareProfileData._id} |{' '}
+                        <a onClick={() => setCompareProfileData(null)}>Clear</a>
+                    </Divider>
+                    <ProfileDetails profileData={compareProfileData} />
+                </>
             )}
             <Divider />
             <Space>
