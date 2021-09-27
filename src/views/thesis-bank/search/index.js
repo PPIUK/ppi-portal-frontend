@@ -26,7 +26,7 @@ export default function ThesisSearchView() {
                 </span>
             }
         >
-            {auth.user.roles.includes('thesisAdmin') ? (
+            {theses && auth.user.roles.includes('thesisAdmin') ? (
                 <CSVLink
                     filename={`Thesis-Bank-${Date.now()}.csv`}
                     data={theses.map(
