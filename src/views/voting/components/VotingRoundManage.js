@@ -93,6 +93,14 @@ export default function VotingRoundManage({
             >
                 <DatePicker showTime />
             </Form.Item>
+            <Form.Item
+                label="Voter List Finalisation Date"
+                name="voterListFinalisationDate"
+                initialValue={moment(roundData.voterListFinalisationDate)}
+                rules={[{ required: true }]}
+            >
+                <DatePicker showTime />
+            </Form.Item>
             <Typography>Select Candidates</Typography>
             <br />
             <Checkbox.Group
