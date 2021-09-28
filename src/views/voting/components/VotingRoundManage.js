@@ -1,11 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
     Button,
-    Checkbox,
     DatePicker,
     Form,
+    Grid,
     message,
+    Select,
     Skeleton,
     Typography,
 } from 'antd';
@@ -13,12 +13,16 @@ import Axios from 'axios';
 import { useAuth } from '../../../utils/useAuth';
 import moment from 'moment';
 
+const { useBreakpoint } = Grid;
+const { Option } = Select;
+
 export default function VotingRoundManage({
     electionID,
     roundID,
     electionData,
     setElectionData,
 }) {
+    const screens = useBreakpoint();
     const [form] = Form.useForm();
     const auth = useAuth();
 
@@ -103,14 +107,18 @@ export default function VotingRoundManage({
             </Form.Item>
             <Typography>Select Candidates</Typography>
             <br />
-            <Checkbox.Group
-                options={electionData.candidatePool.map((c) => ({
-                    label: candidateNames[c._id],
-                    value: c._id,
-                }))}
+            <Select
+                mode="multiple"
+                allowClear
+                style={screens.xs ? { width: '100%' } : { width: '50%' }}
+                placeholder="Please select the candidates"
                 defaultValue={roundData.candidates}
                 onChange={(vals) => setSelectedCandidates(vals)}
-            />
+            >
+                {electionData.candidatePool.map((c) => (
+                    <Option key={c._id}>{candidateNames[c._id]}</Option>
+                ))}
+            </Select>
             <br />
             <br />
             <Button onClick={() => form.submit()}>Save</Button>
