@@ -12,6 +12,7 @@ import {
 import { BarChart, PieChart, CallSplit, School } from '@material-ui/icons';
 
 import axios from 'axios';
+import moment from 'moment';
 import TableauEmbed from '../../components/TableauEmbed';
 import VotersStatisticsCharts from '../../views/voting/components/VotersStatisticsCharts';
 
@@ -118,7 +119,28 @@ function SummaryTable() {
                 </Space>
             </Space>
 
-            <Tabs defaultActiveKey="Election Round 1">
+            <Tabs defaultActiveKey="Election Round 2">
+                <Tabs.TabPane
+                    tab={
+                        <span>
+                            <BarChart
+                                style={{ fontSize: 15, marginRight: '5px' }}
+                            />
+                            General Election Round 2 Statistics
+                        </span>
+                    }
+                    key="Election Round 2"
+                >
+                    <Typography.Title level={5}>
+                        Statistics per current date and time:{' '}
+                        {moment(Date.now()).format('DD MMMM YYYY, HH:mm:ss')}
+                    </Typography.Title>
+                    {statisticsData && (
+                        <VotersStatisticsCharts
+                            statistics={statisticsData[1]}
+                        />
+                    )}
+                </Tabs.TabPane>
                 <Tabs.TabPane
                     tab={
                         <span>
