@@ -9,6 +9,7 @@ import {
     Divider,
     Alert,
     Upload,
+    // eslint-disable-next-line no-unused-vars
     Switch,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
@@ -300,12 +301,13 @@ const uniEmailRules = [
 
 const personalEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
+    // eslint-disable-next-line no-unused-vars
     ({ getFieldValue }) => ({
         validator(rule, value) {
             return new Promise((resolve, reject) => {
-                if (!getFieldValue('hasUniEmail') && !value) {
-                    return reject('Please enter your personal email!');
-                }
+                // if (!getFieldValue('hasUniEmail') && !value) {
+                //     return reject('Please enter your personal email!');
+                // }
                 if (!value) return resolve();
                 axios
                     .post(
@@ -472,6 +474,7 @@ export default function FormDetailsMandatory() {
     const onStudentProofFileChoose = (e) =>
         setUploadStudentProofList([...e.fileList].slice(-1));
 
+    // eslint-disable-next-line no-unused-vars
     const onHasUniEmailChange = (checked) => {
         setHasUniEmail(checked);
     };
@@ -545,27 +548,27 @@ export default function FormDetailsMandatory() {
             </Form.Item>
 
             <Divider />
-            <Form.Item
-                name="hasUniEmail"
-                label="Have university email?"
-                valuePropName="checked"
-                initialValue={true}
-            >
-                <Switch
-                    checkedChildren="Yes"
-                    unCheckedChildren="Not yet"
-                    onChange={onHasUniEmailChange}
-                />
-            </Form.Item>
+            {/*<Form.Item*/}
+            {/*    name="hasUniEmail"*/}
+            {/*    label="Have university email?"*/}
+            {/*    valuePropName="checked"*/}
+            {/*    initialValue={true}*/}
+            {/*>*/}
+            {/*    <Switch*/}
+            {/*        checkedChildren="Yes"*/}
+            {/*        unCheckedChildren="Not yet"*/}
+            {/*        onChange={onHasUniEmailChange}*/}
+            {/*    />*/}
+            {/*</Form.Item>*/}
 
-            {!hasUniEmail && (
-                <Form.Item>
-                    Temporarily, if you do not have a university email yet, you
-                    are allowed to register using your personal email. You need
-                    to update your university email once you have access to it,
-                    no later than 30 September 2021.
-                </Form.Item>
-            )}
+            {/*{!hasUniEmail && (*/}
+            {/*    <Form.Item>*/}
+            {/*        Temporarily, if you do not have a university email yet, you*/}
+            {/*        are allowed to register using your personal email. You need*/}
+            {/*        to update your university email once you have access to it,*/}
+            {/*        no later than 30 September 2021.*/}
+            {/*    </Form.Item>*/}
+            {/*)}*/}
 
             {hasUniEmail && (
                 <Form.Item
@@ -583,7 +586,7 @@ export default function FormDetailsMandatory() {
                 name="emailPersonal"
                 label="Personal Email"
                 rules={personalEmailRules}
-                required={!hasUniEmail}
+                // required={!hasUniEmail}
                 validateTrigger="onBlur"
                 hasFeedback
             >
