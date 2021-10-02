@@ -59,6 +59,7 @@ function SummaryTable() {
     const [totalMembers, setTotalMembers] = useState(null);
     const [totalActiveMembers, setTotalActiveMembers] = useState(null);
     const [statisticsData, setStatisticsData] = useState();
+    const [currentTime, setCurrentTime] = useState(Date.now());
     const screens = Grid.useBreakpoint();
 
     const generalTableauUrl =
@@ -94,6 +95,7 @@ function SummaryTable() {
         const interval = setInterval(() => {
             axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
                 setStatisticsData(res.data.data);
+                setCurrentTime(Date.now());
             });
         }, 60 * 1000);
         return () => clearInterval(interval);
@@ -133,7 +135,7 @@ function SummaryTable() {
                 >
                     <Typography.Title level={5}>
                         Statistics per current date and time:{' '}
-                        {moment(Date.now()).format('DD MMMM YYYY, HH:mm:ss')}
+                        {moment(currentTime).format('DD MMMM YYYY, HH:mm:ss')}
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
