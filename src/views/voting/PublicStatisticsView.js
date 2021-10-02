@@ -15,6 +15,7 @@ function PublicStatisticsView() {
     const [statisticsData, setStatisticsData] = useState();
     const [activeRound, setActiveRound] = useState();
     const [isActiveVote, setIsActiveVote] = useState(null);
+    const [currentTime, setCurrentTime] = useState(Date.now());
 
     useEffect(() => {
         Axios.get(`/api/voting/${electionID}`, {
@@ -79,6 +80,7 @@ function PublicStatisticsView() {
                     },
                 }).then((res) => {
                     setStatisticsData(res.data.data);
+                    setCurrentTime(Date.now());
                 });
             }, 1000);
             return () => clearInterval(interval);
@@ -96,7 +98,7 @@ function PublicStatisticsView() {
                             >
                                 <Typography.Title level={5}>
                                     Current date and time:{' '}
-                                    {moment(Date.now()).format(
+                                    {moment(currentTime).format(
                                         'DD MMMM YYYY, HH:mm:ss'
                                     )}
                                 </Typography.Title>
