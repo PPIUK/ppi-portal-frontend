@@ -82,7 +82,7 @@ function PublicStatisticsView() {
                     setStatisticsData(res.data.data);
                     setCurrentTime(Date.now());
                 });
-            }, 1000);
+            }, 60 * 1000);
             return () => clearInterval(interval);
         }
     }, [electionID, isActiveVote]);
@@ -97,7 +97,7 @@ function PublicStatisticsView() {
                                 key={String(roundIndex)}
                             >
                                 <Typography.Title level={5}>
-                                    Current date and time:{' '}
+                                    Statistics per current date and time:{' '}
                                     {moment(currentTime).format(
                                         'DD MMMM YYYY, HH:mm:ss'
                                     )}
