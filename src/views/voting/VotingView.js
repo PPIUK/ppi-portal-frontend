@@ -296,7 +296,9 @@ function VotingPhaseView() {
                                     According to the Regulatory Document of the
                                     PPI UK General Election 2021/22 Chapter 20
                                     about Eligible Voters, you are not eligible
-                                    to vote in the election.
+                                    to vote in the election. Eligible voters
+                                    also had to be registered in the portal by 1
+                                    October 2021.
                                 </p>
 
                                 <p>
