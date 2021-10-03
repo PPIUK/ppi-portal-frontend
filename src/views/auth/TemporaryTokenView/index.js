@@ -16,7 +16,7 @@ function TemporaryTokenView() {
     const { token } = useParams();
 
     if (auth.user && auth.accessToken) {
-        navigate('/app/voting/611fed0682c639c1766608fc/vote/0');
+        navigate('/app/voting/611fed0682c639c1766608fc/vote/1');
         return (
             <Card {...cardStyle}>
                 <Typography>Redirecting...</Typography>
@@ -24,7 +24,7 @@ function TemporaryTokenView() {
         );
     } else {
         auth.temporaryTokenSignIn(token).then(() => {
-            navigate('/app/voting/611fed0682c639c1766608fc/vote/0');
+            navigate('/app/voting/611fed0682c639c1766608fc/vote/1');
         });
         return (
             <Card {...cardStyle}>
