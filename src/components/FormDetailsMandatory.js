@@ -301,6 +301,7 @@ const uniEmailRules = [
 
 const personalEmailRules = [
     { type: 'email', message: 'Please enter a valid email!' },
+    { required: true, message: 'Please enter your personal email!' },
     // eslint-disable-next-line no-unused-vars
     ({ getFieldValue }) => ({
         validator(rule, value) {
