@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
     Button,
     Card,
+    Checkbox,
     DatePicker,
     Descriptions,
     Form,
@@ -484,6 +485,19 @@ export default function ElectionAdminView() {
                                         noStyle
                                     >
                                         <DatePicker showTime />
+                                    </Form.Item>
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Active" span={3}>
+                                    <Form.Item
+                                        name="activeOverride"
+                                        valuePropName="checked"
+                                        initialValue={
+                                            electionData.activeOverride
+                                        }
+                                        rules={[{ required: true }]}
+                                        noStyle
+                                    >
+                                        <Checkbox />
                                     </Form.Item>
                                 </Descriptions.Item>
                             </Descriptions>

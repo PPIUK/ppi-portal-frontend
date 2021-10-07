@@ -5,6 +5,7 @@ import { useAuth } from '../../utils/useAuth';
 import { useParams } from 'react-router';
 import { Card, Collapse, Skeleton, Typography } from 'antd';
 import VotersStatisticsCharts from './components/VotersStatisticsCharts';
+// import OverallStatisticsCharts from './components/OverallStatisticsCharts';
 
 const { Panel } = Collapse;
 
@@ -97,12 +98,31 @@ function PublicStatisticsView() {
                                 key={String(roundIndex)}
                             >
                                 <Typography.Title level={5}>
-                                    Statistics per current date and time:{' '}
-                                    {moment(currentTime).format(
-                                        'DD MMMM YYYY, HH:mm:ss'
+                                    {new Date(
+                                        electionData.voting[roundIndex].endDate
+                                    ) <= Date.now() ? (
+                                        <>
+                                            Statistics per current date and
+                                            time:{' '}
+                                            {moment(currentTime).format(
+                                                'DD MMMM YYYY, HH:mm:ss'
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            Statistics per last voting date and
+                                            time:{' '}
+                                            {moment(
+                                                new Date(
+                                                    electionData.voting[
+                                                        roundIndex
+                                                    ].endDate
+                                                )
+                                            ).format('DD MMMM YYYY, HH:mm:ss')}
+                                        </>
                                     )}
                                 </Typography.Title>
-
+                                {/*<OverallStatisticsCharts round={round} />*/}
                                 <VotersStatisticsCharts statistics={round} />
                             </Panel>
                         );

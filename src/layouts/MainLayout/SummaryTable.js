@@ -58,6 +58,7 @@ function SummaryTable() {
     const [uniData, setUniData] = useState(null);
     const [totalMembers, setTotalMembers] = useState(null);
     const [totalActiveMembers, setTotalActiveMembers] = useState(null);
+    const [electionData, setElectionData] = useState(null);
     const [statisticsData, setStatisticsData] = useState();
     const [currentTime, setCurrentTime] = useState(Date.now());
     const screens = Grid.useBreakpoint();
@@ -89,6 +90,9 @@ function SummaryTable() {
     useEffect(() => {
         // FIXME: should be dynamic, can't be bothered now
         const electionID = '611fed0682c639c1766608fc';
+        axios.get(`/api/voting/pubinfo/${electionID}`).then((res) => {
+            setElectionData(res.data.data);
+        });
         axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
             setStatisticsData(res.data.data);
         });
@@ -122,46 +126,93 @@ function SummaryTable() {
             </Space>
 
             <Tabs defaultActiveKey="Election Round 2">
-                <Tabs.TabPane
-                    tab={
-                        <span>
-                            <BarChart
-                                style={{ fontSize: 15, marginRight: '5px' }}
-                            />
-                            General Election Round 2 Statistics
-                        </span>
-                    }
-                    key="Election Round 2"
-                >
-                    <Typography.Title level={5}>
-                        Last Voting : 07 October 2021 at 11:59:59 AM
-                    </Typography.Title>
-                    {statisticsData && (
-                        <VotersStatisticsCharts
-                            statistics={statisticsData[1]}
-                        />
-                    )}
-                </Tabs.TabPane>
-                <Tabs.TabPane
-                    tab={
-                        <span>
-                            <BarChart
-                                style={{ fontSize: 15, marginRight: '5px' }}
-                            />
-                            General Election Round 1 Statistics
-                        </span>
-                    }
-                    key="Election Round 1"
-                >
-                    <Typography.Title level={5}>
-                        Last voting : 14 September 2021 at 11:59:59 AM
-                    </Typography.Title>
-                    {statisticsData && (
-                        <VotersStatisticsCharts
-                            statistics={statisticsData[0]}
-                        />
-                    )}
-                </Tabs.TabPane>
+                {electionData && (
+                    <>
+                        <Tabs.TabPane
+                            tab={
+                                <span>
+                                    <BarChart
+                                        style={{
+                                            fontSize: 15,
+                                            marginRight: '5px',
+                                        }}
+                                    />
+                                    General Election Round 2 Statistics
+                                </span>
+                            }
+                            key="Election Round 2"
+                        >
+                            <Typography.Title level={5}>
+                                {new Date(electionData.voting[0].endDate) <=
+                                Date.now() ? (
+                                    <>
+                                        Statistics per current date and time:{' '}
+                                        {moment(currentTime).format(
+                                            'DD MMMM YYYY, HH:mm:ss'
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        Statistics per last voting date and
+                                        time:{' '}
+                                        {moment(
+                                            new Date(
+                                                electionData.voting[0].endDate
+                                            )
+                                        ).format('DD MMMM YYYY, HH:mm:ss')}
+                                    </>
+                                )}
+                            </Typography.Title>
+                            {statisticsData && (
+                                <VotersStatisticsCharts
+                                    statistics={statisticsData[1]}
+                                />
+                            )}
+                        </Tabs.TabPane>
+                        <Tabs.TabPane
+                            tab={
+                                <span>
+                                    <BarChart
+                                        style={{
+                                            fontSize: 15,
+                                            marginRight: '5px',
+                                        }}
+                                    />
+                                    General Election Round 1 Statistics
+                                </span>
+                            }
+                            key="Election Round 1"
+                        >
+                            <Typography.Title level={5}>
+                                {electionData &&
+                                new Date(electionData.voting[1].endDate) <=
+                                    Date.now() ? (
+                                    <>
+                                        Statistics per current date and time:{' '}
+                                        {moment(currentTime).format(
+                                            'DD MMMM YYYY, HH:mm:ss'
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        Statistics per last voting date and
+                                        time:{' '}
+                                        {moment(
+                                            new Date(
+                                                electionData.voting[1].endDate
+                                            )
+                                        ).format('DD MMMM YYYY, HH:mm:ss')}
+                                    </>
+                                )}
+                            </Typography.Title>
+                            {statisticsData && (
+                                <VotersStatisticsCharts
+                                    statistics={statisticsData[0]}
+                                />
+                            )}
+                        </Tabs.TabPane>
+                    </>
+                )}
                 <Tabs.TabPane
                     tab={
                         <span>
