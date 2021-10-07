@@ -135,8 +135,6 @@ function SummaryTable() {
                 >
                     <Typography.Title level={5}>
                         Last Voting : 07 October 2021 at 11:59:59 AM
-                        /*Statistics per current date and time:{' '}
-                        {moment(currentTime).format('DD MMMM YYYY, HH:mm:ss')}*/
                     </Typography.Title>
                     {statisticsData && (
                         <VotersStatisticsCharts
