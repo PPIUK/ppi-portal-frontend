@@ -101,8 +101,8 @@ function VotersStatisticsCharts({ statistics }) {
                     <Typography.Title level={3}>
                         Number of Voters
                     </Typography.Title>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <PieChart width="100%">
+                    <ResponsiveContainer width="100%" height={220}>
+                        <PieChart width="100%" margin={{ top: 25 }}>
                             <Pie
                                 data={statistics.votersCount}
                                 // startAngle={180}
@@ -139,8 +139,8 @@ function VotersStatisticsCharts({ statistics }) {
                     <Typography.Title level={3}>
                         Number of Voters by Degree Level
                     </Typography.Title>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <PieChart width="100%">
+                    <ResponsiveContainer width="100%" height={220}>
+                        <PieChart width="100%" margin={{ top: 10 }}>
                             <Pie
                                 data={statistics.degreeLevelCount}
                                 dataKey="voters"

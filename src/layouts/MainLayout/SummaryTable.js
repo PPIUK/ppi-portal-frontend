@@ -12,9 +12,9 @@ import {
 import { BarChart, PieChart, CallSplit, School } from '@material-ui/icons';
 
 import axios from 'axios';
-import moment from 'moment';
 import TableauEmbed from '../../components/TableauEmbed';
 import VotersStatisticsCharts from '../../views/voting/components/VotersStatisticsCharts';
+import electionStatistics from '../../data/electionStatistics.json';
 
 const tableStyle = {
     style: {
@@ -58,9 +58,6 @@ function SummaryTable() {
     const [uniData, setUniData] = useState(null);
     const [totalMembers, setTotalMembers] = useState(null);
     const [totalActiveMembers, setTotalActiveMembers] = useState(null);
-    const [electionData, setElectionData] = useState(null);
-    const [statisticsData, setStatisticsData] = useState();
-    const [currentTime, setCurrentTime] = useState(Date.now());
     const screens = Grid.useBreakpoint();
 
     const generalTableauUrl =
@@ -87,24 +84,6 @@ function SummaryTable() {
             .then((resp) => setTotalActiveMembers(resp.data.count));
     }, []);
 
-    useEffect(() => {
-        // FIXME: should be dynamic, can't be bothered now
-        const electionID = '611fed0682c639c1766608fc';
-        axios.get(`/api/voting/pubinfo/${electionID}`).then((res) => {
-            setElectionData(res.data.data);
-        });
-        axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
-            setStatisticsData(res.data.data);
-        });
-        const interval = setInterval(() => {
-            axios.get(`/api/voting/pubstats/${electionID}`).then((res) => {
-                setStatisticsData(res.data.data);
-                setCurrentTime(Date.now());
-            });
-        }, 60 * 1000);
-        return () => clearInterval(interval);
-    }, []);
-
     return (
         <Card {...tableStyle}>
             <Space>
@@ -126,93 +105,44 @@ function SummaryTable() {
             </Space>
 
             <Tabs defaultActiveKey="Election Round 2">
-                {electionData && (
-                    <>
-                        <Tabs.TabPane
-                            tab={
-                                <span>
-                                    <BarChart
-                                        style={{
-                                            fontSize: 15,
-                                            marginRight: '5px',
-                                        }}
-                                    />
-                                    General Election Round 2 Statistics
-                                </span>
-                            }
-                            key="Election Round 2"
-                        >
-                            <Typography.Title level={5}>
-                                {new Date(electionData.voting[0].endDate) <=
-                                Date.now() ? (
-                                    <>
-                                        Statistics per current date and time:{' '}
-                                        {moment(currentTime).format(
-                                            'DD MMMM YYYY, HH:mm:ss'
-                                        )}
-                                    </>
-                                ) : (
-                                    <>
-                                        Statistics per last voting date and
-                                        time:{' '}
-                                        {moment(
-                                            new Date(
-                                                electionData.voting[0].endDate
-                                            )
-                                        ).format('DD MMMM YYYY, HH:mm:ss')}
-                                    </>
-                                )}
-                            </Typography.Title>
-                            {statisticsData && (
-                                <VotersStatisticsCharts
-                                    statistics={statisticsData[1]}
+                <>
+                    <Tabs.TabPane
+                        tab={
+                            <span>
+                                <BarChart
+                                    style={{
+                                        fontSize: 15,
+                                        marginRight: '5px',
+                                    }}
                                 />
-                            )}
-                        </Tabs.TabPane>
-                        <Tabs.TabPane
-                            tab={
-                                <span>
-                                    <BarChart
-                                        style={{
-                                            fontSize: 15,
-                                            marginRight: '5px',
-                                        }}
-                                    />
-                                    General Election Round 1 Statistics
-                                </span>
-                            }
-                            key="Election Round 1"
-                        >
-                            <Typography.Title level={5}>
-                                {electionData &&
-                                new Date(electionData.voting[1].endDate) <=
-                                    Date.now() ? (
-                                    <>
-                                        Statistics per current date and time:{' '}
-                                        {moment(currentTime).format(
-                                            'DD MMMM YYYY, HH:mm:ss'
-                                        )}
-                                    </>
-                                ) : (
-                                    <>
-                                        Statistics per last voting date and
-                                        time:{' '}
-                                        {moment(
-                                            new Date(
-                                                electionData.voting[1].endDate
-                                            )
-                                        ).format('DD MMMM YYYY, HH:mm:ss')}
-                                    </>
-                                )}
-                            </Typography.Title>
-                            {statisticsData && (
-                                <VotersStatisticsCharts
-                                    statistics={statisticsData[0]}
+                                General Election Round 2 Statistics
+                            </span>
+                        }
+                        key="Election Round 2"
+                    >
+                        <VotersStatisticsCharts
+                            statistics={electionStatistics[1]}
+                        />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane
+                        tab={
+                            <span>
+                                <BarChart
+                                    style={{
+                                        fontSize: 15,
+                                        marginRight: '5px',
+                                    }}
                                 />
-                            )}
-                        </Tabs.TabPane>
-                    </>
-                )}
+                                General Election Round 1 Statistics
+                            </span>
+                        }
+                        key="Election Round 1"
+                    >
+                        <VotersStatisticsCharts
+                            statistics={electionStatistics[0]}
+                        />
+                    </Tabs.TabPane>
+                </>
                 <Tabs.TabPane
                     tab={
                         <span>

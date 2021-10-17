@@ -1,0 +1,694 @@
+[
+  {
+    "votersCount": [
+      {
+        "name": "has voted",
+        "value": 279
+      },
+      {
+        "name": "has not voted",
+        "value": 528
+      }
+    ],
+    "branchesCount": [
+      {
+        "name": "All",
+        "voters": 2
+      },
+      {
+        "name": "Leeds",
+        "voters": 29
+      },
+      {
+        "name": "London",
+        "voters": 65
+      },
+      {
+        "name": "Edinburgh",
+        "voters": 25
+      },
+      {
+        "name": "Sheffield",
+        "voters": 9
+      },
+      {
+        "name": "Manchester",
+        "voters": 16
+      },
+      {
+        "name": "Nottingham",
+        "voters": 14
+      },
+      {
+        "name": "Hull",
+        "voters": 6
+      },
+      {
+        "name": "Wales",
+        "voters": 4
+      },
+      {
+        "name": "Canterbury",
+        "voters": 1
+      },
+      {
+        "name": "Belfast",
+        "voters": 5
+      },
+      {
+        "name": "Brighton",
+        "voters": 11
+      },
+      {
+        "name": "York",
+        "voters": 11
+      },
+      {
+        "name": "Oxford",
+        "voters": 4
+      },
+      {
+        "name": "Durham",
+        "voters": 3
+      },
+      {
+        "name": "Bournemouth",
+        "voters": 4
+      },
+      {
+        "name": "Glasgow",
+        "voters": 26
+      },
+      {
+        "name": "Birmingham",
+        "voters": 8
+      },
+      {
+        "name": "Liverpool",
+        "voters": 2
+      },
+      {
+        "name": "Cranfield",
+        "voters": 2
+      },
+      {
+        "name": "Warwick",
+        "voters": 6
+      },
+      {
+        "name": "Cambridge",
+        "voters": 4
+      },
+      {
+        "name": "Southampton",
+        "voters": 4
+      },
+      {
+        "name": "Hatfield",
+        "voters": 1
+      },
+      {
+        "name": "Coventry",
+        "voters": 3
+      },
+      {
+        "name": "Bristol",
+        "voters": 9
+      },
+      {
+        "name": "Exeter",
+        "voters": 2
+      },
+      {
+        "name": "Reading",
+        "voters": 1
+      },
+      {
+        "name": "Lancaster",
+        "voters": 1
+      },
+      {
+        "name": "Newcastle",
+        "voters": 1
+      }
+    ],
+    "degreeLevelCount": [
+      {
+        "name": "S1/S2 Integrated Masters",
+        "voters": 1
+      },
+      {
+        "name": "S2 / Masters",
+        "voters": 164
+      },
+      {
+        "name": "S3 / Doctorate",
+        "voters": 77
+      },
+      {
+        "name": "S1 / Undergraduate",
+        "voters": 36
+      },
+      {
+        "name": "A-Level / Foundation",
+        "voters": 1
+      }
+    ],
+    "votersBranchCount": [
+      {
+        "name": "Hull",
+        "hasVoted": 6,
+        "hasNotVoted": 4
+      },
+      {
+        "name": "All",
+        "hasVoted": 2,
+        "hasNotVoted": 0
+      },
+      {
+        "name": "Leeds",
+        "hasVoted": 29,
+        "hasNotVoted": 51
+      },
+      {
+        "name": "London",
+        "hasVoted": 65,
+        "hasNotVoted": 82
+      },
+      {
+        "name": "Bristol",
+        "hasVoted": 9,
+        "hasNotVoted": 10
+      },
+      {
+        "name": "Edinburgh",
+        "hasVoted": 25,
+        "hasNotVoted": 20
+      },
+      {
+        "name": "Birmingham",
+        "hasVoted": 8,
+        "hasNotVoted": 17
+      },
+      {
+        "name": "Cambridge",
+        "hasVoted": 4,
+        "hasNotVoted": 5
+      },
+      {
+        "name": "Sheffield",
+        "hasVoted": 9,
+        "hasNotVoted": 27
+      },
+      {
+        "name": "Coventry",
+        "hasVoted": 3,
+        "hasNotVoted": 10
+      },
+      {
+        "name": "Manchester",
+        "hasVoted": 16,
+        "hasNotVoted": 46
+      },
+      {
+        "name": "Leicester",
+        "hasVoted": 0,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Warwick",
+        "hasVoted": 6,
+        "hasNotVoted": 22
+      },
+      {
+        "name": "Newcastle",
+        "hasVoted": 1,
+        "hasNotVoted": 22
+      },
+      {
+        "name": "Wales",
+        "hasVoted": 4,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Nottingham",
+        "hasVoted": 14,
+        "hasNotVoted": 25
+      },
+      {
+        "name": "Oxford",
+        "hasVoted": 4,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Durham",
+        "hasVoted": 3,
+        "hasNotVoted": 11
+      },
+      {
+        "name": "Brighton",
+        "hasVoted": 11,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Canterbury",
+        "hasVoted": 1,
+        "hasNotVoted": 3
+      },
+      {
+        "name": "Belfast",
+        "hasVoted": 5,
+        "hasNotVoted": 12
+      },
+      {
+        "name": "York",
+        "hasVoted": 11,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Lancaster",
+        "hasVoted": 1,
+        "hasNotVoted": 9
+      },
+      {
+        "name": "Southampton",
+        "hasVoted": 4,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Hatfield",
+        "hasVoted": 1,
+        "hasNotVoted": 5
+      },
+      {
+        "name": "Liverpool",
+        "hasVoted": 2,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Portsmouth",
+        "hasVoted": 0,
+        "hasNotVoted": 2
+      },
+      {
+        "name": "Bournemouth",
+        "hasVoted": 4,
+        "hasNotVoted": 8
+      },
+      {
+        "name": "Glasgow",
+        "hasVoted": 26,
+        "hasNotVoted": 64
+      },
+      {
+        "name": "Exeter",
+        "hasVoted": 2,
+        "hasNotVoted": 14
+      },
+      {
+        "name": "Aberdeen",
+        "hasVoted": 0,
+        "hasNotVoted": 4
+      },
+      {
+        "name": "Reading",
+        "hasVoted": 1,
+        "hasNotVoted": 4
+      },
+      {
+        "name": "Cranfield",
+        "hasVoted": 2,
+        "hasNotVoted": 0
+      },
+      {
+        "name": "Norwich",
+        "hasVoted": 0,
+        "hasNotVoted": 2
+      },
+      {
+        "name": "Sunderland",
+        "hasVoted": 0,
+        "hasNotVoted": 1
+      },
+      {
+        "name": "General",
+        "hasVoted": 0,
+        "hasNotVoted": 1
+      }
+    ]
+  },
+  {
+    "votersCount": [
+      {
+        "name": "has voted",
+        "value": 380
+      },
+      {
+        "name": "has not voted",
+        "value": 460
+      }
+    ],
+    "branchesCount": [
+      {
+        "name": "Hull",
+        "voters": 5
+      },
+      {
+        "name": "All",
+        "voters": 2
+      },
+      {
+        "name": "Leeds",
+        "voters": 36
+      },
+      {
+        "name": "London",
+        "voters": 78
+      },
+      {
+        "name": "Edinburgh",
+        "voters": 32
+      },
+      {
+        "name": "Sheffield",
+        "voters": 17
+      },
+      {
+        "name": "Manchester",
+        "voters": 30
+      },
+      {
+        "name": "Leicester",
+        "voters": 1
+      },
+      {
+        "name": "Wales",
+        "voters": 5
+      },
+      {
+        "name": "Nottingham",
+        "voters": 22
+      },
+      {
+        "name": "Bristol",
+        "voters": 10
+      },
+      {
+        "name": "Canterbury",
+        "voters": 2
+      },
+      {
+        "name": "Warwick",
+        "voters": 9
+      },
+      {
+        "name": "Birmingham",
+        "voters": 10
+      },
+      {
+        "name": "Belfast",
+        "voters": 8
+      },
+      {
+        "name": "Brighton",
+        "voters": 6
+      },
+      {
+        "name": "York",
+        "voters": 12
+      },
+      {
+        "name": "Lancaster",
+        "voters": 5
+      },
+      {
+        "name": "Hatfield",
+        "voters": 2
+      },
+      {
+        "name": "Liverpool",
+        "voters": 3
+      },
+      {
+        "name": "Oxford",
+        "voters": 7
+      },
+      {
+        "name": "Newcastle",
+        "voters": 5
+      },
+      {
+        "name": "Glasgow",
+        "voters": 41
+      },
+      {
+        "name": "Durham",
+        "voters": 2
+      },
+      {
+        "name": "Coventry",
+        "voters": 7
+      },
+      {
+        "name": "Portsmouth",
+        "voters": 1
+      },
+      {
+        "name": "Aberdeen",
+        "voters": 1
+      },
+      {
+        "name": "Reading",
+        "voters": 3
+      },
+      {
+        "name": "Norwich",
+        "voters": 2
+      },
+      {
+        "name": "Southampton",
+        "voters": 5
+      },
+      {
+        "name": "Cambridge",
+        "voters": 3
+      },
+      {
+        "name": "Bournemouth",
+        "voters": 2
+      },
+      {
+        "name": "Cranfield",
+        "voters": 1
+      },
+      {
+        "name": "Exeter",
+        "voters": 5
+      }
+    ],
+    "degreeLevelCount": [
+      {
+        "name": "S1 / Undergraduate",
+        "voters": 70
+      },
+      {
+        "name": "S1/S2 Integrated Masters",
+        "voters": 1
+      },
+      {
+        "name": "S2 / Masters",
+        "voters": 194
+      },
+      {
+        "name": "S3 / Doctorate",
+        "voters": 114
+      },
+      {
+        "name": "A-Level / Foundation",
+        "voters": 1
+      }
+    ],
+    "votersBranchCount": [
+      {
+        "name": "Hull",
+        "hasVoted": 5,
+        "hasNotVoted": 5
+      },
+      {
+        "name": "All",
+        "hasVoted": 2,
+        "hasNotVoted": 0
+      },
+      {
+        "name": "Leeds",
+        "hasVoted": 36,
+        "hasNotVoted": 45
+      },
+      {
+        "name": "London",
+        "hasVoted": 78,
+        "hasNotVoted": 80
+      },
+      {
+        "name": "Bristol",
+        "hasVoted": 10,
+        "hasNotVoted": 11
+      },
+      {
+        "name": "Edinburgh",
+        "hasVoted": 32,
+        "hasNotVoted": 14
+      },
+      {
+        "name": "Birmingham",
+        "hasVoted": 10,
+        "hasNotVoted": 17
+      },
+      {
+        "name": "Cambridge",
+        "hasVoted": 3,
+        "hasNotVoted": 7
+      },
+      {
+        "name": "Sheffield",
+        "hasVoted": 17,
+        "hasNotVoted": 20
+      },
+      {
+        "name": "Coventry",
+        "hasVoted": 7,
+        "hasNotVoted": 8
+      },
+      {
+        "name": "Manchester",
+        "hasVoted": 30,
+        "hasNotVoted": 36
+      },
+      {
+        "name": "Leicester",
+        "hasVoted": 1,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Warwick",
+        "hasVoted": 9,
+        "hasNotVoted": 20
+      },
+      {
+        "name": "Newcastle",
+        "hasVoted": 5,
+        "hasNotVoted": 19
+      },
+      {
+        "name": "Wales",
+        "hasVoted": 5,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Nottingham",
+        "hasVoted": 22,
+        "hasNotVoted": 19
+      },
+      {
+        "name": "Oxford",
+        "hasVoted": 7,
+        "hasNotVoted": 4
+      },
+      {
+        "name": "Durham",
+        "hasVoted": 2,
+        "hasNotVoted": 12
+      },
+      {
+        "name": "Brighton",
+        "hasVoted": 6,
+        "hasNotVoted": 11
+      },
+      {
+        "name": "Canterbury",
+        "hasVoted": 2,
+        "hasNotVoted": 2
+      },
+      {
+        "name": "Belfast",
+        "hasVoted": 8,
+        "hasNotVoted": 10
+      },
+      {
+        "name": "York",
+        "hasVoted": 12,
+        "hasNotVoted": 5
+      },
+      {
+        "name": "Lancaster",
+        "hasVoted": 5,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Southampton",
+        "hasVoted": 5,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Hatfield",
+        "hasVoted": 2,
+        "hasNotVoted": 4
+      },
+      {
+        "name": "Liverpool",
+        "hasVoted": 3,
+        "hasNotVoted": 6
+      },
+      {
+        "name": "Portsmouth",
+        "hasVoted": 1,
+        "hasNotVoted": 2
+      },
+      {
+        "name": "Bournemouth",
+        "hasVoted": 2,
+        "hasNotVoted": 11
+      },
+      {
+        "name": "Glasgow",
+        "hasVoted": 41,
+        "hasNotVoted": 47
+      },
+      {
+        "name": "Exeter",
+        "hasVoted": 5,
+        "hasNotVoted": 12
+      },
+      {
+        "name": "Aberdeen",
+        "hasVoted": 1,
+        "hasNotVoted": 3
+      },
+      {
+        "name": "Reading",
+        "hasVoted": 3,
+        "hasNotVoted": 2
+      },
+      {
+        "name": "Cranfield",
+        "hasVoted": 1,
+        "hasNotVoted": 1
+      },
+      {
+        "name": "Norwich",
+        "hasVoted": 2,
+        "hasNotVoted": 1
+      },
+      {
+        "name": "Sunderland",
+        "hasVoted": 0,
+        "hasNotVoted": 1
+      },
+      {
+        "name": "General",
+        "hasVoted": 0,
+        "hasNotVoted": 1
+      }
+    ]
+  }
+]
