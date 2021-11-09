@@ -105,6 +105,15 @@ function useProvideAuth() {
             });
     };
 
+    const deleteLocalStorage = () => {
+        setUser(null);
+        setRefreshToken(null);
+        setAccessToken(null);
+        localStorage.removeItem('oauth-access-token');
+        localStorage.removeItem('oauth-refresh-token');
+        localStorage.removeItem('oauth-user');
+    };
+
     const sendPasswordResetEmail = (_email) => {
         throw { name: 'NotImplementedError', message: 'WIP' };
     };
@@ -213,6 +222,7 @@ function useProvideAuth() {
         signin,
         signup,
         signout,
+        deleteLocalStorage,
         sendPasswordResetEmail,
         confirmPasswordReset,
         temporaryTokenSignIn,
