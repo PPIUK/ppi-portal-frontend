@@ -78,6 +78,20 @@ function BranchListView() {
             render: (value, item, index) => (page - 1) * pageSize + index + 1,
         },
         {
+            title: 'Status',
+            key: 'status',
+            render: (value) =>
+                new Date(value.endDate) >= new Date() ? 'Active' : 'Inactive',
+            filters: [
+                { text: 'Active', value: 'Active' },
+                { text: 'Inactive', value: 'Inactive' },
+            ],
+            onFilter: (value, record) =>
+                value === 'Active'
+                    ? new Date(record.endDate) >= new Date()
+                    : new Date(record.endDate) < new Date(),
+        },
+        {
             title: 'Name',
             dataIndex: 'fullName',
             key: 'fullName',
