@@ -32,7 +32,7 @@ export default function PublicLayout() {
                         <Link to={'/'}>
                             <img
                                 width={100}
-                                src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
+                                src="https://ppiuk.id/wp-content/uploads/2017/05/ppiuk.jpg"
                             />
                         </Link>
                         <Typography.Title

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const baseURL =
     process.env.NODE_ENV == 'production'
-        ? 'https://portal.ppiuk.org'
+        ? 'https://portal.ppiuk.id'
         : 'http://localhost:3000';
 
 export default function Thesis({ id }) {

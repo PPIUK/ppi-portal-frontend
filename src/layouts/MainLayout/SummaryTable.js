@@ -90,7 +90,7 @@ function SummaryTable() {
                 {screens.lg && (
                     <Image
                         width={100}
-                        src="https://ppiuk.org/wp-content/uploads/2017/02/ppiuk_1-e1486331368769.jpg"
+                        src="https://ppiuk.id/wp-content/uploads/2017/02/ppiuk_1-e1486331368769.jpg"
                     />
                 )}
 

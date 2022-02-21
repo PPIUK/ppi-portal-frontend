@@ -111,7 +111,7 @@ function LoginView({ appOAuthLogin }) {
                     {!screens.lg && (
                         <Image
                             width={100}
-                            src="https://ppiuk.org/wp-content/uploads/2017/05/ppiuk.jpg"
+                            src="https://ppiuk.id/wp-content/uploads/2017/05/ppiuk.jpg"
                         />
                     )}
                     <Typography.Title level={2} style={{ textAlign: 'center' }}>
