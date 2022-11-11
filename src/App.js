@@ -12,7 +12,7 @@ function App() {
         window.location.origin === 'https://staging.portal.ppiuk.org'
             ? 'https://staging.portal.ppiuk.org'
             : process.env.NODE_ENV == 'production'
-            ? 'https://portal.ppiuk.id'
+            ? 'https://portal.ppiuk.org'
             : 'http://localhost:3000';
 
     const router = useRoutes(routes);
