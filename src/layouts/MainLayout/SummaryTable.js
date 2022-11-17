@@ -104,45 +104,7 @@ function SummaryTable() {
                 </Space>
             </Space>
 
-            <Tabs defaultActiveKey="Election Round 2">
-                <>
-                    <Tabs.TabPane
-                        tab={
-                            <span>
-                                <BarChart
-                                    style={{
-                                        fontSize: 15,
-                                        marginRight: '5px',
-                                    }}
-                                />
-                                General Election Round 2 Statistics
-                            </span>
-                        }
-                        key="Election Round 2"
-                    >
-                        <VotersStatisticsCharts
-                            statistics={electionStatistics[1]}
-                        />
-                    </Tabs.TabPane>
-                    <Tabs.TabPane
-                        tab={
-                            <span>
-                                <BarChart
-                                    style={{
-                                        fontSize: 15,
-                                        marginRight: '5px',
-                                    }}
-                                />
-                                General Election Round 1 Statistics
-                            </span>
-                        }
-                        key="Election Round 1"
-                    >
-                        <VotersStatisticsCharts
-                            statistics={electionStatistics[0]}
-                        />
-                    </Tabs.TabPane>
-                </>
+            <Tabs defaultActiveKey="General Infographic">
                 <Tabs.TabPane
                     tab={
                         <span>
@@ -203,7 +165,45 @@ function SummaryTable() {
                         <Table columns={uniTableCols} dataSource={uniData} />
                     )}
                     {!uniData && <Skeleton />}
-                </Tabs.TabPane>
+                </Tabs.TabPane>            
+                <>
+                    <Tabs.TabPane
+                        tab={
+                            <span>
+                                <BarChart
+                                    style={{
+                                        fontSize: 15,
+                                        marginRight: '5px',
+                                    }}
+                                />
+                                General Election Round 2 Statistics
+                            </span>
+                        }
+                        key="Election Round 2"
+                    >
+                        <VotersStatisticsCharts
+                            statistics={electionStatistics[1]}
+                        />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane
+                        tab={
+                            <span>
+                                <BarChart
+                                    style={{
+                                        fontSize: 15,
+                                        marginRight: '5px',
+                                    }}
+                                />
+                                General Election Round 1 Statistics
+                            </span>
+                        }
+                        key="Election Round 1"
+                    >
+                        <VotersStatisticsCharts
+                            statistics={electionStatistics[0]}
+                        />
+                    </Tabs.TabPane>
+                </>
             </Tabs>
         </Card>
     );
