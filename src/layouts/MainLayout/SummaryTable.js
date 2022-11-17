@@ -165,7 +165,7 @@ function SummaryTable() {
                         <Table columns={uniTableCols} dataSource={uniData} />
                     )}
                     {!uniData && <Skeleton />}
-                </Tabs.TabPane>            
+                </Tabs.TabPane>
                 <>
                     <Tabs.TabPane
                         tab={
